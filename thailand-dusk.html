@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Thailand at Dusk: 77 Provinces</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap">
+<style>
+:root{--ink:#050509;--ember:#c9743a;--glow:#f2c48a;--mist:#8f8aa3;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%}
+body{margin:0;min-height:100%;background:radial-gradient(120% 60% at 50% 108%,#3a1e16 0%,#1a1224 38%,var(--ink) 75%);background-color:var(--ink);color:#e9e4ef;font-family:"Inter","Helvetica Neue",Arial,sans-serif;font-weight:300;font-size:.95rem;overflow-x:hidden}
+#stars{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+main{position:relative;max-width:1000px;margin:0 auto;padding:40px 20px 56px;display:grid;grid-template-columns:1fr;gap:24px}
+@media(min-width:800px){main{grid-template-columns:300px minmax(0,1fr);gap:40px;align-items:start;padding-top:32px}section{position:sticky;top:40px}}
+h1{font-weight:300;font-size:clamp(2rem,3.8vw,2.7rem);letter-spacing:-.02em;line-height:1.15;margin:0 0 18px;overflow-wrap:anywhere}@media(max-width:799px){h1{font-size:clamp(2.2rem,10vw,3rem)}}
+p{line-height:1.6;color:var(--mist);max-width:32em;margin:0 0 20px;font-size:.95rem;line-height:1.7;letter-spacing:0}
+#info{min-height:4.5em;border-left:2px solid var(--ember);padding-left:14px}
+#info b{display:block;font-weight:400;font-size:1.2rem;letter-spacing:-.01em;color:var(--glow)}
+#info span{color:var(--mist)}
+svg.map{width:100%;height:auto;max-height:92vh;overflow:visible}
+.land{fill:#0b0a14;stroke:var(--ember);stroke-width:3;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;animation:draw 3.2s ease-out forwards;filter:drop-shadow(0 0 10px rgba(201,116,58,.35))}
+@keyframes draw{to{stroke-dashoffset:0}}
+.c{cursor:pointer;opacity:0;animation:on 1s ease-out forwards}
+.c .d{fill:var(--glow)}
+.c .h{fill:var(--glow);opacity:.12}
+.c:hover .h,.c:focus .h,.c.on .h{opacity:.55}
+.c:focus{outline:none}
+.c text{fill:#d9d2e6;font-size:15px;font-family:inherit;font-weight:400;paint-order:stroke;stroke:#050509;stroke-width:4px;stroke-linejoin:round;opacity:0;transition:opacity .15s;pointer-events:none}
+.c.on text{opacity:1;fill:var(--glow);font-weight:500}
+@keyframes on{to{opacity:1}}
+@media(prefers-reduced-motion:reduce){.land{animation:none;stroke-dashoffset:0}.c{animation:none;opacity:1}}
+</style>
+</head>
+<body>
+<canvas id="stars" aria-hidden="true"></canvas>
+<main>
+<section>
+<h1>TAME THR <br></h1>
+<p>Welcome to the THR family, and these are my family members.</p>
+<div id="info" aria-live="polite"><b>77 provinces</b><span>Hover or tap a light on the map</span></div>
+</section>
+<svg class="map" viewBox="0 0 893 1600" role="img" aria-label="Simplified map of Thailand with 77 provinces">
+<path class="land" pathLength="1" d="M273,35 L266,40 L262,47 L252,49 L240,46 L232,41 L226,42 L225,47 L235,66 L227,72 L217,75 L207,69 L196,69 L187,74 L183,86 L183,102 L176,107 L166,102 L139,115 L131,113 L112,116 L100,106 L96,106 L92,102 L86,103 L83,109 L83,120 L67,129 L66,139 L59,147 L61,158 L59,166 L64,172 L63,178 L54,186 L53,192 L48,197 L48,202 L54,208 L58,232 L45,235 L36,241 L30,241 L24,235 L17,236 L17,241 L21,245 L29,267 L36,272 L43,269 L51,284 L51,291 L56,298 L51,306 L50,317 L57,326 L58,331 L82,352 L85,360 L91,365 L92,372 L106,384 L111,395 L117,400 L124,400 L130,408 L132,421 L128,426 L128,432 L139,445 L139,451 L146,460 L145,465 L149,478 L157,480 L170,465 L173,468 L165,490 L151,489 L145,497 L140,496 L137,499 L140,508 L140,522 L136,534 L139,567 L125,568 L120,576 L112,576 L106,583 L100,584 L101,591 L98,600 L102,606 L101,612 L108,634 L126,654 L138,677 L143,683 L154,688 L169,703 L176,706 L184,721 L192,729 L193,738 L198,744 L198,759 L201,769 L201,791 L193,795 L192,813 L199,819 L198,827 L205,846 L224,862 L222,874 L229,896 L228,906 L235,909 L235,917 L240,921 L238,930 L245,938 L239,950 L227,956 L227,965 L208,995 L205,1005 L189,1020 L182,1022 L179,1035 L172,1036 L159,1049 L158,1061 L161,1065 L161,1071 L154,1099 L140,1128 L134,1134 L133,1146 L128,1140 L121,1145 L121,1151 L124,1154 L127,1154 L131,1149 L132,1155 L129,1158 L129,1164 L118,1195 L113,1203 L107,1205 L108,1243 L104,1248 L106,1258 L102,1264 L102,1271 L110,1296 L111,1312 L108,1332 L113,1349 L119,1350 L123,1345 L128,1345 L129,1340 L132,1338 L133,1331 L129,1328 L133,1319 L132,1309 L135,1305 L135,1294 L144,1290 L145,1297 L153,1300 L146,1301 L141,1307 L135,1309 L140,1333 L143,1336 L150,1334 L150,1317 L155,1303 L160,1323 L167,1326 L178,1324 L179,1329 L187,1336 L184,1344 L187,1354 L185,1367 L188,1375 L194,1380 L199,1380 L201,1373 L198,1368 L202,1364 L202,1357 L207,1359 L208,1363 L213,1366 L212,1374 L217,1378 L217,1388 L221,1394 L221,1406 L227,1407 L234,1403 L236,1399 L241,1410 L253,1416 L251,1418 L252,1439 L262,1444 L266,1450 L270,1450 L280,1462 L280,1467 L297,1483 L304,1480 L307,1468 L306,1459 L311,1458 L316,1470 L323,1475 L347,1483 L362,1482 L368,1503 L381,1504 L385,1502 L391,1504 L389,1513 L393,1517 L392,1528 L385,1533 L380,1548 L385,1555 L389,1555 L395,1564 L402,1565 L413,1557 L417,1547 L442,1537 L451,1551 L460,1551 L464,1554 L471,1553 L481,1542 L485,1527 L498,1515 L498,1496 L467,1471 L445,1436 L427,1430 L421,1425 L411,1426 L406,1434 L388,1435 L364,1420 L345,1396 L335,1377 L317,1288 L311,1273 L304,1267 L299,1267 L296,1270 L286,1259 L282,1211 L275,1190 L269,1186 L259,1186 L245,1191 L238,1190 L230,1199 L216,1196 L213,1190 L220,1186 L222,1181 L211,1164 L204,1143 L207,1137 L207,1114 L205,1110 L208,1104 L215,1099 L215,1095 L207,1090 L218,1086 L218,1076 L215,1073 L219,1060 L227,1053 L234,1037 L241,1034 L239,1024 L241,1011 L239,1007 L241,1004 L244,1005 L248,1002 L247,987 L252,978 L253,969 L264,950 L271,946 L271,938 L274,934 L273,926 L285,913 L292,900 L289,888 L291,876 L288,870 L286,846 L293,832 L295,820 L300,813 L300,806 L297,797 L287,786 L294,776 L315,768 L335,768 L349,764 L370,770 L379,770 L382,775 L375,782 L378,794 L371,804 L376,813 L370,821 L370,826 L375,834 L369,838 L367,844 L371,854 L386,860 L389,854 L397,851 L432,860 L435,856 L454,854 L459,848 L462,848 L471,855 L479,866 L486,866 L490,872 L494,873 L498,879 L511,889 L513,898 L510,899 L509,903 L514,914 L514,923 L518,925 L532,925 L535,923 L535,916 L528,904 L538,908 L540,914 L544,916 L549,915 L550,906 L561,917 L562,929 L575,944 L576,955 L581,957 L584,954 L583,940 L561,901 L562,886 L568,872 L548,851 L539,847 L542,839 L538,823 L540,813 L530,801 L524,786 L524,761 L543,760 L550,756 L551,751 L547,748 L561,739 L567,723 L578,713 L583,696 L605,682 L624,680 L642,673 L679,681 L683,678 L693,680 L698,677 L705,678 L714,675 L731,679 L744,679 L751,673 L763,674 L767,671 L782,676 L783,683 L790,693 L799,693 L809,680 L817,679 L832,672 L844,655 L842,631 L847,624 L847,617 L852,612 L852,608 L837,595 L849,583 L847,571 L854,564 L858,540 L850,529 L834,525 L829,512 L835,507 L835,503 L829,499 L800,492 L796,488 L794,475 L782,465 L779,457 L767,448 L770,436 L767,399 L774,384 L774,360 L762,343 L740,332 L734,326 L729,315 L719,308 L713,293 L703,283 L694,263 L687,258 L675,261 L672,258 L661,257 L644,249 L617,248 L608,257 L610,264 L600,270 L599,277 L592,281 L592,291 L589,294 L580,292 L555,307 L552,306 L550,298 L534,296 L528,290 L522,289 L509,277 L507,272 L493,271 L476,289 L468,285 L464,286 L456,303 L443,307 L436,318 L423,322 L422,326 L399,348 L388,341 L382,340 L390,311 L397,306 L401,298 L407,293 L405,284 L407,274 L403,269 L406,261 L394,252 L414,229 L415,224 L412,220 L413,206 L423,191 L422,183 L413,174 L412,155 L408,151 L408,148 L416,141 L416,131 L409,125 L398,128 L389,123 L372,123 L363,134 L354,131 L345,131 L341,135 L337,133 L329,111 L339,99 L345,79 L345,66 L335,61 L323,40 L312,40 L301,51 L285,36ZM283,1138 L280,1142 L283,1153 L291,1156 L293,1159 L290,1161 L277,1161 L276,1175 L279,1183 L289,1183 L297,1175 L299,1163 L295,1159 L299,1157 L297,1142 L294,1139ZM251,1448 L248,1450 L248,1453 L245,1457 L243,1468 L250,1478 L255,1478 L260,1472 L260,1465 L258,1461 L258,1455 L255,1449ZM541,939 L539,941 L537,949 L538,960 L542,962 L544,965 L550,965 L552,959 L552,948 L546,939ZM70,1171 L67,1174 L66,1183 L70,1187 L76,1186 L79,1174 L76,1171ZM199,1466 L199,1471 L202,1474 L209,1474 L215,1470 L215,1465 L213,1463 L205,1463ZM253,1155 L251,1157 L251,1162 L254,1164 L251,1166 L250,1172 L258,1173 L260,1171 L260,1166 L257,1163 L258,1157Z"/>
+<g id="cities"></g>
+</svg>
+</main>
+<script>
+var R={N:"Northern",NE:"Northeastern",C:"Central",W:"Western",E:"Eastern",S:"Southern"};
+var D="Chiang Mai|N|98.98|18.79;Chiang Rai|N|99.83|19.91;Lampang|N|99.49|18.29;Lamphun|N|99.01|18.58;Mae Hong Son|N|97.97|19.30;Nan|N|100.77|18.78;Phayao|N|99.90|19.17;Phrae|N|100.14|18.14;Uttaradit|N|100.10|17.63;"+
+"Amnat Charoen|NE|104.63|15.86;Bueng Kan|NE|103.65|18.36;Buriram|NE|103.10|14.99;Chaiyaphum|NE|102.03|15.81;Kalasin|NE|103.51|16.43;Khon Kaen|NE|102.83|16.44;Loei|NE|101.72|17.49;Maha Sarakham|NE|103.30|16.18;Mukdahan|NE|104.72|16.54;Nakhon Phanom|NE|104.78|17.41;Nakhon Ratchasima|NE|102.10|14.97;Nong Bua Lamphu|NE|102.44|17.20;Nong Khai|NE|102.74|17.88;Roi Et|NE|103.65|16.05;Sakon Nakhon|NE|104.15|17.16;Sisaket|NE|104.33|15.12;Surin|NE|103.49|14.88;Ubon Ratchathani|NE|104.86|15.24;Udon Thani|NE|102.79|17.41;Yasothon|NE|104.15|15.79;"+
+"Ang Thong|C|100.45|14.59;Bangkok|C|100.50|13.75;Chai Nat|C|100.12|15.19;Kamphaeng Phet|C|99.52|16.48;Lopburi|C|100.65|14.80;Nakhon Nayok|C|101.21|14.20;Nakhon Pathom|C|100.06|13.82;Nakhon Sawan|C|100.12|15.70;Nonthaburi|C|100.52|13.86;Pathum Thani|C|100.53|14.02;Phetchabun|C|101.16|16.42;Phichit|C|100.35|16.44;Phitsanulok|C|100.26|16.82;Phra Nakhon Si Ayutthaya|C|100.57|14.35;Samut Prakan|C|100.60|13.60;Samut Sakhon|C|100.27|13.55;Samut Songkhram|C|100.00|13.41;Saraburi|C|100.91|14.53;Sing Buri|C|100.40|14.89;Sukhothai|C|99.82|17.01;Suphan Buri|C|100.12|14.47;Uthai Thani|C|100.03|15.38;"+
+"Kanchanaburi|W|99.53|14.02;Phetchaburi|W|99.94|13.11;Prachuap Khiri Khan|W|99.80|11.81;Ratchaburi|W|99.82|13.53;Tak|W|99.13|16.87;"+
+"Chachoengsao|E|101.07|13.69;Chanthaburi|E|102.10|12.61;Chonburi|E|100.99|13.36;Prachinburi|E|101.37|14.05;Rayong|E|101.27|12.68;Sa Kaeo|E|102.07|13.82;Trat|E|102.52|12.24;"+
+"Chumphon|S|99.18|10.49;Krabi|S|98.91|8.09;Nakhon Si Thammarat|S|99.96|8.43;Narathiwat|S|101.82|6.43;Pattani|S|101.25|6.87;Phang Nga|S|98.53|8.45;Phatthalung|S|100.08|7.62;Phuket|S|98.39|7.88;Ranong|S|98.63|9.96;Satun|S|100.07|6.62;Songkhla|S|100.60|7.20;Surat Thani|S|99.32|9.14;Trang|S|99.61|7.56;Yala|S|101.28|6.54";
+var P=D.split(";").map(function(s){var a=s.split("|");return{n:a[0],r:R[a[1]],x:17+(a[2]-97.35)/8.29*842,y:35+(20.46-a[3])/14.85*1531}});
+var g=document.getElementById("cities"),info=document.getElementById("info"),NS="http://www.w3.org/2000/svg",els={};
+function show(p){document.querySelectorAll(".c.on").forEach(function(n){n.classList.remove("on")});els[p.n].classList.add("on");info.innerHTML="<b>"+p.n+"</b><span>"+p.r+" Thailand</span>"}
+P.forEach(function(p,i){
+var e=document.createElementNS(NS,"g");e.setAttribute("class","c");e.setAttribute("tabindex","0");e.setAttribute("role","button");e.setAttribute("aria-label",p.n);
+e.style.animationDelay=(2.2+i*.03)+"s";
+e.innerHTML='<circle class="h" cx="'+p.x+'" cy="'+p.y+'" r="18"/><circle class="d" cx="'+p.x+'" cy="'+p.y+'" r="5"/><text>'+p.n+'</text>';
+["mouseenter","focus","click"].forEach(function(v){e.addEventListener(v,function(){show(p)})});e.addEventListener("mouseleave",function(){e.classList.remove("on")});e.addEventListener("blur",function(){e.classList.remove("on")});
+els[p.n]=e;g.appendChild(e);
+});
+(function(){var W=893,pl=[],dots=P.map(function(p){return[p.x-8,p.y-8,p.x+8,p.y+8]});
+var C=[[10,5,"start"],[-10,5,"end"],[0,-11,"middle"],[0,22,"middle"],[10,-9,"start"],[10,19,"start"],[-10,-9,"end"],[-10,19,"end"]];
+function ov(a,b){var w=Math.min(a[2],b[2])-Math.max(a[0],b[0]),h=Math.min(a[3],b[3])-Math.max(a[1],b[1]);return w>0&&h>0?w*h:0}
+P.forEach(function(p,i){var w=p.n.length*8.3,best=null;
+C.forEach(function(c){var tx=p.x+c[0],ty=p.y+c[1],x0=c[2]=="start"?tx:c[2]=="end"?tx-w:tx-w/2,r=[x0,ty-12,x0+w,ty+4],s=0;
+pl.forEach(function(q){s+=ov(r,q)});dots.forEach(function(q,j){if(j!=i)s+=ov(r,q)});if(r[0]<0||r[2]>W)s+=5000;
+if(!best||s<best.s)best={s:s,tx:tx,ty:ty,a:c[2],r:r}});
+pl.push(best.r);var t=els[p.n].querySelector("text");t.setAttribute("x",best.tx);t.setAttribute("y",best.ty);t.setAttribute("text-anchor",best.a)})})();
+var cv=document.getElementById("stars"),x=cv.getContext("2d"),S=[];
+function size(){cv.width=innerWidth;cv.height=innerHeight;S=[];for(var i=0;i<140;i++)S.push([Math.random()*cv.width,Math.random()*cv.height*.7,Math.random()*1.2+.2,Math.random()*6])}
+function draw(t){x.clearRect(0,0,cv.width,cv.height);S.forEach(function(s){x.globalAlpha=.25+.45*Math.abs(Math.sin(t/2500+s[3]));x.fillStyle="#dcd6ee";x.beginPath();x.arc(s[0],s[1],s[2],0,7);x.fill()});
+if(!matchMedia("(prefers-reduced-motion:reduce)").matches)requestAnimationFrame(draw)}
+size();addEventListener("resize",size);requestAnimationFrame(draw);
+</script>
+</body>
+</html>
