@@ -84,13 +84,13 @@ function renderMembers(){
 }
 async function loadMembers(){
   if(client){
-    memberStatus.textContent="กำลังโหลดสมาชิกจาก Supabase...";
+    memberStatus.textContent="กำลังโหลดสมาชิกจาก";
     var response=await client.from("members").select("name,tiktok,youtube,province,photo_url,created_at").order("created_at",{ascending:false});
     if(response.error){memberStatus.textContent="โหลดสมาชิกจาก Supabase ไม่สำเร็จ: "+response.error.message;memberRows=[];renderMembers();return}
     memberRows=response.data||[];memberStatus.textContent="สมาชิกทั้งหมด "+memberRows.length+" คน · ซิงก์จาก Supabase";
   }else{
-    try{var local=JSON.parse(localStorage.getItem("thr_members")||"[]");memberRows=Array.isArray(local)?local:[];memberStatus.textContent="ยังไม่ได้ตั้งค่า Supabase · แสดงข้อมูลในอุปกรณ์นี้ "+memberRows.length+" คน"}
-    catch(e){memberRows=[];memberStatus.textContent="ยังไม่ได้ตั้งค่า Supabase"}
+    try{var local=JSON.parse(localStorage.getItem("thr_members")||"[]");memberRows=Array.isArray(local)?local:[];memberStatus.textContent="ยังไม่ได้ตั้งค่า ข้อมูล · แสดงข้อมูลในอุปกรณ์นี้ "+memberRows.length+" คน"}
+    catch(e){memberRows=[];memberStatus.textContent="ยังไม่ได้ตั้งค่า ข้อมูล"}
   }
   renderMembers();
 }
