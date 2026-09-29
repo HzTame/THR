@@ -24,7 +24,7 @@ svg.map{width:100%;height:auto;max-height:92vh;overflow:visible}
 .c{cursor:pointer;opacity:0;animation:on 1s ease-out forwards}
 .c .d{fill:var(--glow)}
 .c .h{fill:var(--glow);opacity:.12}
-.member-marker{fill:#ffdc56;stroke:#fff1a5;stroke-width:2;filter:drop-shadow(0 0 9px rgba(255,220,86,.95));pointer-events:none}
+.member-marker{pointer-events:none;filter:drop-shadow(0 1px 5px rgba(0,0,0,.9))}
 .c:hover .h,.c:focus .h,.c.on .h{opacity:.55}
 .c:focus{outline:none}
 .c text{fill:#d9d2e6;font-size:15px;font-family:inherit;font-weight:400;paint-order:stroke;stroke:#050509;stroke-width:4px;stroke-linejoin:round;opacity:0;transition:opacity .15s;pointer-events:none}
@@ -87,16 +87,19 @@ function renderMembers(){
 }
 function renderMemberMarkers(){
   if(!mapReady)return;
-  P.forEach(function(p){
+  P.forEach(function(p,index){
     var group=els[p.n],old=group.querySelector(".member-marker");
     if(old)old.remove();
-    var count=memberRows.filter(function(m){return m.province===p.n&&(m.photo_url||m.photo)}).length;
-    if(!count)return;
-    var marker=document.createElementNS(NS,"circle");
-    marker.setAttribute("class","member-marker");marker.setAttribute("cx",p.x);marker.setAttribute("cy",p.y);
-    marker.setAttribute("r",Math.min(20,13+Math.min(count-1,4)*2));
-    marker.setAttribute("aria-label",count+" members with photos in "+p.n);
-    var title=document.createElementNS(NS,"title");title.textContent=p.n+": "+count+" คนมีรูปโปรไฟล์";marker.appendChild(title);
+    var member=memberRows.find(function(m){return m.province===p.n&&(m.photo_url||m.photo)});
+    if(!member)return;
+    var src=member.photo_url||member.photo,clipId="member-avatar-"+index;
+    var marker=document.createElementNS(NS,"g");marker.setAttribute("class","member-marker");
+    marker.setAttribute("role","img");marker.setAttribute("aria-label",p.n+": "+(member.name||"สมาชิก THR"));
+    var title=document.createElementNS(NS,"title");title.textContent=p.n+": "+(member.name||"สมาชิก THR");marker.appendChild(title);
+    var defs=document.createElementNS(NS,"defs"),clip=document.createElementNS(NS,"clipPath"),clipCircle=document.createElementNS(NS,"circle");
+    clip.setAttribute("id",clipId);clip.setAttribute("clipPathUnits","userSpaceOnUse");clipCircle.setAttribute("cx",p.x);clipCircle.setAttribute("cy",p.y);clipCircle.setAttribute("r",12);clip.appendChild(clipCircle);defs.appendChild(clip);marker.appendChild(defs);
+    var back=document.createElementNS(NS,"circle");back.setAttribute("cx",p.x);back.setAttribute("cy",p.y);back.setAttribute("r",14);back.setAttribute("fill","#090810");back.setAttribute("stroke","#f4f0e9");back.setAttribute("stroke-width","2");marker.appendChild(back);
+    var avatar=document.createElementNS(NS,"image");avatar.setAttribute("x",p.x-12);avatar.setAttribute("y",p.y-12);avatar.setAttribute("width","24");avatar.setAttribute("height","24");avatar.setAttribute("preserveAspectRatio","xMidYMid slice");avatar.setAttribute("clip-path","url(#"+clipId+")");avatar.setAttribute("href",src);avatar.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href",src);marker.appendChild(avatar);
     group.insertBefore(marker,group.querySelector("text"));
   });
 }
