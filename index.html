@@ -24,6 +24,7 @@ svg.map{width:100%;height:auto;max-height:92vh;overflow:visible}
 .c{cursor:pointer;opacity:0;animation:on 1s ease-out forwards}
 .c .d{fill:var(--glow)}
 .c .h{fill:var(--glow);opacity:.12}
+.member-marker{fill:#ffdc56;stroke:#fff1a5;stroke-width:2;filter:drop-shadow(0 0 9px rgba(255,220,86,.95));pointer-events:none}
 .c:hover .h,.c:focus .h,.c.on .h{opacity:.55}
 .c:focus{outline:none}
 .c text{fill:#d9d2e6;font-size:15px;font-family:inherit;font-weight:400;paint-order:stroke;stroke:#050509;stroke-width:4px;stroke-linejoin:round;opacity:0;transition:opacity .15s;pointer-events:none}
@@ -64,12 +65,14 @@ var SUPABASE_URL = "https://gxurnxlbtmdymrdfrhcv.supabase.co";
 var SUPABASE_ANON_KEY = "sb_publishable_QKnPZU1huLddOAYWOP4KPA_29Sv7C7G";
 var memberRows = [];
 var activeProvince = "";
+var mapReady = false;
 var memberStatus = document.getElementById("member-status");
 var memberList = document.getElementById("members");
 var client = SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase
   ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
   : null;
 function renderMembers(){
+  renderMemberMarkers();
   var rows=memberRows.filter(function(m){return !activeProvince||m.province===activeProvince});
   memberList.replaceChildren();
   if(!rows.length){memberList.textContent=activeProvince?"ยังไม่มีสมาชิกจังหวัดนี้":"ยังไม่มีข้อมูลสมาชิก";return}
@@ -80,6 +83,21 @@ function renderMembers(){
     else{var empty=document.createElement("span");empty.className="no-photo";empty.textContent="THR";item.appendChild(empty)}
     var detail=document.createElement("div"),name=document.createElement("strong"),province=document.createElement("small");
     name.textContent=m.name||"สมาชิก THR";province.textContent=[m.province,m.tiktok,m.youtube].filter(Boolean).join(" · ");detail.append(name,province);item.appendChild(detail);memberList.appendChild(item)
+  });
+}
+function renderMemberMarkers(){
+  if(!mapReady)return;
+  P.forEach(function(p){
+    var group=els[p.n],old=group.querySelector(".member-marker");
+    if(old)old.remove();
+    var count=memberRows.filter(function(m){return m.province===p.n&&(m.photo_url||m.photo)}).length;
+    if(!count)return;
+    var marker=document.createElementNS(NS,"circle");
+    marker.setAttribute("class","member-marker");marker.setAttribute("cx",p.x);marker.setAttribute("cy",p.y);
+    marker.setAttribute("r",Math.min(20,13+Math.min(count-1,4)*2));
+    marker.setAttribute("aria-label",count+" members with photos in "+p.n);
+    var title=document.createElementNS(NS,"title");title.textContent=p.n+": "+count+" คนมีรูปโปรไฟล์";marker.appendChild(title);
+    group.insertBefore(marker,group.querySelector("text"));
   });
 }
 async function loadMembers(){
@@ -112,6 +130,7 @@ e.innerHTML='<circle class="h" cx="'+p.x+'" cy="'+p.y+'" r="18"/><circle class="
 ["mouseenter","focus","click"].forEach(function(v){e.addEventListener(v,function(){show(p)})});e.addEventListener("mouseleave",function(){e.classList.remove("on")});e.addEventListener("blur",function(){e.classList.remove("on")});
 els[p.n]=e;g.appendChild(e);
 });
+mapReady=true;renderMemberMarkers();
 (function(){var W=893,pl=[],dots=P.map(function(p){return[p.x-8,p.y-8,p.x+8,p.y+8]});
 var C=[[10,5,"start"],[-10,5,"end"],[0,-11,"middle"],[0,22,"middle"],[10,-9,"start"],[10,19,"start"],[-10,-9,"end"],[-10,19,"end"]];
 function ov(a,b){var w=Math.min(a[2],b[2])-Math.max(a[0],b[0]),h=Math.min(a[3],b[3])-Math.max(a[1],b[1]);return w>0&&h>0?w*h:0}
