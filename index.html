@@ -24,7 +24,7 @@ svg.map{width:100%;height:auto;max-height:92vh;overflow:visible}
 .c{cursor:pointer;opacity:0;animation:on 1s ease-out forwards}
 .c .d{fill:var(--glow)}
 .c .h{fill:var(--glow);opacity:.12}
-.member-marker{pointer-events:none;filter:drop-shadow(0 1px 5px rgba(0,0,0,.9))}
+.member-marker{pointer-events:all;cursor:pointer;filter:drop-shadow(0 1px 5px rgba(0,0,0,.9))}
 .c:hover .h,.c:focus .h,.c.on .h{opacity:.55}
 .c:focus{outline:none}
 .c text{fill:#d9d2e6;font-size:15px;font-family:inherit;font-weight:400;paint-order:stroke;stroke:#050509;stroke-width:4px;stroke-linejoin:round;opacity:0;transition:opacity .15s;pointer-events:none}
@@ -40,6 +40,14 @@ svg.map{width:100%;height:auto;max-height:92vh;overflow:visible}
 .member .no-photo{display:grid;place-items:center;color:var(--mist)}
 .member strong{display:block;color:#e9e4ef;font-weight:400;overflow-wrap:anywhere}
 .member small{display:block;color:var(--mist);overflow-wrap:anywhere}
+#profile[hidden]{display:none}
+#profile{display:grid;grid-template-columns:64px minmax(0,1fr);gap:10px 12px;align-items:center;border-left:2px solid var(--ember);padding:8px 0 8px 12px;margin:12px 0}
+#profile-photo{width:64px;height:64px;object-fit:cover;border-radius:50%;border:2px solid #f4f0e9}
+#profile-name{display:block;color:var(--glow);font-weight:400;overflow-wrap:anywhere}
+#profile-province{color:var(--mist);font-size:.85rem}
+#profile-links{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:12px}
+#profile-links a{color:var(--glow);text-underline-offset:3px}
+.member{cursor:pointer}
 </style>
 </head>
 <body>
@@ -51,6 +59,11 @@ svg.map{width:100%;height:auto;max-height:92vh;overflow:visible}
 <div id="info" aria-live="polite"><b>77 provinces</b><span>Hover or tap a light on the map</span></div>
 <a class="join-link" href="join.html">สมัครเข้าร่วม THR</a>
 <p id="member-status" aria-live="polite">กำลังโหลดสมาชิก...</p>
+<div id="profile" hidden>
+<img id="profile-photo" alt="รูปโปรไฟล์สมาชิก">
+<div><strong id="profile-name"></strong><div id="profile-province"></div></div>
+<div id="profile-links"></div>
+</div>
 <div id="members" aria-live="polite"></div>
 </section>
 <svg class="map" viewBox="0 0 893 1600" role="img" aria-label="Simplified map of Thailand with 77 provinces">
@@ -68,21 +81,52 @@ var activeProvince = "";
 var mapReady = false;
 var memberStatus = document.getElementById("member-status");
 var memberList = document.getElementById("members");
+var profile = document.getElementById("profile");
+var profilePhoto = document.getElementById("profile-photo");
+var profileName = document.getElementById("profile-name");
+var profileProvince = document.getElementById("profile-province");
+var profileLinks = document.getElementById("profile-links");
 var client = SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase
   ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
   : null;
+function socialHref(kind,value){
+  var raw=String(value||"").trim();
+  if(!raw)return "";
+  if(/^https?:\/\//i.test(raw))return raw;
+  if(/^www\./i.test(raw))return "https://"+raw;
+  if(/^(tiktok\.com|youtube\.com|youtu\.be|facebook\.com|m\.facebook\.com)\//i.test(raw))return "https://"+raw;
+  var handle=raw.replace(/^@/,"");
+  var base={TikTok:"https://www.tiktok.com/@",YouTube:"https://www.youtube.com/@",Facebook:"https://www.facebook.com/"}[kind];
+  return base+handle;
+}
+function showMember(member){
+  profile.hidden=false;
+  var src=member.photo_url||member.photo||"";
+  profilePhoto.hidden=!src;
+  if(src){profilePhoto.src=src;profilePhoto.alt="รูปโปรไฟล์ของ "+(member.name||"สมาชิก THR")}
+  profileName.textContent=member.name||"สมาชิก THR";
+  profileProvince.textContent=member.province||"";
+  profileLinks.replaceChildren();
+  [["TikTok",member.tiktok],["YouTube",member.youtube],["Facebook",member.facebook]].forEach(function(entry){
+    var href=socialHref(entry[0],entry[1]);
+    if(!href)return;
+    var link=document.createElement("a");link.href=href;link.target="_blank";link.rel="noopener noreferrer";link.textContent=entry[0];profileLinks.appendChild(link);
+  });
+  if(!profileLinks.children.length)profileLinks.textContent="ยังไม่มีลิงก์โซเชียล";
+}
 function renderMembers(){
   renderMemberMarkers();
   var rows=memberRows.filter(function(m){return !activeProvince||m.province===activeProvince});
   memberList.replaceChildren();
   if(!rows.length){memberList.textContent=activeProvince?"ยังไม่มีสมาชิกจังหวัดนี้":"ยังไม่มีข้อมูลสมาชิก";return}
   rows.forEach(function(m){
-    var item=document.createElement("div");item.className="member";
+    var item=document.createElement("div");item.className="member";item.tabIndex=0;item.setAttribute("role","button");
     var src=m.photo_url||m.photo||"";
     if(src){var image=document.createElement("img");image.src=src;image.alt="รูปของ "+(m.name||"สมาชิก");image.loading="lazy";item.appendChild(image)}
     else{var empty=document.createElement("span");empty.className="no-photo";empty.textContent="THR";item.appendChild(empty)}
     var detail=document.createElement("div"),name=document.createElement("strong"),province=document.createElement("small");
-    name.textContent=m.name||"สมาชิก THR";province.textContent=[m.province,m.tiktok,m.youtube].filter(Boolean).join(" · ");detail.append(name,province);item.appendChild(detail);memberList.appendChild(item)
+    name.textContent=m.name||"สมาชิก THR";province.textContent=[m.province,m.tiktok,m.youtube,m.facebook].filter(Boolean).join(" · ");detail.append(name,province);item.appendChild(detail);
+    item.addEventListener("click",function(){showMember(m)});item.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();showMember(m)}});memberList.appendChild(item)
   });
 }
 function renderMemberMarkers(){
@@ -94,21 +138,23 @@ function renderMemberMarkers(){
     if(!member)return;
     var src=member.photo_url||member.photo,clipId="member-avatar-"+index;
     var marker=document.createElementNS(NS,"g");marker.setAttribute("class","member-marker");
-    marker.setAttribute("role","img");marker.setAttribute("aria-label",p.n+": "+(member.name||"สมาชิก THR"));
+    marker.setAttribute("role","button");marker.setAttribute("tabindex","0");marker.setAttribute("aria-label","ดูข้อมูล "+(member.name||"สมาชิก THR"));
     var title=document.createElementNS(NS,"title");title.textContent=p.n+": "+(member.name||"สมาชิก THR");marker.appendChild(title);
     var defs=document.createElementNS(NS,"defs"),clip=document.createElementNS(NS,"clipPath"),clipCircle=document.createElementNS(NS,"circle");
     clip.setAttribute("id",clipId);clip.setAttribute("clipPathUnits","userSpaceOnUse");clipCircle.setAttribute("cx",p.x);clipCircle.setAttribute("cy",p.y);clipCircle.setAttribute("r",21);clip.appendChild(clipCircle);defs.appendChild(clip);marker.appendChild(defs);
     var back=document.createElementNS(NS,"circle");back.setAttribute("cx",p.x);back.setAttribute("cy",p.y);back.setAttribute("r",24);back.setAttribute("fill","#090810");back.setAttribute("stroke","#f4f0e9");back.setAttribute("stroke-width","3");marker.appendChild(back);
     var avatar=document.createElementNS(NS,"image");avatar.setAttribute("x",p.x-21);avatar.setAttribute("y",p.y-21);avatar.setAttribute("width","42");avatar.setAttribute("height","42");avatar.setAttribute("preserveAspectRatio","xMidYMid slice");avatar.setAttribute("clip-path","url(#"+clipId+")");avatar.setAttribute("href",src);avatar.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href",src);marker.appendChild(avatar);
+    marker.addEventListener("click",function(e){e.stopPropagation();show(p);showMember(member)});
+    marker.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();e.stopPropagation();show(p);showMember(member)}});
     group.insertBefore(marker,group.querySelector("text"));
   });
 }
 async function loadMembers(){
   if(client){
     memberStatus.textContent="กำลังโหลดสมาชิกจาก";
-    var response=await client.from("members").select("name,tiktok,youtube,province,photo_url,created_at").order("created_at",{ascending:false});
+    var response=await client.from("members").select("name,tiktok,youtube,facebook,province,photo_url,created_at").order("created_at",{ascending:false});
     if(response.error){memberStatus.textContent="โหลดสมาชิกจาก Supabase ไม่สำเร็จ: "+response.error.message;memberRows=[];renderMembers();return}
-    memberRows=response.data||[];memberStatus.textContent="สมาชิกทั้งหมด "+memberRows.length+" คน · ";
+    memberRows=response.data||[];memberStatus.textContent="สมาชิกทั้งหมด "+memberRows.length+" คน · ซิงก์จาก Supabase";
   }else{
     try{var local=JSON.parse(localStorage.getItem("thr_members")||"[]");memberRows=Array.isArray(local)?local:[];memberStatus.textContent="ยังไม่ได้ตั้งค่า ข้อมูล · แสดงข้อมูลในอุปกรณ์นี้ "+memberRows.length+" คน"}
     catch(e){memberRows=[];memberStatus.textContent="ยังไม่ได้ตั้งค่า ข้อมูล"}

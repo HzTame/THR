@@ -63,6 +63,10 @@ button:disabled{opacity:.65;cursor:wait}
 <input id="youtube" name="youtube" type="text" autocomplete="off" placeholder="@channel หรือลิงก์ช่อง">
 </div>
 <div>
+<label for="facebook">ช่อง Facebook <small>(ไม่บังคับ)</small></label>
+<input id="facebook" name="facebook" type="text" autocomplete="off" placeholder="ชื่อผู้ใช้หรือลิงก์โปรไฟล์">
+</div>
+<div>
 <label for="province">จังหวัดที่อยู่</label>
 <select id="province" name="province" required>
 <option value="">เลือกจังหวัด</option>
@@ -132,7 +136,7 @@ function getLocalMembers(){
   catch(e){throw new Error("อ่านข้อมูลในเครื่องไม่ได้ พื้นที่จัดเก็บอาจเต็มหรือถูกปิด")}
 }
 function saveLocally(d){
-  var members=getLocalMembers();members.push({name:d.name,tiktok:d.tiktok,youtube:d.youtube,province:d.province,photo:img,at:d.created_at});
+  var members=getLocalMembers();members.push({name:d.name,tiktok:d.tiktok,youtube:d.youtube,facebook:d.facebook,province:d.province,photo:img,at:d.created_at});
   try{localStorage.setItem("thr_members",JSON.stringify(members))}
   catch(e){throw new Error("บันทึกในเครื่องไม่สำเร็จ พื้นที่จัดเก็บอาจเต็ม")}
 }
@@ -151,7 +155,7 @@ async function saveToSupabase(d){
     photoUrl=supabaseClient.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
   }
   setStatus("กำลังบันทึกข้อมูล...","");
-  var result=await supabaseClient.from("members").insert({name:d.name,tiktok:d.tiktok||null,youtube:d.youtube||null,province:d.province,photo_url:photoUrl,created_at:d.created_at});
+  var result=await supabaseClient.from("members").insert({name:d.name,tiktok:d.tiktok||null,youtube:d.youtube||null,facebook:d.facebook||null,province:d.province,photo_url:photoUrl,created_at:d.created_at});
   if(result.error)throw result.error;
 }
 function errorMessage(error){
@@ -163,7 +167,7 @@ function errorMessage(error){
 }
 f.addEventListener("submit",async function(e){
   e.preventDefault();
-  var d={name:f.elements.name.value.trim(),tiktok:f.elements.tiktok.value.trim(),youtube:f.elements.youtube.value.trim(),province:f.elements.province.value,photo_url:null,created_at:new Date().toISOString()};
+  var d={name:f.elements.name.value.trim(),tiktok:f.elements.tiktok.value.trim(),youtube:f.elements.youtube.value.trim(),facebook:f.elements.facebook.value.trim(),province:f.elements.province.value,photo_url:null,created_at:new Date().toISOString()};
   if(!d.name||!d.province){setStatus("กรุณากรอกชื่อและเลือกจังหวัด","err");return}
   if(photo.files[0]&&(ALLOWED_TYPES.indexOf(photo.files[0].type)===-1||photo.files[0].size>MAX_FILE_SIZE)){setStatus("กรุณาเลือกไฟล์รูปที่รองรับและมีขนาดไม่เกิน 5 MB","err");return}
   submitButton.disabled=true;
