@@ -35,20 +35,29 @@ svg.map{width:100%;height:auto;max-height:92vh;overflow:visible}
 .join-link{display:inline-block;margin:22px 0 18px;color:var(--ink);background:var(--glow);border-radius:6px;padding:10px 14px;text-decoration:none;font-weight:400}
 .join-link:hover{background:#f7d3a6}
 #member-status{font-size:.82rem;margin:0 0 12px;color:var(--mist)}
-#members{display:grid;gap:8px;max-height:34vh;overflow:auto;padding-right:4px}
-.member{display:grid;grid-template-columns:42px minmax(0,1fr);align-items:center;gap:10px;border-bottom:1px solid rgba(201,116,58,.25);padding:7px 0}
-.member img,.member .no-photo{width:42px;height:42px;border-radius:50%;object-fit:cover;background:#17131f;border:1px solid rgba(201,116,58,.45)}
-.member .no-photo{display:grid;place-items:center;color:var(--mist)}
-.member strong{display:block;color:#e9e4ef;font-weight:400;overflow-wrap:anywhere}
-.member small{display:block;color:var(--mist);overflow-wrap:anywhere}
+#members{display:none}
+#members::-webkit-scrollbar{width:6px}
+#members::-webkit-scrollbar-thumb{background:rgba(201,116,58,.5);border-radius:6px}
+.member{cursor:pointer;display:grid;grid-template-columns:44px minmax(0,1fr);align-items:center;gap:12px;padding:10px 12px;border:1px solid rgba(242,196,138,.14);border-radius:14px;background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.015));backdrop-filter:blur(6px);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease,background .2s ease}
+.member:hover,.member:focus-visible{outline:none;transform:translateY(-2px);border-color:rgba(242,196,138,.55);background:linear-gradient(135deg,rgba(201,116,58,.16),rgba(255,255,255,.03));box-shadow:0 8px 22px rgba(0,0,0,.45),0 0 16px rgba(201,116,58,.18)}
+.member:active{transform:translateY(0) scale(.99)}
+.member img,.member .no-photo{width:44px;height:44px;border-radius:50%;object-fit:cover;background:#17131f;border:2px solid transparent;background-image:linear-gradient(#17131f,#17131f),linear-gradient(135deg,var(--glow),var(--ember));background-origin:border-box;background-clip:padding-box,border-box}
+.member .no-photo{display:grid;place-items:center;color:var(--glow);font-size:.7rem;font-weight:500;letter-spacing:.04em}
+.member strong{display:block;color:#f3eef8;font-weight:500;letter-spacing:.01em;overflow-wrap:anywhere}
+.member small{display:block;margin-top:2px;color:var(--mist);font-size:.78rem;overflow-wrap:anywhere}
 #profile[hidden]{display:none}
-#profile{display:grid;grid-template-columns:64px minmax(0,1fr);gap:10px 12px;align-items:center;border-left:2px solid var(--ember);padding:8px 0 8px 12px;margin:12px 0}
-#profile-photo{width:64px;height:64px;object-fit:cover;border-radius:50%;border:2px solid #f4f0e9}
-#profile-name{display:block;color:var(--glow);font-weight:400;overflow-wrap:anywhere}
-#profile-province{color:var(--mist);font-size:.85rem}
-#profile-links{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:12px}
-#profile-links a{color:var(--glow);text-underline-offset:3px}
-.member{cursor:pointer}
+#profile{position:relative;display:grid;grid-template-columns:1fr;justify-items:center;text-align:center;gap:14px;margin:18px 0;padding:32px 22px 22px;border:1px solid rgba(242,196,138,.32);border-radius:24px;background:radial-gradient(90% 70% at 50% 0%,rgba(242,196,138,.24),rgba(201,116,58,.1) 45%,transparent 75%),linear-gradient(180deg,rgba(24,18,34,.9),rgba(9,8,16,.92));box-shadow:0 18px 48px rgba(0,0,0,.6),0 0 40px rgba(201,116,58,.16),inset 0 1px 0 rgba(255,255,255,.1);overflow:hidden;animation:pop .4s cubic-bezier(.2,.9,.3,1.2)}
+#profile::before{content:"";position:absolute;top:0;left:18%;right:18%;height:3px;border-radius:0 0 4px 4px;background:linear-gradient(90deg,transparent,var(--glow),var(--ember),transparent);box-shadow:0 0 16px var(--ember)}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes glowpulse{0%,100%{box-shadow:0 0 0 4px rgba(201,116,58,.6),0 0 0 9px rgba(242,196,138,.12),0 0 34px rgba(242,196,138,.4)}50%{box-shadow:0 0 0 4px rgba(242,196,138,.85),0 0 0 12px rgba(242,196,138,.08),0 0 52px rgba(242,196,138,.6)}}
+#profile-photo{width:132px;height:132px;object-fit:cover;border-radius:50%;border:4px solid #f4f0e9;animation:glowpulse 3.6s ease-in-out infinite}
+#profile-name{display:block;margin-top:6px;color:var(--glow);font-size:1.5rem;font-weight:500;letter-spacing:-.01em;text-shadow:0 0 18px rgba(242,196,138,.35);overflow-wrap:anywhere}
+#profile-province{display:inline-block;margin-top:8px;padding:4px 14px;color:var(--glow);font-size:.8rem;letter-spacing:.04em;border:1px solid rgba(242,196,138,.4);border-radius:999px;background:rgba(242,196,138,.1)}
+#profile-province:empty{display:none}
+#profile-links{width:100%;display:flex;flex-wrap:wrap;justify-content:center;gap:10px;padding-top:16px;border-top:1px dashed rgba(242,196,138,.25);color:var(--mist);font-size:.82rem}
+#profile-links a{min-width:96px;padding:9px 20px;color:var(--ink);background:linear-gradient(135deg,var(--glow),var(--ember));border-radius:999px;font-size:.88rem;font-weight:500;text-decoration:none;transition:transform .15s,box-shadow .15s,filter .15s}
+#profile-links a:hover{transform:translateY(-2px);filter:brightness(1.08);box-shadow:0 6px 20px rgba(201,116,58,.55)}
+@media(prefers-reduced-motion:reduce){#profile,#profile-photo{animation:none}.member{transition:none}}
 </style>
 </head>
 <body>
@@ -58,7 +67,6 @@ svg.map{width:100%;height:auto;max-height:92vh;overflow:visible}
 <h1>TAME THR <br></h1>
 <p>Welcome to the THR family, and these are my family members.</p>
 <div id="info" aria-live="polite"><b>77 provinces</b><span>Hover or tap a light on the map</span></div>
-<a class="join-link" href="join.html">สมัครเข้าร่วม THR</a>
 <p id="member-status" aria-live="polite">กำลังโหลดสมาชิก...</p>
 <div id="profile" hidden>
 <img id="profile-photo" alt="รูปโปรไฟล์สมาชิก">
@@ -81,6 +89,9 @@ var SUPABASE_ANON_KEY = "sb_publishable_QKnPZU1huLddOAYWOP4KPA_29Sv7C7G";
 var memberRows = [];
 var activeProvince = "";
 var mapReady = false;
+var TH={"Chiang Mai":"เชียงใหม่","Chiang Rai":"เชียงราย","Lampang":"ลำปาง","Lamphun":"ลำพูน","Mae Hong Son":"แม่ฮ่องสอน","Nan":"น่าน","Phayao":"พะเยา","Phrae":"แพร่","Uttaradit":"อุตรดิตถ์","Amnat Charoen":"อำนาจเจริญ","Bueng Kan":"บึงกาฬ","Buriram":"บุรีรัมย์","Chaiyaphum":"ชัยภูมิ","Kalasin":"กาฬสินธุ์","Khon Kaen":"ขอนแก่น","Loei":"เลย","Maha Sarakham":"มหาสารคาม","Mukdahan":"มุกดาหาร","Nakhon Phanom":"นครพนม","Nakhon Ratchasima":"นครราชสีมา","Nong Bua Lamphu":"หนองบัวลำภู","Nong Khai":"หนองคาย","Roi Et":"ร้อยเอ็ด","Sakon Nakhon":"สกลนคร","Sisaket":"ศรีสะเกษ","Surin":"สุรินทร์","Ubon Ratchathani":"อุบลราชธานี","Udon Thani":"อุดรธานี","Yasothon":"ยโสธร","Ang Thong":"อ่างทอง","Bangkok":"กรุงเทพมหานคร","Chai Nat":"ชัยนาท","Kamphaeng Phet":"กำแพงเพชร","Lopburi":"ลพบุรี","Nakhon Nayok":"นครนายก","Nakhon Pathom":"นครปฐม","Nakhon Sawan":"นครสวรรค์","Nonthaburi":"นนทบุรี","Pathum Thani":"ปทุมธานี","Phetchabun":"เพชรบูรณ์","Phichit":"พิจิตร","Phitsanulok":"พิษณุโลก","Phra Nakhon Si Ayutthaya":"พระนครศรีอยุธยา","Samut Prakan":"สมุทรปราการ","Samut Sakhon":"สมุทรสาคร","Samut Songkhram":"สมุทรสงคราม","Saraburi":"สระบุรี","Sing Buri":"สิงห์บุรี","Sukhothai":"สุโขทัย","Suphan Buri":"สุพรรณบุรี","Uthai Thani":"อุทัยธานี","Kanchanaburi":"กาญจนบุรี","Phetchaburi":"เพชรบุรี","Prachuap Khiri Khan":"ประจวบคีรีขันธ์","Ratchaburi":"ราชบุรี","Tak":"ตาก","Chachoengsao":"ฉะเชิงเทรา","Chanthaburi":"จันทบุรี","Chonburi":"ชลบุรี","Prachinburi":"ปราจีนบุรี","Rayong":"ระยอง","Sa Kaeo":"สระแก้ว","Trat":"ตราด","Chumphon":"ชุมพร","Krabi":"กระบี่","Nakhon Si Thammarat":"นครศรีธรรมราช","Narathiwat":"นราธิวาส","Pattani":"ปัตตานี","Phang Nga":"พังงา","Phatthalung":"พัทลุง","Phuket":"ภูเก็ต","Ranong":"ระนอง","Satun":"สตูล","Songkhla":"สงขลา","Surat Thani":"สุราษฎร์ธานี","Trang":"ตรัง","Yala":"ยะลา"};
+function canon(v){v=String(v||"").trim();if(!v)return"";if(TH[v])return v;var k=Object.keys(TH).find(function(e){return TH[e]===v||e.toLowerCase()===v.toLowerCase()});if(k)return k;if(/^กรุงเทพ/.test(v))return"Bangkok";return v}
+function th(v){return canon(v)||v||""}
 var memberStatus = document.getElementById("member-status");
 var memberList = document.getElementById("members");
 var profile = document.getElementById("profile");
@@ -107,7 +118,7 @@ function showMember(member){
   profilePhoto.hidden=!src;
   if(src){profilePhoto.src=src;profilePhoto.alt="รูปโปรไฟล์ของ "+(member.name||"สมาชิก THR")}
   profileName.textContent=member.name||"สมาชิก THR";
-  profileProvince.textContent=member.province||"";
+  profileProvince.textContent=th(member.province);
   profileLinks.replaceChildren();
   [["TikTok",member.tiktok],["YouTube",member.youtube],["Facebook",member.facebook]].forEach(function(entry){
     var href=socialHref(entry[0],entry[1]);
@@ -118,7 +129,7 @@ function showMember(member){
 }
 function renderMembers(){
   renderMemberMarkers();
-  var rows=memberRows.filter(function(m){return !activeProvince||m.province===activeProvince});
+  var rows=memberRows.filter(function(m){return !activeProvince||canon(m.province)===activeProvince});
   memberList.replaceChildren();
   if(!rows.length){memberList.textContent=activeProvince?"ยังไม่มีสมาชิกจังหวัดนี้":"ยังไม่มีข้อมูลสมาชิก";return}
   rows.forEach(function(m){
@@ -127,7 +138,7 @@ function renderMembers(){
     if(src){var image=document.createElement("img");image.src=src;image.alt="รูปของ "+(m.name||"สมาชิก");image.loading="lazy";item.appendChild(image)}
     else{var empty=document.createElement("span");empty.className="no-photo";empty.textContent="THR";item.appendChild(empty)}
     var detail=document.createElement("div"),name=document.createElement("strong"),province=document.createElement("small");
-    name.textContent=m.name||"สมาชิก THR";province.textContent=[m.province,m.tiktok,m.youtube,m.facebook].filter(Boolean).join(" · ");detail.append(name,province);item.appendChild(detail);
+    name.textContent=m.name||"สมาชิก THR";province.textContent=th(m.province);detail.append(name,province);item.appendChild(detail);
     item.addEventListener("click",function(){showMember(m)});item.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();showMember(m)}});memberList.appendChild(item)
   });
 }
@@ -136,12 +147,12 @@ function renderMemberMarkers(){
   P.forEach(function(p,index){
     var group=els[p.n],old=group.querySelector(".member-marker");
     if(old)old.remove();
-    var member=memberRows.find(function(m){return m.province===p.n&&(m.photo_url||m.photo)});
+    var member=memberRows.find(function(m){return canon(m.province)===p.n&&(m.photo_url||m.photo)});
     if(!member)return;
     var src=member.photo_url||member.photo,clipId="member-avatar-"+index;
     var marker=document.createElementNS(NS,"g");marker.setAttribute("class","member-marker");
     marker.setAttribute("role","button");marker.setAttribute("tabindex","0");marker.setAttribute("aria-label","ดูข้อมูล "+(member.name||"สมาชิก THR"));
-    var title=document.createElementNS(NS,"title");title.textContent=p.n+": "+(member.name||"สมาชิก THR");marker.appendChild(title);
+    var title=document.createElementNS(NS,"title");title.textContent=th(p.n)+": "+(member.name||"สมาชิก THR");marker.appendChild(title);
     var defs=document.createElementNS(NS,"defs"),clip=document.createElementNS(NS,"clipPath"),clipCircle=document.createElementNS(NS,"circle");
     clip.setAttribute("id",clipId);clip.setAttribute("clipPathUnits","userSpaceOnUse");clipCircle.setAttribute("cx",p.x);clipCircle.setAttribute("cy",p.y);clipCircle.setAttribute("r",32);clip.appendChild(clipCircle);defs.appendChild(clip);marker.appendChild(defs);
     var back=document.createElementNS(NS,"circle");back.setAttribute("cx",p.x);back.setAttribute("cy",p.y);back.setAttribute("r",36);back.setAttribute("fill","#090810");back.setAttribute("stroke","#f4f0e9");back.setAttribute("stroke-width","4");marker.appendChild(back);
@@ -186,11 +197,11 @@ fetch(BOUNDARY_DATA_URL).then(function(response){if(!response.ok)throw new Error
   path.setAttribute("d",data.features.map(function(feature){return geometryPath(feature.geometry)}).join(""));
   boundaryLayer.appendChild(path);
 }).catch(function(){memberStatus.textContent+=" · โหลดเส้นแบ่งจังหวัดไม่สำเร็จ"});
-function show(p){document.querySelectorAll(".c.on").forEach(function(n){n.classList.remove("on")});els[p.n].classList.add("on");activeProvince=p.n;info.innerHTML="<b>"+p.n+"</b><span>"+p.r+" Thailand</span>";renderMembers()}
+function show(p){document.querySelectorAll(".c.on").forEach(function(n){n.classList.remove("on")});els[p.n].classList.add("on");activeProvince=p.n;info.innerHTML="<b>"+th(p.n)+"</b><span>"+p.r+" Thailand</span>";renderMembers()}
 P.forEach(function(p,i){
-var e=document.createElementNS(NS,"g");e.setAttribute("class","c");e.setAttribute("tabindex","0");e.setAttribute("role","button");e.setAttribute("aria-label",p.n);
+var e=document.createElementNS(NS,"g");e.setAttribute("class","c");e.setAttribute("tabindex","0");e.setAttribute("role","button");e.setAttribute("aria-label",th(p.n));
 e.style.animationDelay=(2.2+i*.03)+"s";
-e.innerHTML='<circle class="h" cx="'+p.x+'" cy="'+p.y+'" r="18"/><circle class="d" cx="'+p.x+'" cy="'+p.y+'" r="5"/><text>'+p.n+'</text>';
+e.innerHTML='<circle class="h" cx="'+p.x+'" cy="'+p.y+'" r="18"/><circle class="d" cx="'+p.x+'" cy="'+p.y+'" r="5"/><text>'+th(p.n)+'</text>';
 ["mouseenter","focus","click"].forEach(function(v){e.addEventListener(v,function(){show(p)})});e.addEventListener("mouseleave",function(){e.classList.remove("on")});e.addEventListener("blur",function(){e.classList.remove("on")});
 els[p.n]=e;g.appendChild(e);
 });
@@ -198,7 +209,7 @@ mapReady=true;renderMemberMarkers();
 (function(){var W=893,pl=[],dots=P.map(function(p){return[p.x-8,p.y-8,p.x+8,p.y+8]});
 var C=[[10,5,"start"],[-10,5,"end"],[0,-11,"middle"],[0,22,"middle"],[10,-9,"start"],[10,19,"start"],[-10,-9,"end"],[-10,19,"end"]];
 function ov(a,b){var w=Math.min(a[2],b[2])-Math.max(a[0],b[0]),h=Math.min(a[3],b[3])-Math.max(a[1],b[1]);return w>0&&h>0?w*h:0}
-P.forEach(function(p,i){var w=p.n.length*8.3,best=null;
+P.forEach(function(p,i){var w=th(p.n).length*8.3,best=null;
 C.forEach(function(c){var tx=p.x+c[0],ty=p.y+c[1],x0=c[2]=="start"?tx:c[2]=="end"?tx-w:tx-w/2,r=[x0,ty-12,x0+w,ty+4],s=0;
 pl.forEach(function(q){s+=ov(r,q)});dots.forEach(function(q,j){if(j!=i)s+=ov(r,q)});if(r[0]<0||r[2]>W)s+=5000;
 if(!best||s<best.s)best={s:s,tx:tx,ty:ty,a:c[2],r:r}});

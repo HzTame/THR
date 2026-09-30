@@ -67,6 +67,10 @@ button:disabled{opacity:.65;cursor:wait}
 <input id="facebook" name="facebook" type="text" autocomplete="off" placeholder="ชื่อผู้ใช้หรือลิงก์โปรไฟล์">
 </div>
 <div>
+<label for="instagram">ช่อง Instagram <small>(ไม่บังคับ)</small></label>
+<input id="instagram" name="instagram" type="text" autocomplete="off" placeholder="@username หรือลิงก์โปรไฟล์">
+</div>
+<div>
 <label for="province">จังหวัดที่อยู่</label>
 <select id="province" name="province" required>
 <option value="">เลือกจังหวัด</option>
@@ -103,9 +107,35 @@ if (supabaseConfigured && window.supabase) {
   supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 }
 
-var PROV="Amnat Charoen;Ang Thong;Bangkok;Bueng Kan;Buriram;Chachoengsao;Chai Nat;Chaiyaphum;Chanthaburi;Chiang Mai;Chiang Rai;Chonburi;Chumphon;Kalasin;Kamphaeng Phet;Kanchanaburi;Khon Kaen;Krabi;Lampang;Lamphun;Loei;Lopburi;Mae Hong Son;Maha Sarakham;Mukdahan;Nakhon Nayok;Nakhon Pathom;Nakhon Phanom;Nakhon Ratchasima;Nakhon Sawan;Nakhon Si Thammarat;Nan;Narathiwat;Nong Bua Lamphu;Nong Khai;Nonthaburi;Pathum Thani;Pattani;Phang Nga;Phatthalung;Phayao;Phetchabun;Phetchaburi;Phichit;Phitsanulok;Phra Nakhon Si Ayutthaya;Phrae;Phuket;Prachinburi;Prachuap Khiri Khan;Ranong;Ratchaburi;Rayong;Roi Et;Sa Kaeo;Sakon Nakhon;Samut Prakan;Samut Sakhon;Samut Songkhram;Saraburi;Satun;Sing Buri;Sisaket;Songkhla;Sukhothai;Suphan Buri;Surat Thani;Surin;Tak;Trang;Trat;Ubon Ratchathani;Udon Thani;Uthai Thani;Uttaradit;Yala;Yasothon".split(";");
+var PROV=[
+  ["Amnat Charoen","อำนาจเจริญ"],["Ang Thong","อ่างทอง"],["Bangkok","กรุงเทพมหานคร"],
+  ["Bueng Kan","บึงกาฬ"],["Buriram","บุรีรัมย์"],["Chachoengsao","ฉะเชิงเทรา"],
+  ["Chai Nat","ชัยนาท"],["Chaiyaphum","ชัยภูมิ"],["Chanthaburi","จันทบุรี"],
+  ["Chiang Mai","เชียงใหม่"],["Chiang Rai","เชียงราย"],["Chonburi","ชลบุรี"],
+  ["Chumphon","ชุมพร"],["Kalasin","กาฬสินธุ์"],["Kamphaeng Phet","กำแพงเพชร"],
+  ["Kanchanaburi","กาญจนบุรี"],["Khon Kaen","ขอนแก่น"],["Krabi","กระบี่"],
+  ["Lampang","ลำปาง"],["Lamphun","ลำพูน"],["Loei","เลย"],["Lopburi","ลพบุรี"],
+  ["Mae Hong Son","แม่ฮ่องสอน"],["Maha Sarakham","มหาสารคาม"],["Mukdahan","มุกดาหาร"],
+  ["Nakhon Nayok","นครนายก"],["Nakhon Pathom","นครปฐม"],["Nakhon Phanom","นครพนม"],
+  ["Nakhon Ratchasima","นครราชสีมา"],["Nakhon Sawan","นครสวรรค์"],
+  ["Nakhon Si Thammarat","นครศรีธรรมราช"],["Nan","น่าน"],["Narathiwat","นราธิวาส"],
+  ["Nong Bua Lamphu","หนองบัวลำภู"],["Nong Khai","หนองคาย"],["Nonthaburi","นนทบุรี"],
+  ["Pathum Thani","ปทุมธานี"],["Pattani","ปัตตานี"],["Phang Nga","พังงา"],
+  ["Phatthalung","พัทลุง"],["Phayao","พะเยา"],["Phetchabun","เพชรบูรณ์"],
+  ["Phetchaburi","เพชรบุรี"],["Phichit","พิจิตร"],["Phitsanulok","พิษณุโลก"],
+  ["Phra Nakhon Si Ayutthaya","พระนครศรีอยุธยา"],["Phrae","แพร่"],["Phuket","ภูเก็ต"],
+  ["Prachinburi","ปราจีนบุรี"],["Prachuap Khiri Khan","ประจวบคีรีขันธ์"],
+  ["Ranong","ระนอง"],["Ratchaburi","ราชบุรี"],["Rayong","ระยอง"],["Roi Et","ร้อยเอ็ด"],
+  ["Sa Kaeo","สระแก้ว"],["Sakon Nakhon","สกลนคร"],["Samut Prakan","สมุทรปราการ"],
+  ["Samut Sakhon","สมุทรสาคร"],["Samut Songkhram","สมุทรสงคราม"],["Saraburi","สระบุรี"],
+  ["Satun","สตูล"],["Sing Buri","สิงห์บุรี"],["Sisaket","ศรีสะเกษ"],["Songkhla","สงขลา"],
+  ["Sukhothai","สุโขทัย"],["Suphan Buri","สุพรรณบุรี"],["Surat Thani","สุราษฎร์ธานี"],
+  ["Surin","สุรินทร์"],["Tak","ตาก"],["Trang","ตรัง"],["Trat","ตราด"],
+  ["Ubon Ratchathani","อุบลราชธานี"],["Udon Thani","อุดรธานี"],
+  ["Uthai Thani","อุทัยธานี"],["Uttaradit","อุตรดิตถ์"],["Yala","ยะลา"],["Yasothon","ยโสธร"]
+];
 var sel=document.getElementById("province");
-PROV.forEach(function(n){var o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o)});
+PROV.forEach(function(p){var o=document.createElement("option");o.value=p[0];o.textContent=p[1];sel.appendChild(o)});
 var f=document.getElementById("f"),msg=document.getElementById("msg"),photo=document.getElementById("photo"),prev=document.getElementById("prev"),ph=document.getElementById("ph"),rm=document.getElementById("rm"),submitButton=document.getElementById("submit"),img="";
 function setStatus(text,type){msg.className=type||"";msg.textContent=text}
 function setImg(u){img=u;prev.hidden=!u;ph.hidden=!!u;rm.hidden=!u;if(u)prev.src=u;else prev.removeAttribute("src")}
@@ -136,7 +166,7 @@ function getLocalMembers(){
   catch(e){throw new Error("อ่านข้อมูลในเครื่องไม่ได้ พื้นที่จัดเก็บอาจเต็มหรือถูกปิด")}
 }
 function saveLocally(d){
-  var members=getLocalMembers();members.push({name:d.name,tiktok:d.tiktok,youtube:d.youtube,facebook:d.facebook,province:d.province,photo:img,at:d.created_at});
+  var members=getLocalMembers();members.push({name:d.name,tiktok:d.tiktok,youtube:d.youtube,facebook:d.facebook,instagram:d.instagram,province:d.province,photo:img,at:d.created_at});
   try{localStorage.setItem("thr_members",JSON.stringify(members))}
   catch(e){throw new Error("บันทึกในเครื่องไม่สำเร็จ พื้นที่จัดเก็บอาจเต็ม")}
 }
@@ -155,7 +185,7 @@ async function saveToSupabase(d){
     photoUrl=supabaseClient.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
   }
   setStatus("กำลังบันทึกข้อมูล...","");
-  var result=await supabaseClient.from("members").insert({name:d.name,tiktok:d.tiktok||null,youtube:d.youtube||null,facebook:d.facebook||null,province:d.province,photo_url:photoUrl,created_at:d.created_at});
+  var result=await supabaseClient.from("members").insert({name:d.name,tiktok:d.tiktok||null,youtube:d.youtube||null,facebook:d.facebook||null,instagram:d.instagram||null,province:d.province,photo_url:photoUrl,created_at:d.created_at});
   if(result.error)throw result.error;
 }
 function errorMessage(error){
@@ -167,7 +197,7 @@ function errorMessage(error){
 }
 f.addEventListener("submit",async function(e){
   e.preventDefault();
-  var d={name:f.elements.name.value.trim(),tiktok:f.elements.tiktok.value.trim(),youtube:f.elements.youtube.value.trim(),facebook:f.elements.facebook.value.trim(),province:f.elements.province.value,photo_url:null,created_at:new Date().toISOString()};
+  var d={name:f.elements.name.value.trim(),tiktok:f.elements.tiktok.value.trim(),youtube:f.elements.youtube.value.trim(),facebook:f.elements.facebook.value.trim(),instagram:f.elements.instagram.value.trim(),province:f.elements.province.value,photo_url:null,created_at:new Date().toISOString()};
   if(!d.name||!d.province){setStatus("กรุณากรอกชื่อและเลือกจังหวัด","err");return}
   if(photo.files[0]&&(ALLOWED_TYPES.indexOf(photo.files[0].type)===-1||photo.files[0].size>MAX_FILE_SIZE)){setStatus("กรุณาเลือกไฟล์รูปที่รองรับและมีขนาดไม่เกิน 5 MB","err");return}
   submitButton.disabled=true;
