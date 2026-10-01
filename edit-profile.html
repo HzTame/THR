@@ -37,6 +37,64 @@ button:disabled{opacity:.6;cursor:wait}
 #msg.err{color:#ff9a9a}.back{display:inline-block;margin-top:18px;color:var(--mist);text-decoration:none}.back:hover{color:var(--glow)}
 @media(max-width:420px){main{padding-left:12px;padding-right:12px}.card{padding:16px;border-radius:18px}.top{align-items:flex-start}.logout{padding:8px 10px;font-size:.82rem}}
 </style>
+
+<style id="account-settings-style">
+.account-card{
+  margin-top:18px;
+  padding:22px;
+  border:1px solid rgba(242,196,138,.25);
+  border-radius:22px;
+  background:linear-gradient(180deg,rgba(25,18,32,.9),rgba(8,7,14,.94));
+  box-shadow:0 16px 48px rgba(0,0,0,.34);
+}
+.account-card h2{
+  margin:0 0 6px;
+  font-size:1.2rem;
+  font-weight:400;
+  color:var(--glow);
+}
+.account-card .account-lead{
+  margin:0 0 18px;
+  color:var(--mist);
+  font-size:.86rem;
+  line-height:1.5;
+}
+.account-grid{display:grid;gap:16px}
+.account-current{
+  padding:10px 12px;
+  border:1px solid rgba(242,196,138,.18);
+  border-radius:9px;
+  background:rgba(255,255,255,.025);
+  color:#e9e4ef;
+  overflow-wrap:anywhere;
+}
+.account-actions-row{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:10px;
+  align-items:end;
+}
+.account-actions-row .grow{min-width:0}
+.account-actions-row button{
+  white-space:nowrap;
+  min-width:118px;
+}
+#email-msg,#password-msg{
+  min-height:1.3em;
+  margin:6px 0 0;
+  font-size:.82rem;
+  color:var(--glow);
+  line-height:1.45;
+}
+#email-msg.err,#password-msg.err{color:#ff9a9a}
+#email-msg.ok,#password-msg.ok{color:#b6e3b8}
+@media(max-width:520px){
+  .account-card{padding:16px;border-radius:18px}
+  .account-actions-row{grid-template-columns:1fr}
+  .account-actions-row button{width:100%}
+}
+</style>
+
 </head>
 <body>
 <canvas id="stars" aria-hidden="true"></canvas>
@@ -90,7 +148,43 @@ button:disabled{opacity:.6;cursor:wait}
     </form>
   </section>
 
-  <a class="back" href="index.html">← กลับหน้าหลัก</a>
+  
+<section class="account-card" aria-labelledby="account-title">
+  <h2 id="account-title">ACCOUNT SETTINGS</h2>
+  <p class="account-lead">เปลี่ยนอีเมลหรือรหัสผ่านสำหรับบัญชีที่ใช้เข้าสู่ระบบ</p>
+
+  <div class="account-grid">
+    <div>
+      <label>อีเมลปัจจุบัน</label>
+      <div id="current-email" class="account-current">กำลังโหลด...</div>
+    </div>
+
+    <div class="account-actions-row">
+      <div class="grow">
+        <label for="new-email">อีเมลใหม่</label>
+        <input id="new-email" type="email" autocomplete="email" placeholder="new@example.com">
+      </div>
+      <button id="change-email" type="button">เปลี่ยนอีเมล</button>
+    </div>
+    <p id="email-msg" aria-live="polite"></p>
+
+    <div>
+      <label for="new-password">รหัสผ่านใหม่ <small>(อย่างน้อย 6 ตัว)</small></label>
+      <input id="new-password" type="password" autocomplete="new-password" placeholder="••••••••">
+    </div>
+
+    <div class="account-actions-row">
+      <div class="grow">
+        <label for="confirm-password">ยืนยันรหัสผ่านใหม่</label>
+        <input id="confirm-password" type="password" autocomplete="new-password" placeholder="••••••••">
+      </div>
+      <button id="change-password" type="button">เปลี่ยนรหัสผ่าน</button>
+    </div>
+    <p id="password-msg" aria-live="polite"></p>
+  </div>
+</section>
+
+<a class="back" href="index.html">← กลับหน้าหลัก</a>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -208,6 +302,101 @@ f.addEventListener("submit",async function(e){
 
 document.getElementById("logout").addEventListener("click",async function(){
   await client.auth.signOut();location.replace("login.html");
+});
+
+refreshAccountEmail();
+
+function setAccountMessage(el,text,type){
+  el.textContent=text||"";
+  el.className=type||"";
+}
+
+async function refreshAccountEmail(){
+  var emailBox=document.getElementById("current-email");
+  if(!emailBox)return;
+  try{
+    var result=await client.auth.getUser();
+    var user=result.data&&result.data.user;
+    emailBox.textContent=user&&user.email?user.email:"ไม่พบอีเมล";
+  }catch(e){
+    emailBox.textContent="โหลดอีเมลไม่สำเร็จ";
+  }
+}
+
+document.getElementById("change-email").addEventListener("click",async function(){
+  var button=this;
+  var input=document.getElementById("new-email");
+  var msgEl=document.getElementById("email-msg");
+  var newEmail=input.value.trim().toLowerCase();
+
+  setAccountMessage(msgEl,"","");
+  if(!newEmail){
+    setAccountMessage(msgEl,"กรุณากรอกอีเมลใหม่","err");
+    return;
+  }
+
+  var userResult=await client.auth.getUser();
+  var current=userResult.data&&userResult.data.user;
+  if(current&&current.email&&current.email.toLowerCase()===newEmail){
+    setAccountMessage(msgEl,"อีเมลใหม่นี้เหมือนกับอีเมลปัจจุบัน","err");
+    return;
+  }
+
+  button.disabled=true;
+  button.textContent="กำลังเปลี่ยน...";
+  try{
+    var result=await client.auth.updateUser({email:newEmail});
+    if(result.error)throw result.error;
+
+    /*
+      ถ้า Supabase เปิด Secure email change / Confirm email:
+      การเปลี่ยนอีเมลอาจต้องยืนยันผ่านอีเมลก่อน จึงยังไม่เปลี่ยนทันที
+    */
+    setAccountMessage(
+      msgEl,
+      "ส่งคำขอเปลี่ยนอีเมลแล้ว หากโปรเจกต์เปิดการยืนยันอีเมล กรุณาตรวจอีเมลและกดยืนยันก่อน",
+      "ok"
+    );
+    input.value="";
+    await refreshAccountEmail();
+  }catch(err){
+    setAccountMessage(msgEl,"เปลี่ยนอีเมลไม่สำเร็จ: "+err.message,"err");
+  }finally{
+    button.disabled=false;
+    button.textContent="เปลี่ยนอีเมล";
+  }
+});
+
+document.getElementById("change-password").addEventListener("click",async function(){
+  var button=this;
+  var p1=document.getElementById("new-password").value;
+  var p2=document.getElementById("confirm-password").value;
+  var msgEl=document.getElementById("password-msg");
+
+  setAccountMessage(msgEl,"","");
+  if(p1.length<6){
+    setAccountMessage(msgEl,"รหัสผ่านใหม่ต้องมีอย่างน้อย 6 ตัว","err");
+    return;
+  }
+  if(p1!==p2){
+    setAccountMessage(msgEl,"รหัสผ่านทั้งสองช่องไม่ตรงกัน","err");
+    return;
+  }
+
+  button.disabled=true;
+  button.textContent="กำลังเปลี่ยน...";
+  try{
+    var result=await client.auth.updateUser({password:p1});
+    if(result.error)throw result.error;
+    document.getElementById("new-password").value="";
+    document.getElementById("confirm-password").value="";
+    setAccountMessage(msgEl,"เปลี่ยนรหัสผ่านเรียบร้อย","ok");
+  }catch(err){
+    setAccountMessage(msgEl,"เปลี่ยนรหัสผ่านไม่สำเร็จ: "+err.message,"err");
+  }finally{
+    button.disabled=false;
+    button.textContent="เปลี่ยนรหัสผ่าน";
+  }
 });
 
 loadProfile();
