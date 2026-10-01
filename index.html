@@ -633,20 +633,6 @@ svg.map{
 
 <style id="thr-ultra-smooth-style">
 html{scroll-behavior:smooth}
-body{--mx:50vw;--my:20vh}
-body::before{
-  content:"";
-  position:fixed;
-  left:0;top:0;
-  width:280px;height:280px;
-  border-radius:50%;
-  pointer-events:none;
-  z-index:-1;
-  opacity:.20;
-  background:radial-gradient(circle,rgba(242,196,138,.22) 0%,rgba(201,116,58,.08) 38%,transparent 72%);
-  transform:translate3d(calc(var(--mx) - 140px),calc(var(--my) - 140px),0);
-  will-change:transform;
-}
 button,a,input,select,.card,.account-card,#profile,.member,.music-box{
   -webkit-tap-highlight-color:transparent;
 }
@@ -672,19 +658,6 @@ input:focus,select:focus{transform:translateZ(0) scale(1.006)}
   transform:translate3d(0,0,0) scale(1);
   transition:opacity .52s cubic-bezier(.16,1,.3,1),transform .52s cubic-bezier(.16,1,.3,1);
 }
-.thr-ripple{
-  position:fixed;
-  width:8px;height:8px;
-  margin:-4px 0 0 -4px;
-  border-radius:50%;
-  pointer-events:none;
-  z-index:99999;
-  border:1px solid rgba(242,196,138,.75);
-  box-shadow:0 0 18px rgba(242,196,138,.35);
-  animation:thrRipple .5s ease-out forwards;
-}
-@keyframes thrRipple{
-  to{opacity:0;transform:scale(5)}
 }
 .thr-shine{
   position:relative;
@@ -709,7 +682,7 @@ input:focus,select:focus{transform:translateZ(0) scale(1.006)}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
-  body::before,.thr-shine::after{display:none!important}
+  .thr-shine::after{display:none!important}
   *,*::before,*::after{
     animation-duration:.01ms!important;
     animation-iteration-count:1!important;
@@ -721,8 +694,7 @@ input:focus,select:focus{transform:translateZ(0) scale(1.006)}
 
 <style id="thr-index-fx">
 .map{transform:translateZ(0);will-change:transform}
-.member-marker{transition:transform .18s cubic-bezier(.2,.8,.2,1),filter .18s ease!important}
-.member-marker:hover{transform:scale(1.08)}
+.member-marker{transition:filter .18s ease!important}
 #profile-photo{will-change:transform,box-shadow}
 #profile:not([hidden]) #profile-photo{animation:glowpulse 3.6s ease-in-out infinite,thrFloat 5s ease-in-out infinite}
 @keyframes thrFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
@@ -730,9 +702,135 @@ input:focus,select:focus{transform:translateZ(0) scale(1.006)}
 #profile-links a{overflow:hidden}
 .land{will-change:stroke-dashoffset,filter}
 @media(max-width:799px){
-  .member-marker:hover{transform:none}
   #profile:not([hidden]) #profile-photo{animation:glowpulse 3.6s ease-in-out infinite}
 }
+</style>
+
+
+<style id="profile-open-fx-style">
+/* เอฟเฟกต์ตอนเปิดโปรไฟล์ */
+#profile.profile-opening{
+  animation:profileReveal .62s cubic-bezier(.16,1.08,.28,1) both!important;
+  transform-origin:50% 18%;
+  will-change:transform,opacity,filter;
+}
+#profile.profile-opening::after{
+  content:"";
+  position:absolute;
+  inset:-35%;
+  pointer-events:none;
+  background:conic-gradient(
+    from 180deg,
+    transparent 0 33%,
+    rgba(242,196,138,.20) 42%,
+    rgba(201,116,58,.13) 48%,
+    transparent 58% 100%
+  );
+  animation:profileSweep .9s cubic-bezier(.2,.8,.2,1) both;
+  mix-blend-mode:screen;
+}
+#profile.profile-opening #profile-photo{
+  animation:profileAvatarIn .72s cubic-bezier(.16,1.15,.25,1) .06s both!important;
+}
+#profile.profile-opening #profile-name{
+  animation:profileItemIn .48s cubic-bezier(.16,1,.3,1) .15s both;
+}
+#profile.profile-opening #profile-province{
+  animation:profileItemIn .48s cubic-bezier(.16,1,.3,1) .21s both;
+}
+#profile.profile-opening #profile-links{
+  animation:profileLinksIn .52s cubic-bezier(.16,1,.3,1) .26s both;
+}
+#profile.profile-opening #profile-links a{
+  animation:profileButtonPop .48s cubic-bezier(.16,1.15,.25,1) both;
+}
+#profile.profile-opening #profile-links a:nth-child(1){animation-delay:.30s}
+#profile.profile-opening #profile-links a:nth-child(2){animation-delay:.35s}
+#profile.profile-opening #profile-links a:nth-child(3){animation-delay:.40s}
+#profile.profile-opening #profile-links a:nth-child(4){animation-delay:.45s}
+#profile.profile-opening #profile-music-toggle{
+  animation:musicPop .5s cubic-bezier(.16,1.2,.25,1) .18s both;
+}
+#profile.profile-opening #profile-close{
+  animation:closePop .42s cubic-bezier(.16,1.15,.25,1) .18s both;
+}
+
+@keyframes profileReveal{
+  0%{
+    opacity:0;
+    transform:translate3d(0,22px,0) scale(.90) rotateX(7deg);
+    filter:blur(8px) brightness(.72);
+  }
+  55%{
+    opacity:1;
+    transform:translate3d(0,-3px,0) scale(1.025) rotateX(0);
+    filter:blur(0) brightness(1.08);
+  }
+  100%{
+    opacity:1;
+    transform:translate3d(0,0,0) scale(1);
+    filter:none;
+  }
+}
+@keyframes profileAvatarIn{
+  0%{opacity:0;transform:scale(.55) rotate(-8deg);filter:blur(7px)}
+  65%{opacity:1;transform:scale(1.08) rotate(2deg);filter:blur(0)}
+  100%{opacity:1;transform:scale(1) rotate(0)}
+}
+@keyframes profileItemIn{
+  0%{opacity:0;transform:translate3d(0,10px,0)}
+  100%{opacity:1;transform:none}
+}
+@keyframes profileLinksIn{
+  0%{opacity:0;transform:translate3d(0,12px,0)}
+  100%{opacity:1;transform:none}
+}
+@keyframes profileButtonPop{
+  0%{opacity:0;transform:translateY(9px) scale(.88)}
+  70%{opacity:1;transform:translateY(-2px) scale(1.035)}
+  100%{opacity:1;transform:none}
+}
+@keyframes musicPop{
+  0%{opacity:0;transform:scale(.4) rotate(-35deg)}
+  75%{opacity:1;transform:scale(1.12) rotate(5deg)}
+  100%{opacity:1;transform:none}
+}
+@keyframes closePop{
+  0%{opacity:0;transform:scale(.45) rotate(55deg)}
+  100%{opacity:1;transform:none}
+}
+@keyframes profileSweep{
+  0%{opacity:0;transform:rotate(-22deg) scale(.78)}
+  35%{opacity:.9}
+  100%{opacity:0;transform:rotate(26deg) scale(1.12)}
+}
+
+@media (max-width:799px){
+  #profile.profile-opening{
+    animation-duration:.52s!important;
+  }
+  #profile.profile-opening::after{
+    inset:-28%;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  #profile.profile-opening,
+  #profile.profile-opening *,
+  #profile.profile-opening::after{
+    animation:none!important;
+  }
+}
+</style>
+
+
+<style id="safe-cursor-fix">
+html,body{cursor:auto}
+.member-marker,.member,#profile-close,#profile-music-toggle,
+.thr-menu-button,#profile-links a,button,a,.c{
+  cursor:pointer;
+}
+/* ห้ามแก้ pointer-events ของ marker เพื่อให้คลิกสมาชิกได้ปกติ */
 </style>
 
 </head><body>
@@ -863,7 +961,7 @@ profileMusicToggle.addEventListener("click",function(e){
   }
 });
 
-function showMember(member,autoplay){profile.hidden=false;var src=member.photo_url||member.photo||"";profilePhoto.hidden=!src;if(src){profilePhoto.src=src;profilePhoto.alt="รูปโปรไฟล์ของ "+(member.name||"สมาชิก THR")}profileName.textContent=member.name||"สมาชิก THR";profileProvince.textContent=th(member.province);setupProfileMusic(member,!!autoplay);profileLinks.replaceChildren();[["TikTok",member.tiktok],["YouTube",member.youtube],["Facebook",member.facebook],["Instagram",member.instagram]].forEach(function(entry){var href=socialHref(entry[0],entry[1]);if(!href)return;var link=document.createElement("a");link.href=href;link.target="_blank";link.rel="noopener noreferrer";link.textContent=entry[0];profileLinks.appendChild(link);});if(!profileLinks.children.length)profileLinks.textContent="ยังไม่มีลิงก์โซเชียล";}function renderMembers(){renderMemberMarkers();var rows=memberRows.filter(function(m){return!activeProvince||canon(m.province)===activeProvince});memberList.replaceChildren();if(!rows.length){memberList.textContent=activeProvince?"ยังไม่มีสมาชิกจังหวัดนี้":"ยังไม่มีข้อมูลสมาชิก";return}rows.forEach(function(m){var item=document.createElement("div");item.className="member";item.tabIndex=0;item.setAttribute("role","button");var src=m.photo_url||m.photo||"";if(src){var image=document.createElement("img");image.src=src;image.alt="รูปของ "+(m.name||"สมาชิก");image.loading="lazy";item.appendChild(image)}else{var empty=document.createElement("span");empty.className="no-photo";empty.textContent="THR";item.appendChild(empty)}var detail=document.createElement("div"),name=document.createElement("strong"),province=document.createElement("small");name.textContent=m.name||"สมาชิก THR";province.textContent=th(m.province);detail.append(name,province);item.appendChild(detail);item.addEventListener("click",function(){showMember(m,true)});item.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();showMember(m,true)}});memberList.appendChild(item)});}function renderMemberMarkers(){if(!mapReady)return;P.forEach(function(p,index){var group=els[p.n],old=group.querySelector(".member-marker");if(old)old.remove();var member=memberRows.find(function(m){return canon(m.province)===p.n&&(m.photo_url||m.photo)});if(!member)return;var src=member.photo_url||member.photo,clipId="member-avatar-"+index;var marker=document.createElementNS(NS,"g");marker.setAttribute("class","member-marker");marker.setAttribute("role","button");marker.setAttribute("tabindex","0");marker.setAttribute("aria-label","ดูข้อมูล "+(member.name||"สมาชิก THR"));var title=document.createElementNS(NS,"title");title.textContent=th(p.n)+": "+(member.name||"สมาชิก THR");marker.appendChild(title);var defs=document.createElementNS(NS,"defs"),clip=document.createElementNS(NS,"clipPath"),clipCircle=document.createElementNS(NS,"circle");clip.setAttribute("id",clipId);clip.setAttribute("clipPathUnits","userSpaceOnUse");clipCircle.setAttribute("cx",p.x);clipCircle.setAttribute("cy",p.y);clipCircle.setAttribute("r",32);clip.appendChild(clipCircle);defs.appendChild(clip);marker.appendChild(defs);var back=document.createElementNS(NS,"circle");back.setAttribute("cx",p.x);back.setAttribute("cy",p.y);back.setAttribute("r",36);back.setAttribute("fill","#090810");back.setAttribute("stroke","#f4f0e9");back.setAttribute("stroke-width","4");marker.appendChild(back);var avatar=document.createElementNS(NS,"image");avatar.setAttribute("x",p.x-32);avatar.setAttribute("y",p.y-32);avatar.setAttribute("width","64");avatar.setAttribute("height","64");avatar.setAttribute("preserveAspectRatio","xMidYMid slice");avatar.setAttribute("clip-path","url(#"+clipId+")");avatar.setAttribute("href",src);avatar.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href",src);marker.appendChild(avatar);marker.addEventListener("click",function(e){e.stopPropagation();show(p);showMember(member,true)});marker.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();e.stopPropagation();show(p);showMember(member,true)}});group.insertBefore(marker,group.querySelector("text"));});}function closeProfile(){clearProfileMusic();profileMusicToggle.hidden=true;profile.hidden=true;}
+function showMember(member,autoplay){profile.hidden=false;if(window.playProfileOpenFX)window.playProfileOpenFX();var src=member.photo_url||member.photo||"";profilePhoto.hidden=!src;if(src){profilePhoto.src=src;profilePhoto.alt="รูปโปรไฟล์ของ "+(member.name||"สมาชิก THR")}profileName.textContent=member.name||"สมาชิก THR";profileProvince.textContent=th(member.province);setupProfileMusic(member,!!autoplay);profileLinks.replaceChildren();[["TikTok",member.tiktok],["YouTube",member.youtube],["Facebook",member.facebook],["Instagram",member.instagram]].forEach(function(entry){var href=socialHref(entry[0],entry[1]);if(!href)return;var link=document.createElement("a");link.href=href;link.target="_blank";link.rel="noopener noreferrer";link.textContent=entry[0];profileLinks.appendChild(link);});if(!profileLinks.children.length)profileLinks.textContent="ยังไม่มีลิงก์โซเชียล";}function renderMembers(){renderMemberMarkers();var rows=memberRows.filter(function(m){return!activeProvince||canon(m.province)===activeProvince});memberList.replaceChildren();if(!rows.length){memberList.textContent=activeProvince?"ยังไม่มีสมาชิกจังหวัดนี้":"ยังไม่มีข้อมูลสมาชิก";return}rows.forEach(function(m){var item=document.createElement("div");item.className="member";item.tabIndex=0;item.setAttribute("role","button");var src=m.photo_url||m.photo||"";if(src){var image=document.createElement("img");image.src=src;image.alt="รูปของ "+(m.name||"สมาชิก");image.loading="lazy";item.appendChild(image)}else{var empty=document.createElement("span");empty.className="no-photo";empty.textContent="THR";item.appendChild(empty)}var detail=document.createElement("div"),name=document.createElement("strong"),province=document.createElement("small");name.textContent=m.name||"สมาชิก THR";province.textContent=th(m.province);detail.append(name,province);item.appendChild(detail);item.addEventListener("click",function(){showMember(m,true)});item.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();showMember(m,true)}});memberList.appendChild(item)});}function renderMemberMarkers(){if(!mapReady)return;P.forEach(function(p,index){var group=els[p.n],old=group.querySelector(".member-marker");if(old)old.remove();var member=memberRows.find(function(m){return canon(m.province)===p.n&&(m.photo_url||m.photo)});if(!member)return;var src=member.photo_url||member.photo,clipId="member-avatar-"+index;var marker=document.createElementNS(NS,"g");marker.setAttribute("class","member-marker");marker.setAttribute("role","button");marker.setAttribute("tabindex","0");marker.setAttribute("aria-label","ดูข้อมูล "+(member.name||"สมาชิก THR"));var title=document.createElementNS(NS,"title");title.textContent=th(p.n)+": "+(member.name||"สมาชิก THR");marker.appendChild(title);var defs=document.createElementNS(NS,"defs"),clip=document.createElementNS(NS,"clipPath"),clipCircle=document.createElementNS(NS,"circle");clip.setAttribute("id",clipId);clip.setAttribute("clipPathUnits","userSpaceOnUse");clipCircle.setAttribute("cx",p.x);clipCircle.setAttribute("cy",p.y);clipCircle.setAttribute("r",32);clip.appendChild(clipCircle);defs.appendChild(clip);marker.appendChild(defs);var back=document.createElementNS(NS,"circle");back.setAttribute("cx",p.x);back.setAttribute("cy",p.y);back.setAttribute("r",36);back.setAttribute("fill","#090810");back.setAttribute("stroke","#f4f0e9");back.setAttribute("stroke-width","4");marker.appendChild(back);var avatar=document.createElementNS(NS,"image");avatar.setAttribute("x",p.x-32);avatar.setAttribute("y",p.y-32);avatar.setAttribute("width","64");avatar.setAttribute("height","64");avatar.setAttribute("preserveAspectRatio","xMidYMid slice");avatar.setAttribute("clip-path","url(#"+clipId+")");avatar.setAttribute("href",src);avatar.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href",src);marker.appendChild(avatar);marker.addEventListener("click",function(e){e.stopPropagation();show(p);showMember(member,true)});marker.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();e.stopPropagation();show(p);showMember(member,true)}});group.insertBefore(marker,group.querySelector("text"));});}function closeProfile(){clearProfileMusic();profileMusicToggle.hidden=true;profile.hidden=true;}
 document.getElementById("profile-close").addEventListener("click",function(e){
   e.preventDefault();
   e.stopPropagation();
@@ -974,19 +1072,7 @@ async function loadMembers(){if(client){memberStatus.textContent="กำลั�
 (function(){
   var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
   var fine=matchMedia("(hover:hover) and (pointer:fine)").matches;
-  var root=document.body;
-  var raf=0,lastX=innerWidth*.5,lastY=innerHeight*.2;
-
-  function paintPointer(){
-    raf=0;
-    root.style.setProperty("--mx",lastX+"px");
-    root.style.setProperty("--my",lastY+"px");
-  }
-  if(!reduce){
-    addEventListener("pointermove",function(e){
-      lastX=e.clientX; lastY=e.clientY;
-      if(!raf)raf=requestAnimationFrame(paintPointer);
-    },{passive:true});
+  ,{passive:true});
   }
 
   var revealNodes=[].slice.call(document.querySelectorAll("main,.card,.account-card,.music-box,#profile"));
@@ -1002,57 +1088,33 @@ async function loadMembers(){if(client){memberStatus.textContent="กำลั�
     el.classList.add("thr-shine");
   });
 
-  if(fine&&!reduce){
-    document.querySelectorAll(".card,.account-card,#profile").forEach(function(card){
-      var tr=0;
-      card.addEventListener("pointermove",function(e){
-        var r=card.getBoundingClientRect();
-        var px=(e.clientX-r.left)/r.width-.5;
-        var py=(e.clientY-r.top)/r.height-.5;
-        if(tr)return;
-        tr=requestAnimationFrame(function(){
-          tr=0;
-          card.style.transform="perspective(900px) rotateX("+(-py*1.5)+"deg) rotateY("+(px*1.8)+"deg) translateZ(0)";
-        });
-      },{passive:true});
+  ,{passive:true});
       card.addEventListener("pointerleave",function(){
         card.style.transform="perspective(900px) rotateX(0) rotateY(0) translateZ(0)";
       },{passive:true});
     });
   }
 
-  document.addEventListener("pointerdown",function(e){
-    if(reduce)return;
-    if(!e.target.closest("button,a,.pick,.music-pick,.member,.member-marker"))return;
-    var ring=document.createElement("span");
-    ring.className="thr-ripple";
-    ring.style.left=e.clientX+"px";
-    ring.style.top=e.clientY+"px";
-    document.body.appendChild(ring);
-    setTimeout(function(){ring.remove()},520);
-  },{passive:true});
-})();
+  })();
 </script>
 
 
-<script id="thr-map-parallax-script">
+
+
+
+<script id="profile-open-fx-script">
 (function(){
-  var map=document.querySelector("svg.map");
-  if(!map||matchMedia("(prefers-reduced-motion: reduce)").matches||!matchMedia("(hover:hover) and (pointer:fine)").matches)return;
-  var raf=0,tx=0,ty=0;
-  map.addEventListener("pointermove",function(e){
-    var r=map.getBoundingClientRect();
-    tx=((e.clientX-r.left)/r.width-.5)*3;
-    ty=((e.clientY-r.top)/r.height-.5)*3;
-    if(raf)return;
-    raf=requestAnimationFrame(function(){
-      raf=0;
-      map.style.transform="translate3d("+tx+"px,"+ty+"px,0)";
-    });
-  },{passive:true});
-  map.addEventListener("pointerleave",function(){
-    map.style.transform="translate3d(0,0,0)";
-  },{passive:true});
+  window.playProfileOpenFX=function(){
+    var profile=document.getElementById("profile");
+    if(!profile)return;
+    profile.classList.remove("profile-opening");
+    void profile.offsetWidth;
+    profile.classList.add("profile-opening");
+    clearTimeout(profile._openFxTimer);
+    profile._openFxTimer=setTimeout(function(){
+      profile.classList.remove("profile-opening");
+    },1050);
+  };
 })();
 </script>
 
