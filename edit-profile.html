@@ -95,6 +95,109 @@ button:disabled{opacity:.6;cursor:wait}
 }
 </style>
 
+
+<style id="password-toggle-style">
+.password-field{position:relative}
+.password-field input{padding-right:48px}
+.password-toggle{
+  position:absolute;
+  right:8px;
+  top:50%;
+  transform:translateY(-50%);
+  width:36px;
+  height:36px;
+  padding:0;
+  border:0;
+  border-radius:8px;
+  background:transparent;
+  color:var(--glow);
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  font-size:18px;
+  line-height:1;
+}
+.password-toggle:hover{background:rgba(242,196,138,.10)}
+.password-toggle:focus-visible{outline:2px solid var(--glow);outline-offset:2px}
+.password-toggle .eye-off{display:none}
+.password-toggle.showing .eye{display:none}
+.password-toggle.showing .eye-off{display:inline}
+</style>
+
+
+<style id="profile-music-edit-style">
+.music-box{
+  padding:16px;
+  border:1px solid rgba(242,196,138,.18);
+  border-radius:14px;
+  background:rgba(255,255,255,.025);
+}
+.music-box h3{
+  margin:0 0 6px;
+  color:var(--glow);
+  font-size:1rem;
+  font-weight:500;
+}
+.music-box .music-help{
+  margin:0 0 14px;
+  color:var(--mist);
+  font-size:.78rem;
+  line-height:1.55;
+}
+.music-choice{display:grid;gap:12px}
+.music-upload-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+#music-file{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.music-pick{
+  display:inline-block;
+  margin:0;
+  padding:9px 12px;
+  border:1px solid var(--ember);
+  border-radius:8px;
+  color:var(--glow);
+  cursor:pointer;
+  font-size:.84rem;
+}
+#music-file-name{color:var(--mist);font-size:.78rem;overflow-wrap:anywhere}
+#remove-music{
+  width:auto;
+  padding:7px 9px;
+  background:transparent;
+  color:#ffb0b0;
+  border:1px solid rgba(255,154,154,.25);
+}
+#remove-music[hidden]{display:none!important}
+#music-preview{
+  margin-top:12px;
+  width:100%;
+}
+#music-preview[hidden]{display:none!important}
+#music-preview iframe{
+  width:100%;
+  aspect-ratio:16/9;
+  border:0;
+  border-radius:12px;
+  background:#000;
+}
+#music-preview audio{width:100%}
+.music-or{
+  text-align:center;
+  color:var(--mist);
+  font-size:.72rem;
+  position:relative;
+}
+.music-or:before,.music-or:after{
+  content:"";
+  display:inline-block;
+  width:28%;
+  height:1px;
+  margin:0 8px 3px;
+  background:rgba(242,196,138,.16);
+}
+@media(max-width:420px){
+  .music-box{padding:13px}
+}
+</style>
+
 </head>
 <body>
 <canvas id="stars" aria-hidden="true"></canvas>
@@ -143,6 +246,38 @@ button:disabled{opacity:.6;cursor:wait}
           </div>
         </div>
       </div>
+
+      <div class="music-box">
+        <h3>เพลงประจำโปรไฟล์ 🎵</h3>
+        <p class="music-help">ใส่ลิงก์ YouTube/ลิงก์ไฟล์เสียง หรืออัปโหลดเพลงของคุณเอง ระบบจะไม่เล่นอัตโนมัติ</p>
+
+        <div class="music-choice">
+          <div>
+            <label for="music-title">ชื่อเพลง <small>(ไม่บังคับ)</small></label>
+            <input id="music-title" type="text" maxlength="120" placeholder="เช่น My Theme Song">
+          </div>
+
+          <div>
+            <label for="music-link">ลิงก์ YouTube หรือ URL เพลง <small>(ไม่บังคับ)</small></label>
+            <input id="music-link" type="url" inputmode="url" placeholder="https://youtube.com/watch?v=... หรือ https://.../song.mp3">
+          </div>
+
+          <div class="music-or">หรือ</div>
+
+          <div>
+            <label>อัปโหลดไฟล์เพลง <small>(MP3/M4A/OGG/WAV ไม่เกิน 20 MB)</small></label>
+            <div class="music-upload-row">
+              <input id="music-file" type="file" accept="audio/mpeg,audio/mp4,audio/ogg,audio/wav,audio/x-wav,.mp3,.m4a,.ogg,.wav">
+              <label class="music-pick" for="music-file">เลือกไฟล์เพลง</label>
+              <span id="music-file-name">ยังไม่ได้เลือกไฟล์</span>
+              <button id="remove-music" type="button" hidden>ลบเพลง</button>
+            </div>
+          </div>
+
+          <div id="music-preview" hidden></div>
+        </div>
+      </div>
+
       <button id="save" type="submit">บันทึกการแก้ไข</button>
       <p id="msg" aria-live="polite"></p>
     </form>
@@ -170,13 +305,23 @@ button:disabled{opacity:.6;cursor:wait}
 
     <div>
       <label for="new-password">รหัสผ่านใหม่ <small>(อย่างน้อย 6 ตัว)</small></label>
+      <div class="password-field">
       <input id="new-password" type="password" autocomplete="new-password" placeholder="••••••••">
+      <button class="password-toggle" type="button" data-target="new-password" aria-label="แสดงรหัสผ่าน" title="แสดง/ซ่อนรหัสผ่าน">
+        <span class="eye" aria-hidden="true">👁</span><span class="eye-off" aria-hidden="true">🙈</span>
+      </button>
+    </div>
     </div>
 
     <div class="account-actions-row">
       <div class="grow">
         <label for="confirm-password">ยืนยันรหัสผ่านใหม่</label>
-        <input id="confirm-password" type="password" autocomplete="new-password" placeholder="••••••••">
+        <div class="password-field">
+      <input id="confirm-password" type="password" autocomplete="new-password" placeholder="••••••••">
+      <button class="password-toggle" type="button" data-target="confirm-password" aria-label="แสดงรหัสผ่าน" title="แสดง/ซ่อนรหัสผ่าน">
+        <span class="eye" aria-hidden="true">👁</span><span class="eye-off" aria-hidden="true">🙈</span>
+      </button>
+    </div>
       </div>
       <button id="change-password" type="button">เปลี่ยนรหัสผ่าน</button>
     </div>
@@ -192,10 +337,12 @@ button:disabled{opacity:.6;cursor:wait}
 var SUPABASE_URL="https://gxurnxlbtmdymrdfrhcv.supabase.co";
 var SUPABASE_ANON_KEY="sb_publishable_QKnPZU1huLddOAYWOP4KPA_29Sv7C7G";
 var BUCKET="member-photos";
+var MUSIC_BUCKET="member-music";
 var MAX_FILE_SIZE=5*1024*1024;
+var MAX_MUSIC_SIZE=20*1024*1024;
 var ALLOWED_TYPES=["image/jpeg","image/png","image/webp","image/gif"];
 var client=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-var currentUser=null,currentRow=null,currentPhotoUrl="",removePhoto=false;
+var currentUser=null,currentRow=null,currentPhotoUrl="",removePhoto=false,currentMusicUrl="",currentMusicType="",removeMusic=false;
 
 var PROV=[
 ["Amnat Charoen","อำนาจเจริญ"],["Ang Thong","อ่างทอง"],["Bangkok","กรุงเทพมหานคร"],["Bueng Kan","บึงกาฬ"],["Buriram","บุรีรัมย์"],["Chachoengsao","ฉะเชิงเทรา"],["Chai Nat","ชัยนาท"],["Chaiyaphum","ชัยภูมิ"],["Chanthaburi","จันทบุรี"],["Chiang Mai","เชียงใหม่"],["Chiang Rai","เชียงราย"],["Chonburi","ชลบุรี"],["Chumphon","ชุมพร"],["Kalasin","กาฬสินธุ์"],["Kamphaeng Phet","กำแพงเพชร"],["Kanchanaburi","กาญจนบุรี"],["Khon Kaen","ขอนแก่น"],["Krabi","กระบี่"],["Lampang","ลำปาง"],["Lamphun","ลำพูน"],["Loei","เลย"],["Lopburi","ลพบุรี"],["Mae Hong Son","แม่ฮ่องสอน"],["Maha Sarakham","มหาสารคาม"],["Mukdahan","มุกดาหาร"],["Nakhon Nayok","นครนายก"],["Nakhon Pathom","นครปฐม"],["Nakhon Phanom","นครพนม"],["Nakhon Ratchasima","นครราชสีมา"],["Nakhon Sawan","นครสวรรค์"],["Nakhon Si Thammarat","นครศรีธรรมราช"],["Nan","น่าน"],["Narathiwat","นราธิวาส"],["Nong Bua Lamphu","หนองบัวลำภู"],["Nong Khai","หนองคาย"],["Nonthaburi","นนทบุรี"],["Pathum Thani","ปทุมธานี"],["Pattani","ปัตตานี"],["Phang Nga","พังงา"],["Phatthalung","พัทลุง"],["Phayao","พะเยา"],["Phetchabun","เพชรบูรณ์"],["Phetchaburi","เพชรบุรี"],["Phichit","พิจิตร"],["Phitsanulok","พิษณุโลก"],["Phra Nakhon Si Ayutthaya","พระนครศรีอยุธยา"],["Phrae","แพร่"],["Phuket","ภูเก็ต"],["Prachinburi","ปราจีนบุรี"],["Prachuap Khiri Khan","ประจวบคีรีขันธ์"],["Ranong","ระนอง"],["Ratchaburi","ราชบุรี"],["Rayong","ระยอง"],["Roi Et","ร้อยเอ็ด"],["Sa Kaeo","สระแก้ว"],["Sakon Nakhon","สกลนคร"],["Samut Prakan","สมุทรปราการ"],["Samut Sakhon","สมุทรสาคร"],["Samut Songkhram","สมุทรสงคราม"],["Saraburi","สระบุรี"],["Satun","สตูล"],["Sing Buri","สิงห์บุรี"],["Sisaket","ศรีสะเกษ"],["Songkhla","สงขลา"],["Sukhothai","สุโขทัย"],["Suphan Buri","สุพรรณบุรี"],["Surat Thani","สุราษฎร์ธานี"],["Surin","สุรินทร์"],["Tak","ตาก"],["Trang","ตรัง"],["Trat","ตราด"],["Ubon Ratchathani","อุบลราชธานี"],["Udon Thani","อุดรธานี"],["Uthai Thani","อุทัยธานี"],["Uttaradit","อุตรดิตถ์"],["Yala","ยะลา"],["Yasothon","ยโสธร"]
@@ -205,11 +352,56 @@ var sel=document.getElementById("province");
 PROV.forEach(function(p){var o=document.createElement("option");o.value=p[0];o.textContent=p[1];sel.appendChild(o)});
 
 var f=document.getElementById("f"),msg=document.getElementById("msg"),save=document.getElementById("save"),photo=document.getElementById("photo"),prev=document.getElementById("prev"),ph=document.getElementById("ph"),rm=document.getElementById("rm");
+var musicTitle=document.getElementById("music-title"),
+    musicLink=document.getElementById("music-link"),
+    musicFile=document.getElementById("music-file"),
+    musicFileName=document.getElementById("music-file-name"),
+    removeMusicBtn=document.getElementById("remove-music"),
+    musicPreview=document.getElementById("music-preview");
 
 function status(t,err){msg.textContent=t;msg.className=err?"err":""}
 function setPreview(url){prev.hidden=!url;ph.hidden=!!url;rm.hidden=!url;if(url)prev.src=url;else prev.removeAttribute("src")}
 function dataUrlToBlob(dataUrl){var parts=dataUrl.split(","),mime=parts[0].match(/:(.*?);/)[1],binary=atob(parts[1]),bytes=new Uint8Array(binary.length);for(var i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);return new Blob([bytes],{type:mime})}
 function makeObjectPath(file){var ext=file.type==="image/png"?"png":file.type==="image/webp"?"webp":file.type==="image/gif"?"gif":"jpg";return currentUser.id+"/"+Date.now()+"."+ext}
+
+
+function youtubeId(url){
+  var s=String(url||"").trim();
+  var m=s.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{6,})/i);
+  if(!m&&/youtube\.com/i.test(s)){
+    try{m=[null,new URL(s).searchParams.get("v")]}catch(e){}
+  }
+  return m&&m[1]?m[1]:"";
+}
+function musicKind(url){
+  return youtubeId(url)?"youtube":"url";
+}
+function showMusicPreview(url,type,title){
+  musicPreview.replaceChildren();
+  if(!url){musicPreview.hidden=true;return}
+  musicPreview.hidden=false;
+  if(type==="youtube"||youtubeId(url)){
+    var id=youtubeId(url);
+    if(!id){musicPreview.hidden=true;return}
+    var frame=document.createElement("iframe");
+    frame.src="https://www.youtube-nocookie.com/embed/"+encodeURIComponent(id);
+    frame.title=title||"เพลงประจำโปรไฟล์";
+    frame.loading="lazy";
+    frame.allow="accelerometer; encrypted-media; picture-in-picture";
+    frame.allowFullscreen=true;
+    musicPreview.appendChild(frame);
+  }else{
+    var audio=document.createElement("audio");
+    audio.controls=true;
+    audio.preload="metadata";
+    audio.src=url;
+    musicPreview.appendChild(audio);
+  }
+}
+function musicObjectPath(file){
+  var name=(file.name||"music").replace(/[^a-zA-Z0-9._-]+/g,"-");
+  return currentUser.id+"/"+Date.now()+"-"+name;
+}
 
 async function requireUser(){
   var u=await client.auth.getUser();
@@ -220,7 +412,7 @@ async function requireUser(){
 async function loadProfile(){
   if(!await requireUser())return;
   status("กำลังโหลดข้อมูล...");
-  var r=await client.from("members").select("id,name,tiktok,youtube,facebook,instagram,province,photo_url,user_id").eq("user_id",currentUser.id).maybeSingle();
+  var r=await client.from("members").select("id,name,tiktok,youtube,facebook,instagram,province,photo_url,user_id,music_url,music_type,music_title").eq("user_id",currentUser.id).maybeSingle();
   if(r.error){
     status("โหลดข้อมูลไม่สำเร็จ: "+r.error.message,true);
     return;
@@ -239,6 +431,15 @@ async function loadProfile(){
   f.province.value=r.data.province||"";
   currentPhotoUrl=r.data.photo_url||"";
   setPreview(currentPhotoUrl);
+  currentMusicUrl=r.data.music_url||"";
+  currentMusicType=r.data.music_type||"";
+  musicTitle.value=r.data.music_title||"";
+  musicLink.value=(currentMusicType==="upload")?"":currentMusicUrl;
+  removeMusic=false;
+  musicFile.value="";
+  musicFileName.textContent=currentMusicType==="upload"&&currentMusicUrl?"มีไฟล์เพลงอยู่แล้ว":"ยังไม่ได้เลือกไฟล์";
+  removeMusicBtn.hidden=!currentMusicUrl;
+  showMusicPreview(currentMusicUrl,currentMusicType,r.data.music_title||"");
   status("");
 }
 
@@ -259,6 +460,51 @@ photo.addEventListener("change",function(){
 
 rm.addEventListener("click",function(){removePhoto=true;photo.value="";setPreview("");});
 
+
+musicLink.addEventListener("input",function(){
+  if(musicLink.value.trim()){
+    removeMusic=false;
+    musicFile.value="";
+    musicFileName.textContent="ยังไม่ได้เลือกไฟล์";
+    var url=musicLink.value.trim();
+    showMusicPreview(url,musicKind(url),musicTitle.value.trim());
+    removeMusicBtn.hidden=false;
+  }else if(!currentMusicUrl){
+    showMusicPreview("","","");
+    removeMusicBtn.hidden=true;
+  }
+});
+
+musicFile.addEventListener("change",function(){
+  var file=musicFile.files[0];
+  if(!file)return;
+  var allowed=["audio/mpeg","audio/mp4","audio/ogg","audio/wav","audio/x-wav"];
+  var ext=(file.name.split(".").pop()||"").toLowerCase();
+  if(allowed.indexOf(file.type)===-1&&["mp3","m4a","ogg","wav"].indexOf(ext)===-1){
+    status("ไฟล์เพลงต้องเป็น MP3, M4A, OGG หรือ WAV",true);
+    musicFile.value="";return;
+  }
+  if(file.size>MAX_MUSIC_SIZE){
+    status("ไฟล์เพลงต้องมีขนาดไม่เกิน 20 MB",true);
+    musicFile.value="";return;
+  }
+  removeMusic=false;
+  musicLink.value="";
+  musicFileName.textContent=file.name;
+  var localUrl=URL.createObjectURL(file);
+  showMusicPreview(localUrl,"upload",musicTitle.value.trim());
+  removeMusicBtn.hidden=false;
+});
+
+removeMusicBtn.addEventListener("click",function(){
+  removeMusic=true;
+  musicFile.value="";
+  musicLink.value="";
+  musicFileName.textContent="ยังไม่ได้เลือกไฟล์";
+  removeMusicBtn.hidden=true;
+  showMusicPreview("","","");
+});
+
 f.addEventListener("submit",async function(e){
   e.preventDefault();
   if(!currentUser){status("กรุณาเข้าสู่ระบบก่อน",true);return}
@@ -274,6 +520,26 @@ f.addEventListener("submit",async function(e){
       if(up.error)throw up.error;
       photoUrl=client.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
     }
+    var musicUrl=currentMusicUrl;
+    var musicType=currentMusicType;
+    var musicTitleValue=musicTitle.value.trim()||null;
+
+    if(removeMusic){
+      musicUrl=null;
+      musicType=null;
+      musicTitleValue=null;
+    }else if(musicFile.files[0]){
+      var mf=musicFile.files[0];
+      var mpath=musicObjectPath(mf);
+      var mup=await client.storage.from(MUSIC_BUCKET).upload(mpath,mf,{contentType:mf.type||"audio/mpeg",upsert:false});
+      if(mup.error)throw mup.error;
+      musicUrl=client.storage.from(MUSIC_BUCKET).getPublicUrl(mpath).data.publicUrl;
+      musicType="upload";
+    }else if(musicLink.value.trim()){
+      musicUrl=musicLink.value.trim();
+      musicType=musicKind(musicUrl);
+    }
+
     var payload={
       name:f.name.value.trim(),
       tiktok:f.tiktok.value.trim()||null,
@@ -281,7 +547,10 @@ f.addEventListener("submit",async function(e){
       facebook:f.facebook.value.trim()||null,
       instagram:f.instagram.value.trim()||null,
       province:f.province.value,
-      photo_url:photoUrl
+      photo_url:photoUrl,
+      music_url:musicUrl,
+      music_type:musicType,
+      music_title:musicTitleValue
     };
     if(!payload.name||!payload.province)throw new Error("กรุณากรอกชื่อและเลือกจังหวัด");
     var r;
@@ -295,6 +564,14 @@ f.addEventListener("submit",async function(e){
     if(r.error)throw r.error;
     if(!currentRow)currentRow={id:r.data.id,user_id:currentUser.id};
     currentPhotoUrl=photoUrl;removePhoto=false;photo.value="";
+    currentMusicUrl=musicUrl||"";
+    currentMusicType=musicType||"";
+    removeMusic=false;
+    musicFile.value="";
+    musicFileName.textContent=currentMusicType==="upload"&&currentMusicUrl?"มีไฟล์เพลงอยู่แล้ว":"ยังไม่ได้เลือกไฟล์";
+    removeMusicBtn.hidden=!currentMusicUrl;
+    if(currentMusicType==="upload")musicLink.value="";
+    showMusicPreview(currentMusicUrl,currentMusicType,musicTitleValue||"");
     status("บันทึกข้อมูลเรียบร้อย");
   }catch(err){status("บันทึกไม่สำเร็จ: "+err.message,true)}
   finally{save.disabled=false;save.textContent="บันทึกการแก้ไข"}
@@ -406,5 +683,19 @@ function size(){cv.width=innerWidth;cv.height=innerHeight;S=[];for(var i=0;i<110
 function draw(t){x.clearRect(0,0,cv.width,cv.height);S.forEach(function(s){x.globalAlpha=.2+.4*Math.abs(Math.sin(t/2500+s[3]));x.fillStyle="#dcd6ee";x.beginPath();x.arc(s[0],s[1],s[2],0,7);x.fill()});requestAnimationFrame(draw)}
 size();addEventListener("resize",size);requestAnimationFrame(draw);
 </script>
+
+<script id="password-toggle-script">
+document.querySelectorAll(".password-toggle").forEach(function(button){
+  button.addEventListener("click",function(){
+    var input=document.getElementById(button.dataset.target);
+    if(!input)return;
+    var show=input.type==="password";
+    input.type=show?"text":"password";
+    button.classList.toggle("showing",show);
+    button.setAttribute("aria-label",show?"ซ่อนรหัสผ่าน":"แสดงรหัสผ่าน");
+  });
+});
+</script>
+
 </body>
 </html>
