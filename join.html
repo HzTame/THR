@@ -6,213 +6,152 @@
 <title>Join THR Family</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap">
 <style>
-:root{--ink:#050509;--ember:#c9743a;--glow:#f2c48a;--mist:#8f8aa3;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+
+:root{--ink:#050509;--ember:#c9743a;--glow:#f2c48a;--mist:#8f8aa3;box-sizing:border-box}
 *,*::before,*::after{box-sizing:inherit}
-html{height:100%}
-body{margin:0;min-height:100%;background:radial-gradient(120% 60% at 50% 108%,#3a1e16 0%,#1a1224 38%,var(--ink) 75%);background-color:var(--ink);color:#e9e4ef;font-family:"Inter","Helvetica Neue",Arial,sans-serif;font-weight:300;font-size:.95rem;overflow-x:hidden}
+html,body{min-height:100%;margin:0}
+body{background:radial-gradient(120% 60% at 50% 108%,#3a1e16 0%,#1a1224 38%,var(--ink) 75%);color:#e9e4ef;font-family:"Inter","Helvetica Neue",Arial,sans-serif;overflow-x:hidden}
 #stars{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
-main{position:relative;max-width:520px;margin:0 auto;padding:40px 20px 56px}
-h1{font-weight:300;font-size:clamp(2rem,8vw,2.7rem);letter-spacing:0;line-height:1.15;margin:0 0 14px}
-p.lead{line-height:1.7;color:var(--mist);margin:0 0 28px}
-form{border-left:2px solid var(--ember);padding-left:18px;display:grid;gap:18px}
-label{display:block;font-size:.8rem;color:var(--glow);letter-spacing:0;margin-bottom:6px}
-label small{color:var(--mist);font-weight:300}
-input,select{width:100%;font:inherit;font-size:1rem;color:#e9e4ef;background:rgba(11,10,20,.8);border:1px solid rgba(201,116,58,.45);border-radius:8px;padding:12px 14px;outline:none;transition:border-color .15s,box-shadow .15s}
-input::placeholder{color:#5f5a72}
-input:focus,select:focus{border-color:var(--glow);box-shadow:0 0 0 3px rgba(242,196,138,.18)}
-select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--glow) 50%),linear-gradient(135deg,var(--glow) 50%,transparent 50%);background-position:calc(100% - 20px) 50%,calc(100% - 14px) 50%;background-size:6px 6px;background-repeat:no-repeat;padding-right:36px}
-option{background:#1a1224;color:#e9e4ef}
-.up{display:flex;align-items:center;gap:14px}
-#prev{width:72px;height:72px;border-radius:50%;object-fit:cover;border:1px solid rgba(201,116,58,.45);background:rgba(11,10,20,.8);flex:none}
-#prev[hidden]{display:none}
-#ph{width:72px;height:72px;border-radius:50%;border:1px dashed rgba(201,116,58,.6);display:grid;place-items:center;color:var(--mist);font-size:1.6rem;flex:none}
-#ph[hidden]{display:none}
-#photo{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
-.pick{display:inline-block;color:var(--glow);border:1px solid var(--ember);border-radius:8px;padding:10px 14px;cursor:pointer;font-size:.9rem;transition:background .15s}
-.pick:hover,#photo:focus-visible+.pick{background:rgba(201,116,58,.2)}
-#rm{background:none;color:var(--mist);padding:6px 4px;font-size:.85rem;text-decoration:underline}
-#rm:hover{background:none;color:var(--glow)}
-#rm[hidden]{display:none}
-button{font:inherit;font-weight:400;font-size:1rem;color:#1a1224;background:var(--glow);border:0;border-radius:8px;padding:13px 18px;cursor:pointer;transition:background .15s,transform .05s}
-button:hover{background:#f7d3a6}
-button:active{transform:translateY(1px)}
-button:disabled{opacity:.65;cursor:wait}
-#msg{min-height:1.4em;color:var(--glow);margin:0}
-#msg.err{color:#ff9a9a}
-#msg.ok{color:#b6e3b8}
-.back{display:inline-block;margin-top:28px;color:var(--mist);text-decoration:none;border-bottom:1px solid var(--ember);padding-bottom:2px}
+input,select{width:100%;font:inherit;color:#e9e4ef;background:rgba(11,10,20,.82);border:1px solid rgba(201,116,58,.45);border-radius:10px;padding:12px 14px;outline:none}
+input:focus,select:focus{border-color:var(--glow);box-shadow:0 0 0 3px rgba(242,196,138,.16)}
+label{display:block;margin-bottom:6px;color:var(--glow);font-size:.82rem}
+label small{color:var(--mist)}
+button{font:inherit;font-weight:500;color:#171018;background:linear-gradient(135deg,var(--glow),var(--ember));border:0;border-radius:10px;padding:12px 16px;cursor:pointer}
+button:disabled{opacity:.6;cursor:wait}
+.back{display:block;margin-top:18px;text-align:center;color:var(--mist);text-decoration:none}
 .back:hover{color:var(--glow)}
+
+main{position:relative;width:min(100%,560px);margin:0 auto;padding:max(30px,env(safe-area-inset-top)) 18px max(48px,env(safe-area-inset-bottom))}
+h1{margin:0 0 8px;font-size:clamp(2rem,8vw,2.7rem);font-weight:300}
+.lead{color:var(--mist);line-height:1.6;margin:0 0 24px}
+.card{padding:22px;border:1px solid rgba(242,196,138,.25);border-radius:22px;background:linear-gradient(180deg,rgba(25,18,32,.9),rgba(8,7,14,.94));box-shadow:0 16px 48px rgba(0,0,0,.48)}
+form{display:grid;gap:16px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.up{display:flex;align-items:center;gap:14px}
+#prev,#ph{width:78px;height:78px;border-radius:50%;flex:none}
+#prev{object-fit:cover;border:2px solid rgba(242,196,138,.6)}
+#ph{display:grid;place-items:center;border:1px dashed rgba(201,116,58,.6);color:var(--mist);font-size:1.5rem}
+#prev[hidden],#ph[hidden],#rm[hidden]{display:none}
+#photo{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.pick{display:inline-block;color:var(--glow);border:1px solid var(--ember);border-radius:8px;padding:9px 12px;cursor:pointer;font-size:.86rem}
+#rm{width:auto;background:transparent;color:var(--mist);padding:8px}
+#msg{min-height:1.4em;margin:3px 0 0;color:var(--glow);font-size:.86rem;line-height:1.5}
+#msg.err{color:#ff9a9a}#msg.ok{color:#b6e3b8}
+.login-note{margin-top:16px;text-align:center;color:var(--mist);font-size:.87rem}
+.login-note a{color:var(--glow)}
+@media(max-width:500px){main{padding-left:12px;padding-right:12px}.card{padding:16px;border-radius:18px}.two{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <canvas id="stars" aria-hidden="true"></canvas>
 <main>
 <h1>JOIN THR</h1>
-<p class="lead">กรอกข้อมูลของคุณเพื่อเข้าร่วมครอบครัว THR</p>
+<p class="lead">สร้างบัญชีและข้อมูลสมาชิก THR ในครั้งเดียว</p>
+<section class="card">
 <form id="f" novalidate>
-<div>
-<label for="name">ชื่อ</label>
-<input id="name" name="name" type="text" autocomplete="name" placeholder="ชื่อของคุณ" required>
-</div>
-<div>
-<label for="tiktok">ช่อง TikTok <small>(ไม่บังคับ)</small></label>
-<input id="tiktok" name="tiktok" type="text" autocomplete="off" placeholder="@username หรือลิงก์ช่อง">
-</div>
-<div>
-<label for="youtube">ช่อง YouTube <small>(ไม่บังคับ)</small></label>
-<input id="youtube" name="youtube" type="text" autocomplete="off" placeholder="@channel หรือลิงก์ช่อง">
-</div>
-<div>
-<label for="facebook">ช่อง Facebook <small>(ไม่บังคับ)</small></label>
-<input id="facebook" name="facebook" type="url" autocomplete="url" placeholder="วางลิงก์ Facebook เช่น https://www.facebook.com/username">
-</div>
-<div>
-<label for="instagram">ช่อง Instagram <small>(ไม่บังคับ)</small></label>
-<input id="instagram" name="instagram" type="text" autocomplete="off" placeholder="@username หรือลิงก์โปรไฟล์">
-</div>
-<div>
-<label for="province">จังหวัดที่อยู่</label>
-<select id="province" name="province" required>
-<option value="">เลือกจังหวัด</option>
-</select>
-</div>
-<div>
-<label for="photo">รูปโปรไฟล์ <small>(ไม่บังคับ, JPEG/PNG/WebP/GIF ไม่เกิน 5 MB)</small></label>
-<div class="up">
-<img id="prev" alt="ตัวอย่างรูป" hidden>
-<div id="ph" aria-hidden="true">+</div>
-<div>
-<input id="photo" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
-<label class="pick" for="photo" style="margin:0">เลือกรูป</label>
-<button type="button" id="rm" hidden>ลบรูป</button>
-</div>
-</div>
-</div>
-<button id="submit" type="submit">ส่งข้อมูล</button>
-<p id="msg" aria-live="polite"></p>
+  <div class="two">
+    <div><label for="email">อีเมลสำหรับเข้าสู่ระบบ</label><input id="email" name="email" type="email" autocomplete="email" required placeholder="you@example.com"></div>
+    <div><label for="password">รหัสผ่าน <small>(อย่างน้อย 6 ตัว)</small></label><input id="password" name="password" type="password" autocomplete="new-password" minlength="6" required placeholder="••••••••"></div>
+  </div>
+  <div><label for="name">ชื่อ</label><input id="name" name="name" type="text" autocomplete="name" required placeholder="ชื่อของคุณ"></div>
+  <div class="two">
+    <div><label for="tiktok">TikTok <small>(ไม่บังคับ)</small></label><input id="tiktok" name="tiktok" type="text" placeholder="@username หรือลิงก์"></div>
+    <div><label for="youtube">YouTube <small>(ไม่บังคับ)</small></label><input id="youtube" name="youtube" type="text" placeholder="@channel หรือลิงก์"></div>
+  </div>
+  <div class="two">
+    <div><label for="facebook">Facebook <small>(ไม่บังคับ)</small></label><input id="facebook" name="facebook" type="text" placeholder="ลิงก์ Facebook"></div>
+    <div><label for="instagram">Instagram <small>(ไม่บังคับ)</small></label><input id="instagram" name="instagram" type="text" placeholder="@username หรือลิงก์"></div>
+  </div>
+  <div><label for="province">จังหวัด</label><select id="province" name="province" required><option value="">เลือกจังหวัด</option></select></div>
+  <div>
+    <label for="photo">รูปโปรไฟล์ <small>(ไม่บังคับ, ไม่เกิน 5 MB)</small></label>
+    <div class="up">
+      <img id="prev" alt="ตัวอย่างรูป" hidden><div id="ph">+</div>
+      <div><input id="photo" type="file" accept="image/jpeg,image/png,image/webp,image/gif"><label class="pick" for="photo" style="margin:0">เลือกรูป</label><button type="button" id="rm" hidden>ลบรูป</button></div>
+    </div>
+  </div>
+  <button id="submit" type="submit">สมัครและสร้างโปรไฟล์</button>
+  <p id="msg" aria-live="polite"></p>
 </form>
-<a class="back" href="index.html">← กลับไปหน้าหลัก</a>
+<div class="login-note">มีบัญชีแล้ว? <a href="login.html">เข้าสู่ระบบเพื่อแก้ไขข้อมูล</a></div>
+</section>
+<a class="back" href="index.html">← กลับหน้าหลัก</a>
 </main>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// ใส่ Project URL และ anon/publishable key ของ Supabase ที่สองบรรทัดนี้
-var SUPABASE_URL = "https://gxurnxlbtmdymrdfrhcv.supabase.co";
-var SUPABASE_ANON_KEY = "sb_publishable_QKnPZU1huLddOAYWOP4KPA_29Sv7C7G";
-var BUCKET = "member-photos";
-var MAX_FILE_SIZE = 5 * 1024 * 1024;
-var ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-var supabaseClient = null;
-var supabaseConfigured = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
-if (supabaseConfigured && window.supabase) {
-  supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-}
-
+var SUPABASE_URL="https://gxurnxlbtmdymrdfrhcv.supabase.co",SUPABASE_ANON_KEY="sb_publishable_QKnPZU1huLddOAYWOP4KPA_29Sv7C7G",BUCKET="member-photos";
+var client=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+var MAX_FILE_SIZE=5*1024*1024,ALLOWED_TYPES=["image/jpeg","image/png","image/webp","image/gif"];
 var PROV=[
-  ["Amnat Charoen","อำนาจเจริญ"],["Ang Thong","อ่างทอง"],["Bangkok","กรุงเทพมหานคร"],
-  ["Bueng Kan","บึงกาฬ"],["Buriram","บุรีรัมย์"],["Chachoengsao","ฉะเชิงเทรา"],
-  ["Chai Nat","ชัยนาท"],["Chaiyaphum","ชัยภูมิ"],["Chanthaburi","จันทบุรี"],
-  ["Chiang Mai","เชียงใหม่"],["Chiang Rai","เชียงราย"],["Chonburi","ชลบุรี"],
-  ["Chumphon","ชุมพร"],["Kalasin","กาฬสินธุ์"],["Kamphaeng Phet","กำแพงเพชร"],
-  ["Kanchanaburi","กาญจนบุรี"],["Khon Kaen","ขอนแก่น"],["Krabi","กระบี่"],
-  ["Lampang","ลำปาง"],["Lamphun","ลำพูน"],["Loei","เลย"],["Lopburi","ลพบุรี"],
-  ["Mae Hong Son","แม่ฮ่องสอน"],["Maha Sarakham","มหาสารคาม"],["Mukdahan","มุกดาหาร"],
-  ["Nakhon Nayok","นครนายก"],["Nakhon Pathom","นครปฐม"],["Nakhon Phanom","นครพนม"],
-  ["Nakhon Ratchasima","นครราชสีมา"],["Nakhon Sawan","นครสวรรค์"],
-  ["Nakhon Si Thammarat","นครศรีธรรมราช"],["Nan","น่าน"],["Narathiwat","นราธิวาส"],
-  ["Nong Bua Lamphu","หนองบัวลำภู"],["Nong Khai","หนองคาย"],["Nonthaburi","นนทบุรี"],
-  ["Pathum Thani","ปทุมธานี"],["Pattani","ปัตตานี"],["Phang Nga","พังงา"],
-  ["Phatthalung","พัทลุง"],["Phayao","พะเยา"],["Phetchabun","เพชรบูรณ์"],
-  ["Phetchaburi","เพชรบุรี"],["Phichit","พิจิตร"],["Phitsanulok","พิษณุโลก"],
-  ["Phra Nakhon Si Ayutthaya","พระนครศรีอยุธยา"],["Phrae","แพร่"],["Phuket","ภูเก็ต"],
-  ["Prachinburi","ปราจีนบุรี"],["Prachuap Khiri Khan","ประจวบคีรีขันธ์"],
-  ["Ranong","ระนอง"],["Ratchaburi","ราชบุรี"],["Rayong","ระยอง"],["Roi Et","ร้อยเอ็ด"],
-  ["Sa Kaeo","สระแก้ว"],["Sakon Nakhon","สกลนคร"],["Samut Prakan","สมุทรปราการ"],
-  ["Samut Sakhon","สมุทรสาคร"],["Samut Songkhram","สมุทรสงคราม"],["Saraburi","สระบุรี"],
-  ["Satun","สตูล"],["Sing Buri","สิงห์บุรี"],["Sisaket","ศรีสะเกษ"],["Songkhla","สงขลา"],
-  ["Sukhothai","สุโขทัย"],["Suphan Buri","สุพรรณบุรี"],["Surat Thani","สุราษฎร์ธานี"],
-  ["Surin","สุรินทร์"],["Tak","ตาก"],["Trang","ตรัง"],["Trat","ตราด"],
-  ["Ubon Ratchathani","อุบลราชธานี"],["Udon Thani","อุดรธานี"],
-  ["Uthai Thani","อุทัยธานี"],["Uttaradit","อุตรดิตถ์"],["Yala","ยะลา"],["Yasothon","ยโสธร"]
-];
-var sel=document.getElementById("province");
+["Amnat Charoen","อำนาจเจริญ"],["Ang Thong","อ่างทอง"],["Bangkok","กรุงเทพมหานคร"],["Bueng Kan","บึงกาฬ"],["Buriram","บุรีรัมย์"],["Chachoengsao","ฉะเชิงเทรา"],["Chai Nat","ชัยนาท"],["Chaiyaphum","ชัยภูมิ"],["Chanthaburi","จันทบุรี"],["Chiang Mai","เชียงใหม่"],["Chiang Rai","เชียงราย"],["Chonburi","ชลบุรี"],["Chumphon","ชุมพร"],["Kalasin","กาฬสินธุ์"],["Kamphaeng Phet","กำแพงเพชร"],["Kanchanaburi","กาญจนบุรี"],["Khon Kaen","ขอนแก่น"],["Krabi","กระบี่"],["Lampang","ลำปาง"],["Lamphun","ลำพูน"],["Loei","เลย"],["Lopburi","ลพบุรี"],["Mae Hong Son","แม่ฮ่องสอน"],["Maha Sarakham","มหาสารคาม"],["Mukdahan","มุกดาหาร"],["Nakhon Nayok","นครนายก"],["Nakhon Pathom","นครปฐม"],["Nakhon Phanom","นครพนม"],["Nakhon Ratchasima","นครราชสีมา"],["Nakhon Sawan","นครสวรรค์"],["Nakhon Si Thammarat","นครศรีธรรมราช"],["Nan","น่าน"],["Narathiwat","นราธิวาส"],["Nong Bua Lamphu","หนองบัวลำภู"],["Nong Khai","หนองคาย"],["Nonthaburi","นนทบุรี"],["Pathum Thani","ปทุมธานี"],["Pattani","ปัตตานี"],["Phang Nga","พังงา"],["Phatthalung","พัทลุง"],["Phayao","พะเยา"],["Phetchabun","เพชรบูรณ์"],["Phetchaburi","เพชรบุรี"],["Phichit","พิจิตร"],["Phitsanulok","พิษณุโลก"],["Phra Nakhon Si Ayutthaya","พระนครศรีอยุธยา"],["Phrae","แพร่"],["Phuket","ภูเก็ต"],["Prachinburi","ปราจีนบุรี"],["Prachuap Khiri Khan","ประจวบคีรีขันธ์"],["Ranong","ระนอง"],["Ratchaburi","ราชบุรี"],["Rayong","ระยอง"],["Roi Et","ร้อยเอ็ด"],["Sa Kaeo","สระแก้ว"],["Sakon Nakhon","สกลนคร"],["Samut Prakan","สมุทรปราการ"],["Samut Sakhon","สมุทรสาคร"],["Samut Songkhram","สมุทรสงคราม"],["Saraburi","สระบุรี"],["Satun","สตูล"],["Sing Buri","สิงห์บุรี"],["Sisaket","ศรีสะเกษ"],["Songkhla","สงขลา"],["Sukhothai","สุโขทัย"],["Suphan Buri","สุพรรณบุรี"],["Surat Thani","สุราษฎร์ธานี"],["Surin","สุรินทร์"],["Tak","ตาก"],["Trang","ตรัง"],["Trat","ตราด"],["Ubon Ratchathani","อุบลราชธานี"],["Udon Thani","อุดรธานี"],["Uthai Thani","อุทัยธานี"],["Uttaradit","อุตรดิตถ์"],["Yala","ยะลา"],["Yasothon","ยโสธร"]
+],sel=document.getElementById("province");
 PROV.forEach(function(p){var o=document.createElement("option");o.value=p[0];o.textContent=p[1];sel.appendChild(o)});
-var f=document.getElementById("f"),msg=document.getElementById("msg"),photo=document.getElementById("photo"),prev=document.getElementById("prev"),ph=document.getElementById("ph"),rm=document.getElementById("rm"),submitButton=document.getElementById("submit"),img="";
-function setStatus(text,type){msg.className=type||"";msg.textContent=text}
-function setImg(u){img=u;prev.hidden=!u;ph.hidden=!!u;rm.hidden=!u;if(u)prev.src=u;else prev.removeAttribute("src")}
-photo.addEventListener("change",function(){
-  var file=photo.files[0];
-  if(!file){return}
-  if(ALLOWED_TYPES.indexOf(file.type)===-1){setStatus("ชนิดไฟล์ไม่รองรับ กรุณาเลือก JPEG, PNG, WebP หรือ GIF","err");photo.value="";setImg("");return}
-  if(file.size>MAX_FILE_SIZE){setStatus("ไฟล์มีขนาดเกิน 5 MB กรุณาเลือกรูปที่เล็กกว่านี้","err");photo.value="";setImg("");return}
-  var url=URL.createObjectURL(file),im=new Image();
-  im.onload=function(){
-    var M=480,s=Math.min(1,M/Math.max(im.width,im.height)),c=document.createElement("canvas");
-    c.width=Math.max(1,Math.round(im.width*s));c.height=Math.max(1,Math.round(im.height*s));
-    c.getContext("2d").drawImage(im,0,0,c.width,c.height);
-    setImg(c.toDataURL("image/jpeg",.82));setStatus("เลือกรูปแล้ว","ok");URL.revokeObjectURL(url)
-  };
-  im.onerror=function(){setStatus("เปิดรูปนี้ไม่ได้ ลองเลือกรูปอื่น","err");photo.value="";setImg("");URL.revokeObjectURL(url)};
-  im.src=url
-});
-rm.addEventListener("click",function(){setImg("");photo.value="";setStatus("ลบรูปแล้ว","")});
 
-function dataUrlToBlob(dataUrl){
-  var parts=dataUrl.split(","),mime=parts[0].match(/:(.*?);/)[1],binary=atob(parts[1]),bytes=new Uint8Array(binary.length);
-  for(var i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
-  return new Blob([bytes],{type:mime});
+var f=document.getElementById("f"),msg=document.getElementById("msg"),photo=document.getElementById("photo"),prev=document.getElementById("prev"),ph=document.getElementById("ph"),rm=document.getElementById("rm"),submit=document.getElementById("submit"),img="";
+function status(t,type){msg.textContent=t;msg.className=type||""}
+function setImg(u){img=u;prev.hidden=!u;ph.hidden=!!u;rm.hidden=!u;if(u)prev.src=u;else prev.removeAttribute("src")}
+function dataUrlToBlob(dataUrl){var parts=dataUrl.split(","),mime=parts[0].match(/:(.*?);/)[1],binary=atob(parts[1]),bytes=new Uint8Array(binary.length);for(var i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);return new Blob([bytes],{type:mime})}
+
+photo.addEventListener("change",function(){
+ var file=photo.files[0];if(!file)return;
+ if(ALLOWED_TYPES.indexOf(file.type)===-1){status("รองรับเฉพาะ JPEG, PNG, WebP หรือ GIF","err");photo.value="";return}
+ if(file.size>MAX_FILE_SIZE){status("รูปต้องมีขนาดไม่เกิน 5 MB","err");photo.value="";return}
+ var url=URL.createObjectURL(file),im=new Image();
+ im.onload=function(){var M=480,s=Math.min(1,M/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.max(1,Math.round(im.width*s));c.height=Math.max(1,Math.round(im.height*s));c.getContext("2d").drawImage(im,0,0,c.width,c.height);setImg(c.toDataURL("image/jpeg",.82));URL.revokeObjectURL(url)};
+ im.onerror=function(){status("เปิดรูปนี้ไม่ได้","err");photo.value="";URL.revokeObjectURL(url)};
+ im.src=url;
+});
+rm.addEventListener("click",function(){photo.value="";setImg("")});
+
+async function createProfile(user,p){
+ var existing=await client.from("members").select("id").eq("user_id",user.id).maybeSingle();
+ if(existing.error)throw existing.error;
+ if(existing.data)return;
+ var photoUrl=null;
+ if(p.img){
+   var blob=dataUrlToBlob(p.img),path=user.id+"/"+Date.now()+".jpg";
+   var up=await client.storage.from(BUCKET).upload(path,blob,{contentType:"image/jpeg",upsert:false});
+   if(up.error)throw up.error;
+   photoUrl=client.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
+ }
+ var ins=await client.from("members").insert({
+   user_id:user.id,name:p.name,tiktok:p.tiktok||null,youtube:p.youtube||null,
+   facebook:p.facebook||null,instagram:p.instagram||null,province:p.province,
+   photo_url:photoUrl,created_at:new Date().toISOString()
+ });
+ if(ins.error)throw ins.error;
 }
-function getLocalMembers(){
-  try{var data=JSON.parse(localStorage.getItem("thr_members")||"[]");return Array.isArray(data)?data:[]}
-  catch(e){throw new Error("อ่านข้อมูลในเครื่องไม่ได้ พื้นที่จัดเก็บอาจเต็มหรือถูกปิด")}
-}
-function saveLocally(d){
-  var members=getLocalMembers();members.push({name:d.name,tiktok:d.tiktok,youtube:d.youtube,facebook:d.facebook,instagram:d.instagram,province:d.province,photo:img,at:d.created_at});
-  try{localStorage.setItem("thr_members",JSON.stringify(members))}
-  catch(e){throw new Error("บันทึกในเครื่องไม่สำเร็จ พื้นที่จัดเก็บอาจเต็ม")}
-}
-function makeObjectPath(file){
-  var ext=file.type==="image/png"?"png":file.type==="image/webp"?"webp":file.type==="image/gif"?"gif":"jpg";
-  return Date.now()+"-"+crypto.randomUUID()+"."+ext;
-}
-async function saveToSupabase(d){
-  var photoUrl=null;
-  if(photo.files[0]){
-    if(!supabaseClient)throw new Error("โหลด ข้อมูลหลังบ้าน ไม่สำเร็จ กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ตแล้วลองใหม่");
-    setStatus("กำลังอัปโหลดรูป...","");
-    var file=photo.files[0],path=makeObjectPath(file),blob=dataUrlToBlob(img);
-    var upload=await supabaseClient.storage.from(BUCKET).upload(path,blob,{contentType:"image/jpeg",upsert:false});
-    if(upload.error)throw upload.error;
-    photoUrl=supabaseClient.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
-  }
-  setStatus("กำลังบันทึกข้อมูล...","");
-  var result=await supabaseClient.from("members").insert({name:d.name,tiktok:d.tiktok||null,youtube:d.youtube||null,facebook:d.facebook||null,instagram:d.instagram||null,province:d.province,photo_url:photoUrl,created_at:d.created_at});
-  if(result.error)throw result.error;
-}
-function errorMessage(error){
-  var message=error&&error.message?error.message:"เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ";
-  if(/row-level security|permission denied|not authorized/i.test(message))return "ข้อมูลหลังบ้าน ปฏิเสธการบันทึก กรุณาตรวจสอบสิทธิ์ RLS ของตาราง members และ Storage";
-  if(/bucket.*not found|no such bucket/i.test(message))return "ไม่พบ Storage bucket ชื่อ member-photos ใน ข้อมูลหลังบ้าน";
-  if(/failed to fetch|network|load failed/i.test(message))return "เชื่อมต่อ ข้อมูลหลังบ้าน ไม่ได้ กรุณาตรวจสอบอินเทอร์เน็ตและ Project URL";
-  return "บันทึกไม่สำเร็จ: "+message;
-}
+
 f.addEventListener("submit",async function(e){
-  e.preventDefault();
-  var d={name:f.elements.name.value.trim(),tiktok:f.elements.tiktok.value.trim(),youtube:f.elements.youtube.value.trim(),facebook:f.elements.facebook.value.trim(),instagram:f.elements.instagram.value.trim(),province:f.elements.province.value,photo_url:null,created_at:new Date().toISOString()};
-  if(!d.name||!d.province){setStatus("กรุณากรอกชื่อและเลือกจังหวัด","err");return}
-  if(photo.files[0]&&(ALLOWED_TYPES.indexOf(photo.files[0].type)===-1||photo.files[0].size>MAX_FILE_SIZE)){setStatus("กรุณาเลือกไฟล์รูปที่รองรับและมีขนาดไม่เกิน 5 MB","err");return}
-  submitButton.disabled=true;
-  try{
-    if(supabaseConfigured){await saveToSupabase(d);setStatus("บันทึกข้อมูลขึ้น สำเร็จ ยินดีต้อนรับคุณ "+d.name,"ok")}
-    else{saveLocally(d);setStatus("ยังไม่ได้ตั้งค่า ข้อมูลหลังบ้าน ข้อมูลนี้บันทึกไว้ในอุปกรณ์นี้เท่านั้น ขอบคุณ "+d.name,"ok")}
-    f.reset();setImg("");photo.value=""
-  }catch(error){setStatus(errorMessage(error),"err")}
-  finally{submitButton.disabled=false}
+ e.preventDefault();
+ var p={email:f.email.value.trim().toLowerCase(),name:f.name.value.trim(),tiktok:f.tiktok.value.trim(),youtube:f.youtube.value.trim(),facebook:f.facebook.value.trim(),instagram:f.instagram.value.trim(),province:f.province.value,img:img};
+ var password=f.password.value;
+ if(!p.email||!password||!p.name||!p.province){status("กรุณากรอกอีเมล รหัสผ่าน ชื่อ และจังหวัด","err");return}
+ if(password.length<6){status("รหัสผ่านต้องมีอย่างน้อย 6 ตัว","err");return}
+ submit.disabled=true;submit.textContent="กำลังสมัคร...";
+ try{
+   var r=await client.auth.signUp({email:p.email,password:password});
+   if(r.error)throw r.error;
+   if(r.data.session&&r.data.user){
+     await createProfile(r.data.user,p);
+     localStorage.removeItem("thr_pending_profile");
+     status("สมัครสำเร็จ กำลังไปหน้าแก้ไขข้อมูล...","ok");
+     setTimeout(function(){location.replace("edit-profile.html")},700);
+   }else{
+     localStorage.setItem("thr_pending_profile",JSON.stringify(p));
+     status("สร้างบัญชีแล้ว กรุณายืนยันอีเมลก่อน จากนั้นเข้าสู่ระบบ โปรไฟล์จะถูกสร้างให้อัตโนมัติ","ok");
+     setTimeout(function(){location.href="login.html"},1500);
+   }
+ }catch(err){status("สมัครไม่สำเร็จ: "+err.message,"err")}
+ finally{submit.disabled=false;submit.textContent="สมัครและสร้างโปรไฟล์"}
 });
 
 var cv=document.getElementById("stars"),x=cv.getContext("2d"),S=[];
-function size(){cv.width=innerWidth;cv.height=innerHeight;S=[];for(var i=0;i<140;i++)S.push([Math.random()*cv.width,Math.random()*cv.height*.7,Math.random()*1.2+.2,Math.random()*6])}
-function draw(t){x.clearRect(0,0,cv.width,cv.height);S.forEach(function(s){x.globalAlpha=.25+.45*Math.abs(Math.sin(t/2500+s[3]));x.fillStyle="#dcd6ee";x.beginPath();x.arc(s[0],s[1],s[2],0,7);x.fill()});if(!matchMedia("(prefers-reduced-motion:reduce)").matches)requestAnimationFrame(draw)}
+function size(){cv.width=innerWidth;cv.height=innerHeight;S=[];for(var i=0;i<100;i++)S.push([Math.random()*cv.width,Math.random()*cv.height,Math.random()*1.1+.2,Math.random()*6])}
+function draw(t){x.clearRect(0,0,cv.width,cv.height);S.forEach(function(s){x.globalAlpha=.2+.4*Math.abs(Math.sin(t/2500+s[3]));x.fillStyle="#dcd6ee";x.beginPath();x.arc(s[0],s[1],s[2],0,7);x.fill()});if(!matchMedia("(prefers-reduced-motion:reduce)").matches)requestAnimationFrame(draw)}
 size();addEventListener("resize",size);requestAnimationFrame(draw);
+
 </script>
 </body>
 </html>
