@@ -198,6 +198,102 @@ button:disabled{opacity:.6;cursor:wait}
 }
 </style>
 
+
+<style id="thr-ultra-smooth-style">
+html{scroll-behavior:smooth}
+body{--mx:50vw;--my:20vh}
+body::before{
+  content:"";
+  position:fixed;
+  left:0;top:0;
+  width:280px;height:280px;
+  border-radius:50%;
+  pointer-events:none;
+  z-index:-1;
+  opacity:.20;
+  background:radial-gradient(circle,rgba(242,196,138,.22) 0%,rgba(201,116,58,.08) 38%,transparent 72%);
+  transform:translate3d(calc(var(--mx) - 140px),calc(var(--my) - 140px),0);
+  will-change:transform;
+}
+button,a,input,select,.card,.account-card,#profile,.member,.music-box{
+  -webkit-tap-highlight-color:transparent;
+}
+button,a{
+  transition:transform .18s cubic-bezier(.2,.8,.2,1),box-shadow .18s ease,filter .18s ease,background-color .18s ease,border-color .18s ease!important;
+}
+button:not(:disabled):active,a:active{transform:scale(.975)}
+input,select{
+  transition:border-color .16s ease,box-shadow .16s ease,background-color .16s ease,transform .16s ease!important;
+}
+input:focus,select:focus{transform:translateZ(0) scale(1.006)}
+.card,.account-card,#profile,.music-box{
+  transform:translateZ(0);
+  backface-visibility:hidden;
+  will-change:transform;
+}
+.thr-reveal{
+  opacity:0;
+  transform:translate3d(0,18px,0) scale(.985);
+}
+.thr-reveal.thr-in{
+  opacity:1;
+  transform:translate3d(0,0,0) scale(1);
+  transition:opacity .52s cubic-bezier(.16,1,.3,1),transform .52s cubic-bezier(.16,1,.3,1);
+}
+.thr-ripple{
+  position:fixed;
+  width:8px;height:8px;
+  margin:-4px 0 0 -4px;
+  border-radius:50%;
+  pointer-events:none;
+  z-index:99999;
+  border:1px solid rgba(242,196,138,.75);
+  box-shadow:0 0 18px rgba(242,196,138,.35);
+  animation:thrRipple .5s ease-out forwards;
+}
+@keyframes thrRipple{
+  to{opacity:0;transform:scale(5)}
+}
+.thr-shine{
+  position:relative;
+  overflow:hidden;
+}
+.thr-shine::after{
+  content:"";
+  position:absolute;
+  inset:-50% auto -50% -40%;
+  width:22%;
+  pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.10),transparent);
+  transform:skewX(-18deg) translateX(-220%);
+  animation:thrShine 7s ease-in-out infinite;
+}
+@keyframes thrShine{
+  0%,78%{transform:skewX(-18deg) translateX(-220%)}
+  92%,100%{transform:skewX(-18deg) translateX(760%)}
+}
+@media (hover:hover) and (pointer:fine){
+  button:not(:disabled):hover,a:hover{transform:translateY(-1px)}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  body::before,.thr-shine::after{display:none!important}
+  *,*::before,*::after{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+    scroll-behavior:auto!important;
+  }
+}
+</style>
+
+<style id="thr-form-fx">
+input,select{background-image:linear-gradient(90deg,rgba(242,196,138,.03),transparent 35%)}
+label{transition:color .16s ease,text-shadow .16s ease}
+div:focus-within>label{color:#ffd6a4;text-shadow:0 0 16px rgba(242,196,138,.18)}
+.card,.account-card{box-shadow:0 20px 60px rgba(0,0,0,.42),0 0 0 1px rgba(255,255,255,.015) inset!important}
+</style>
+
 </head>
 <body>
 <canvas id="stars" aria-hidden="true"></canvas>
@@ -249,22 +345,14 @@ button:disabled{opacity:.6;cursor:wait}
 
       <div class="music-box">
         <h3>เพลงประจำโปรไฟล์ 🎵</h3>
-        <p class="music-help">ใส่ลิงก์ YouTube/ลิงก์ไฟล์เสียง หรืออัปโหลดเพลงของคุณเอง ระบบจะไม่เล่นอัตโนมัติ</p>
+        <p class="music-help">อัปโหลดเพลงของคุณเอง ระบบจะไม่เล่นอัตโนมัติ</p>
 
         <div class="music-choice">
           <div>
             <label for="music-title">ชื่อเพลง <small>(ไม่บังคับ)</small></label>
             <input id="music-title" type="text" maxlength="120" placeholder="เช่น My Theme Song">
           </div>
-
-          <div>
-            <label for="music-link">ลิงก์ YouTube หรือ URL เพลง <small>(ไม่บังคับ)</small></label>
-            <input id="music-link" type="url" inputmode="url" placeholder="https://youtube.com/watch?v=... หรือ https://.../song.mp3">
-          </div>
-
-          <div class="music-or">หรือ</div>
-
-          <div>
+<div>
             <label>อัปโหลดไฟล์เพลง <small>(MP3/M4A/OGG/WAV ไม่เกิน 20 MB)</small></label>
             <div class="music-upload-row">
               <input id="music-file" type="file" accept="audio/mpeg,audio/mp4,audio/ogg,audio/wav,audio/x-wav,.mp3,.m4a,.ogg,.wav">
@@ -353,7 +441,6 @@ PROV.forEach(function(p){var o=document.createElement("option");o.value=p[0];o.t
 
 var f=document.getElementById("f"),msg=document.getElementById("msg"),save=document.getElementById("save"),photo=document.getElementById("photo"),prev=document.getElementById("prev"),ph=document.getElementById("ph"),rm=document.getElementById("rm");
 var musicTitle=document.getElementById("music-title"),
-    musicLink=document.getElementById("music-link"),
     musicFile=document.getElementById("music-file"),
     musicFileName=document.getElementById("music-file-name"),
     removeMusicBtn=document.getElementById("remove-music"),
@@ -365,38 +452,15 @@ function dataUrlToBlob(dataUrl){var parts=dataUrl.split(","),mime=parts[0].match
 function makeObjectPath(file){var ext=file.type==="image/png"?"png":file.type==="image/webp"?"webp":file.type==="image/gif"?"gif":"jpg";return currentUser.id+"/"+Date.now()+"."+ext}
 
 
-function youtubeId(url){
-  var s=String(url||"").trim();
-  var m=s.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{6,})/i);
-  if(!m&&/youtube\.com/i.test(s)){
-    try{m=[null,new URL(s).searchParams.get("v")]}catch(e){}
-  }
-  return m&&m[1]?m[1]:"";
-}
-function musicKind(url){
-  return youtubeId(url)?"youtube":"url";
-}
 function showMusicPreview(url,type,title){
   musicPreview.replaceChildren();
-  if(!url){musicPreview.hidden=true;return}
+  if(!url || type!=="upload"){musicPreview.hidden=true;return}
   musicPreview.hidden=false;
-  if(type==="youtube"||youtubeId(url)){
-    var id=youtubeId(url);
-    if(!id){musicPreview.hidden=true;return}
-    var frame=document.createElement("iframe");
-    frame.src="https://www.youtube-nocookie.com/embed/"+encodeURIComponent(id);
-    frame.title=title||"เพลงประจำโปรไฟล์";
-    frame.loading="lazy";
-    frame.allow="accelerometer; encrypted-media; picture-in-picture";
-    frame.allowFullscreen=true;
-    musicPreview.appendChild(frame);
-  }else{
-    var audio=document.createElement("audio");
-    audio.controls=true;
-    audio.preload="metadata";
-    audio.src=url;
-    musicPreview.appendChild(audio);
-  }
+  var audio=document.createElement("audio");
+  audio.controls=true;
+  audio.preload="metadata";
+  audio.src=url;
+  musicPreview.appendChild(audio);
 }
 function musicObjectPath(file){
   var name=(file.name||"music").replace(/[^a-zA-Z0-9._-]+/g,"-");
@@ -434,10 +498,9 @@ async function loadProfile(){
   currentMusicUrl=r.data.music_url||"";
   currentMusicType=r.data.music_type||"";
   musicTitle.value=r.data.music_title||"";
-  musicLink.value=(currentMusicType==="upload")?"":currentMusicUrl;
   removeMusic=false;
   musicFile.value="";
-  musicFileName.textContent=currentMusicType==="upload"&&currentMusicUrl?"มีไฟล์เพลงอยู่แล้ว":"ยังไม่ได้เลือกไฟล์";
+  musicFileName.textContent=currentMusicType==="upload"&&currentMusicUrl?"มีไฟล์เพลงอยู่แล้ว":(currentMusicUrl?"มีเพลงจากลิงก์เดิม (กดลบหรืออัปโหลดไฟล์ใหม่)":"ยังไม่ได้เลือกไฟล์");
   removeMusicBtn.hidden=!currentMusicUrl;
   showMusicPreview(currentMusicUrl,currentMusicType,r.data.music_title||"");
   status("");
@@ -461,20 +524,6 @@ photo.addEventListener("change",function(){
 rm.addEventListener("click",function(){removePhoto=true;photo.value="";setPreview("");});
 
 
-musicLink.addEventListener("input",function(){
-  if(musicLink.value.trim()){
-    removeMusic=false;
-    musicFile.value="";
-    musicFileName.textContent="ยังไม่ได้เลือกไฟล์";
-    var url=musicLink.value.trim();
-    showMusicPreview(url,musicKind(url),musicTitle.value.trim());
-    removeMusicBtn.hidden=false;
-  }else if(!currentMusicUrl){
-    showMusicPreview("","","");
-    removeMusicBtn.hidden=true;
-  }
-});
-
 musicFile.addEventListener("change",function(){
   var file=musicFile.files[0];
   if(!file)return;
@@ -489,7 +538,6 @@ musicFile.addEventListener("change",function(){
     musicFile.value="";return;
   }
   removeMusic=false;
-  musicLink.value="";
   musicFileName.textContent=file.name;
   var localUrl=URL.createObjectURL(file);
   showMusicPreview(localUrl,"upload",musicTitle.value.trim());
@@ -499,7 +547,6 @@ musicFile.addEventListener("change",function(){
 removeMusicBtn.addEventListener("click",function(){
   removeMusic=true;
   musicFile.value="";
-  musicLink.value="";
   musicFileName.textContent="ยังไม่ได้เลือกไฟล์";
   removeMusicBtn.hidden=true;
   showMusicPreview("","","");
@@ -535,9 +582,6 @@ f.addEventListener("submit",async function(e){
       if(mup.error)throw mup.error;
       musicUrl=client.storage.from(MUSIC_BUCKET).getPublicUrl(mpath).data.publicUrl;
       musicType="upload";
-    }else if(musicLink.value.trim()){
-      musicUrl=musicLink.value.trim();
-      musicType=musicKind(musicUrl);
     }
 
     var payload={
@@ -568,9 +612,8 @@ f.addEventListener("submit",async function(e){
     currentMusicType=musicType||"";
     removeMusic=false;
     musicFile.value="";
-    musicFileName.textContent=currentMusicType==="upload"&&currentMusicUrl?"มีไฟล์เพลงอยู่แล้ว":"ยังไม่ได้เลือกไฟล์";
+    musicFileName.textContent=currentMusicType==="upload"&&currentMusicUrl?"มีไฟล์เพลงอยู่แล้ว":(currentMusicUrl?"มีเพลงจากลิงก์เดิม (กดลบหรืออัปโหลดไฟล์ใหม่)":"ยังไม่ได้เลือกไฟล์");
     removeMusicBtn.hidden=!currentMusicUrl;
-    if(currentMusicType==="upload")musicLink.value="";
     showMusicPreview(currentMusicUrl,currentMusicType,musicTitleValue||"");
     status("บันทึกข้อมูลเรียบร้อย");
   }catch(err){status("บันทึกไม่สำเร็จ: "+err.message,true)}
@@ -695,6 +738,71 @@ document.querySelectorAll(".password-toggle").forEach(function(button){
     button.setAttribute("aria-label",show?"ซ่อนรหัสผ่าน":"แสดงรหัสผ่าน");
   });
 });
+</script>
+
+
+<script id="thr-ultra-smooth-script">
+(function(){
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var fine=matchMedia("(hover:hover) and (pointer:fine)").matches;
+  var root=document.body;
+  var raf=0,lastX=innerWidth*.5,lastY=innerHeight*.2;
+
+  function paintPointer(){
+    raf=0;
+    root.style.setProperty("--mx",lastX+"px");
+    root.style.setProperty("--my",lastY+"px");
+  }
+  if(!reduce){
+    addEventListener("pointermove",function(e){
+      lastX=e.clientX; lastY=e.clientY;
+      if(!raf)raf=requestAnimationFrame(paintPointer);
+    },{passive:true});
+  }
+
+  var revealNodes=[].slice.call(document.querySelectorAll("main,.card,.account-card,.music-box,#profile"));
+  revealNodes.forEach(function(el,i){
+    if(el.id==="profile" && el.hidden)return;
+    el.classList.add("thr-reveal");
+    requestAnimationFrame(function(){
+      setTimeout(function(){el.classList.add("thr-in")},Math.min(i*55,260));
+    });
+  });
+
+  document.querySelectorAll("button,.pick,.music-pick,.join-link").forEach(function(el){
+    el.classList.add("thr-shine");
+  });
+
+  if(fine&&!reduce){
+    document.querySelectorAll(".card,.account-card,#profile").forEach(function(card){
+      var tr=0;
+      card.addEventListener("pointermove",function(e){
+        var r=card.getBoundingClientRect();
+        var px=(e.clientX-r.left)/r.width-.5;
+        var py=(e.clientY-r.top)/r.height-.5;
+        if(tr)return;
+        tr=requestAnimationFrame(function(){
+          tr=0;
+          card.style.transform="perspective(900px) rotateX("+(-py*1.5)+"deg) rotateY("+(px*1.8)+"deg) translateZ(0)";
+        });
+      },{passive:true});
+      card.addEventListener("pointerleave",function(){
+        card.style.transform="perspective(900px) rotateX(0) rotateY(0) translateZ(0)";
+      },{passive:true});
+    });
+  }
+
+  document.addEventListener("pointerdown",function(e){
+    if(reduce)return;
+    if(!e.target.closest("button,a,.pick,.music-pick,.member,.member-marker"))return;
+    var ring=document.createElement("span");
+    ring.className="thr-ripple";
+    ring.style.left=e.clientX+"px";
+    ring.style.top=e.clientY+"px";
+    document.body.appendChild(ring);
+    setTimeout(function(){ring.remove()},520);
+  },{passive:true});
+})();
 </script>
 
 </body>
