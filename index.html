@@ -336,7 +336,160 @@ svg.map{
   .account-actions a{min-height:36px;font-size:.74rem}
 }
 </style>
-</head><body><video id="bg-video" autoplay muted loop playsinline preload="auto" aria-hidden="true"><source src="https://www.pexels.com/download/video/10343918/" type="video/mp4"></video><div id="bg-overlay" aria-hidden="true"></div><script>(function(){document.addEventListener("contextmenu",function(e){e.preventDefault()});document.addEventListener("keydown",function(e){var k=e.key.toLowerCase();if(e.key==="F12"||(e.ctrlKey&&e.shiftKey&&["i","j","c"].includes(k))||(e.ctrlKey&&["u","s"].includes(k))){e.preventDefault();e.stopPropagation();return false}},true)})();</script><canvas id="stars" aria-hidden="true"></canvas><div id="profile-backdrop" aria-hidden="true"></div><main><section><h1>TAME THR <br></h1><p>Welcome to the THR family, and these are my family members.</p><div id="info" aria-live="polite"><b>77 provinces</b><span>Hover or tap a light on the map</span></div><p id="member-status" aria-live="polite">กำลังโหลดสมาชิก...</p><div class="account-actions" aria-label="บัญชีสมาชิก">
+
+<style id="thr-hamburger-style">
+/* เมนู Hamburger มุมขวาบน */
+.thr-menu-wrap{
+  position:fixed;
+  top:max(18px,env(safe-area-inset-top,0px));
+  right:max(18px,env(safe-area-inset-right,0px));
+  z-index:5000;
+}
+.thr-menu-button{
+  width:48px;
+  height:48px;
+  padding:0;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:50%;
+  background:rgba(5,5,9,.55);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  cursor:pointer;
+  box-shadow:0 8px 28px rgba(0,0,0,.32);
+}
+.thr-menu-button:hover{
+  background:rgba(255,255,255,.08);
+}
+.thr-menu-icon{
+  width:24px;
+  height:18px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+.thr-menu-icon span{
+  display:block;
+  width:100%;
+  height:2.5px;
+  border-radius:999px;
+  background:#fff;
+  transition:transform .2s ease,opacity .2s ease;
+}
+.thr-menu-button[aria-expanded="true"] .thr-menu-icon span:nth-child(1){
+  transform:translateY(7.75px) rotate(45deg);
+}
+.thr-menu-button[aria-expanded="true"] .thr-menu-icon span:nth-child(2){
+  opacity:0;
+}
+.thr-menu-button[aria-expanded="true"] .thr-menu-icon span:nth-child(3){
+  transform:translateY(-7.75px) rotate(-45deg);
+}
+
+.thr-menu-panel{
+  position:absolute;
+  top:58px;
+  right:0;
+  width:210px;
+  padding:10px;
+  border:1px solid rgba(242,196,138,.25);
+  border-radius:16px;
+  background:rgba(8,7,14,.94);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  box-shadow:0 18px 50px rgba(0,0,0,.5);
+  transform-origin:top right;
+  transition:opacity .16s ease,transform .16s ease,visibility .16s;
+}
+.thr-menu-panel[hidden]{
+  display:block!important;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transform:translateY(-7px) scale(.97);
+}
+.thr-menu-panel a,
+.thr-menu-panel button{
+  width:100%;
+  min-height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  padding:10px 12px;
+  margin:0;
+  border:0;
+  border-radius:10px;
+  background:transparent;
+  color:#fff;
+  font:inherit;
+  font-size:.88rem;
+  font-weight:400;
+  text-decoration:none;
+  cursor:pointer;
+}
+.thr-menu-panel a:hover,
+.thr-menu-panel button:hover{
+  background:rgba(242,196,138,.10);
+  color:var(--glow);
+}
+.thr-menu-panel .menu-accent{
+  color:var(--glow);
+}
+.thr-menu-divider{
+  height:1px;
+  margin:7px 5px;
+  background:rgba(242,196,138,.16);
+}
+.thr-menu-panel [hidden]{
+  display:none!important;
+}
+
+/* ซ่อนปุ่มสมาชิกแบบเดิม เพราะย้ายเข้า hamburger แล้ว */
+.account-actions{
+  display:none!important;
+}
+
+@media(max-width:520px){
+  .thr-menu-wrap{
+    top:max(12px,env(safe-area-inset-top,0px));
+    right:max(12px,env(safe-area-inset-right,0px));
+  }
+  .thr-menu-button{
+    width:44px;
+    height:44px;
+  }
+  .thr-menu-icon{
+    width:22px;
+    height:16px;
+  }
+  .thr-menu-panel{
+    top:52px;
+    width:min(210px,calc(100vw - 24px));
+  }
+}
+</style>
+
+</head><body>
+
+<div class="thr-menu-wrap" id="thr-menu-wrap">
+  <button class="thr-menu-button" id="thr-menu-button" type="button"
+          aria-label="เปิดเมนู" aria-expanded="false" aria-controls="thr-menu-panel">
+    <span class="thr-menu-icon" aria-hidden="true">
+      <span></span><span></span><span></span>
+    </span>
+  </button>
+
+  <nav class="thr-menu-panel" id="thr-menu-panel" hidden aria-label="เมนูสมาชิก">
+    <a id="menu-join" class="menu-accent" href="join.html">สมัครสมาชิก</a>
+    <a id="menu-login" href="login.html">เข้าสู่ระบบ</a>
+
+    <a id="menu-edit" class="menu-accent" href="edit-profile.html" hidden>แก้ไขข้อมูลส่วนตัว</a>
+    <div id="menu-auth-divider" class="thr-menu-divider" hidden></div>
+    <button id="menu-logout" type="button" hidden>ออกจากระบบ</button>
+  </nav>
+</div>
+<video id="bg-video" autoplay muted loop playsinline preload="auto" aria-hidden="true"><source src="https://www.pexels.com/download/video/10343918/" type="video/mp4"></video><div id="bg-overlay" aria-hidden="true"></div><script>(function(){document.addEventListener("contextmenu",function(e){e.preventDefault()});document.addEventListener("keydown",function(e){var k=e.key.toLowerCase();if(e.key==="F12"||(e.ctrlKey&&e.shiftKey&&["i","j","c"].includes(k))||(e.ctrlKey&&["u","s"].includes(k))){e.preventDefault();e.stopPropagation();return false}},true)})();</script><canvas id="stars" aria-hidden="true"></canvas><div id="profile-backdrop" aria-hidden="true"></div><main><section><h1>TAME THR <br></h1><p>Welcome to the THR family, and these are my family members.</p><div id="info" aria-live="polite"><b>77 provinces</b><span>Hover or tap a light on the map</span></div><p id="member-status" aria-live="polite">กำลังโหลดสมาชิก...</p><div class="account-actions" aria-label="บัญชีสมาชิก">
 <a class="join-account" id="join-account" href="join.html">เข้าร่วม THR</a>
 <a class="login-account" id="login-account" href="login.html">เข้าสู่ระบบ</a>
 <a class="edit-account" id="edit-account" href="edit-profile.html" hidden>แก้ไขข้อมูลของฉัน</a>
@@ -376,4 +529,74 @@ async function loadMembers(){if(client){memberStatus.textContent="กำลั�
   else updateAccountLinks();
 })();
 </script>
+
+<script id="thr-hamburger-script">
+(function(){
+  var btn=document.getElementById("thr-menu-button");
+  var panel=document.getElementById("thr-menu-panel");
+  var wrap=document.getElementById("thr-menu-wrap");
+  var join=document.getElementById("menu-join");
+  var login=document.getElementById("menu-login");
+  var edit=document.getElementById("menu-edit");
+  var logout=document.getElementById("menu-logout");
+  var divider=document.getElementById("menu-auth-divider");
+
+  function openMenu(){
+    panel.hidden=false;
+    btn.setAttribute("aria-expanded","true");
+    btn.setAttribute("aria-label","ปิดเมนู");
+  }
+  function closeMenu(){
+    panel.hidden=true;
+    btn.setAttribute("aria-expanded","false");
+    btn.setAttribute("aria-label","เปิดเมนู");
+  }
+  function toggleMenu(){
+    if(panel.hidden)openMenu(); else closeMenu();
+  }
+
+  btn.addEventListener("click",function(e){
+    e.stopPropagation();
+    toggleMenu();
+  });
+  panel.addEventListener("click",function(e){e.stopPropagation();});
+  document.addEventListener("click",function(e){
+    if(!panel.hidden&&!wrap.contains(e.target))closeMenu();
+  });
+  document.addEventListener("keydown",function(e){
+    if(e.key==="Escape")closeMenu();
+  });
+
+  async function updateAuthMenu(){
+    if(!window.supabase||!window.SUPABASE_URL||!window.SUPABASE_ANON_KEY)return;
+    try{
+      var authClient=(window.client&&window.client.auth)
+        ? window.client
+        : window.supabase.createClient(window.SUPABASE_URL,window.SUPABASE_ANON_KEY);
+
+      var result=await authClient.auth.getSession();
+      var signed=Boolean(result&&result.data&&result.data.session);
+
+      join.hidden=signed;
+      login.hidden=signed;
+      edit.hidden=!signed;
+      divider.hidden=!signed;
+      logout.hidden=!signed;
+
+      logout.onclick=async function(){
+        await authClient.auth.signOut();
+        closeMenu();
+        location.href="index.html";
+      };
+    }catch(e){}
+  }
+
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",updateAuthMenu);
+  }else{
+    updateAuthMenu();
+  }
+})();
+</script>
+
 </body></html>
