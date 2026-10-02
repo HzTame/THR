@@ -838,6 +838,20 @@ html,body{cursor:auto}
 #thr-menu-wrap[hidden]{display:none!important}
 </style>
 
+
+<style id="unique-visitor-counter-style">
+#unique-visitor-count{
+  margin:2px 0 10px;
+  color:var(--mist);
+  font-size:.78rem;
+  line-height:1.4;
+}
+#unique-visitor-count b{
+  color:var(--glow);
+  font-weight:500;
+}
+</style>
+
 </head><body>
 
 <div class="thr-menu-wrap" id="thr-menu-wrap" hidden>
@@ -857,7 +871,7 @@ html,body{cursor:auto}
     <button id="menu-logout" type="button" hidden>ออกจากระบบ</button>
   </nav>
 </div>
-<video id="bg-video" autoplay muted loop playsinline preload="auto" aria-hidden="true"><source src="https://www.pexels.com/download/video/10343918/" type="video/mp4"></video><div id="bg-overlay" aria-hidden="true"></div><script>(function(){document.addEventListener("contextmenu",function(e){e.preventDefault()});document.addEventListener("keydown",function(e){var k=e.key.toLowerCase();if(e.key==="F12"||(e.ctrlKey&&e.shiftKey&&["i","j","c"].includes(k))||(e.ctrlKey&&["u","s"].includes(k))){e.preventDefault();e.stopPropagation();return false}},true)})();</script><canvas id="stars" aria-hidden="true"></canvas><div id="profile-backdrop" aria-hidden="true"></div><main><section><h1>TAME THR <br></h1><p>Welcome to the THR family, and these are my family members.</p><div id="info" aria-live="polite"><b>77 provinces</b><span>Hover or tap a light on the map</span></div><p id="member-status" aria-live="polite">กำลังโหลดสมาชิก...</p><div class="account-actions" aria-label="บัญชีสมาชิก">
+<video id="bg-video" autoplay muted loop playsinline preload="auto" aria-hidden="true"><source src="https://www.pexels.com/download/video/10343918/" type="video/mp4"></video><div id="bg-overlay" aria-hidden="true"></div><script>(function(){document.addEventListener("contextmenu",function(e){e.preventDefault()});document.addEventListener("keydown",function(e){var k=e.key.toLowerCase();if(e.key==="F12"||(e.ctrlKey&&e.shiftKey&&["i","j","c"].includes(k))||(e.ctrlKey&&["u","s"].includes(k))){e.preventDefault();e.stopPropagation();return false}},true)})();</script><canvas id="stars" aria-hidden="true"></canvas><div id="profile-backdrop" aria-hidden="true"></div><main><section><h1>TAME THR <br></h1><p>Welcome to the THR family, and these are my family members.</p><div id="info" aria-live="polite"><b>77 provinces</b><span>Hover or tap a light on the map</span></div><p id="member-status" aria-live="polite">กำลังโหลดสมาชิก...</p><p id="unique-visitor-count" aria-live="polite">ผู้เข้าชมไม่ซ้ำ: <b>กำลังโหลด...</b></p><div class="account-actions" aria-label="บัญชีสมาชิก">
 <a class="join-account" id="join-account" href="267495831025.html">เข้าร่วม THR</a>
 <a class="login-account" id="login-account" href="914672305189.html">เข้าสู่ระบบ</a>
 <a class="edit-account" id="edit-account" href="748203619558.html" hidden>แก้ไขข้อมูลของฉัน</a>
@@ -1127,6 +1141,66 @@ async function loadMembers(){if(client){memberStatus.textContent="กำลั�
       profile.classList.remove("profile-opening");
     },1050);
   };
+})();
+</script>
+
+
+<script id="unique-visitor-counter-script">
+(function(){
+  var box=document.querySelector("#unique-visitor-count b");
+  if(!box)return;
+
+  function getVisitorId(){
+    var key="thr_unique_visitor_id_v1";
+    var id="";
+    try{id=localStorage.getItem(key)||""}catch(e){}
+    if(!id){
+      try{
+        id=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():
+          "v-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2);
+      }catch(e){
+        id="v-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2);
+      }
+      try{localStorage.setItem(key,id)}catch(e){}
+    }
+    return id;
+  }
+
+  async function updateUniqueVisitors(){
+    if(!window.client){
+      box.textContent="-";
+      return;
+    }
+
+    var visitorId=getVisitorId();
+
+    try{
+      var ins=await window.client
+        .from("site_visitors")
+        .upsert(
+          {visitor_id:visitorId},
+          {onConflict:"visitor_id",ignoreDuplicates:true}
+        );
+
+      if(ins.error)throw ins.error;
+
+      var countResult=await window.client
+        .from("site_visitors")
+        .select("visitor_id",{count:"exact",head:true});
+
+      if(countResult.error)throw countResult.error;
+      box.textContent=String(countResult.count||0);
+    }catch(err){
+      console.warn("visitor counter:",err);
+      box.textContent="-";
+    }
+  }
+
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",updateUniqueVisitors,{once:true});
+  }else{
+    updateUniqueVisitors();
+  }
 })();
 </script>
 
