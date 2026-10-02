@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Join THR Family</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap">
+<style>
+
+:root{--ink:#050509;--ember:#c9743a;--glow:#f2c48a;--mist:#8f8aa3;box-sizing:border-box}
+*,*::before,*::after{box-sizing:inherit}
+html,body{min-height:100%;margin:0}
+body{background:radial-gradient(120% 60% at 50% 108%,#3a1e16 0%,#1a1224 38%,var(--ink) 75%);color:#e9e4ef;font-family:"Inter","Helvetica Neue",Arial,sans-serif;overflow-x:hidden}
+#stars{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+input,select{width:100%;font:inherit;color:#e9e4ef;background:rgba(11,10,20,.82);border:1px solid rgba(201,116,58,.45);border-radius:10px;padding:12px 14px;outline:none}
+input:focus,select:focus{border-color:var(--glow);box-shadow:0 0 0 3px rgba(242,196,138,.16)}
+label{display:block;margin-bottom:6px;color:var(--glow);font-size:.82rem}
+label small{color:var(--mist)}
+button{font:inherit;font-weight:500;color:#171018;background:linear-gradient(135deg,var(--glow),var(--ember));border:0;border-radius:10px;padding:12px 16px;cursor:pointer}
+button:disabled{opacity:.6;cursor:wait}
+.back{display:block;margin-top:18px;text-align:center;color:var(--mist);text-decoration:none}
+.back:hover{color:var(--glow)}
+
+main{position:relative;width:min(100%,560px);margin:0 auto;padding:max(30px,env(safe-area-inset-top)) 18px max(48px,env(safe-area-inset-bottom))}
+h1{margin:0 0 8px;font-size:clamp(2rem,8vw,2.7rem);font-weight:300}
+.lead{color:var(--mist);line-height:1.6;margin:0 0 24px}
+.card{padding:22px;border:1px solid rgba(242,196,138,.25);border-radius:22px;background:linear-gradient(180deg,rgba(25,18,32,.9),rgba(8,7,14,.94));box-shadow:0 16px 48px rgba(0,0,0,.48)}
+form{display:grid;gap:16px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.up{display:flex;align-items:center;gap:14px}
+#prev,#ph{width:78px;height:78px;border-radius:50%;flex:none}
+#prev{object-fit:cover;border:2px solid rgba(242,196,138,.6)}
+#ph{display:grid;place-items:center;border:1px dashed rgba(201,116,58,.6);color:var(--mist);font-size:1.5rem}
+#prev[hidden],#ph[hidden],#rm[hidden]{display:none}
+#photo{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.pick{display:inline-block;color:var(--glow);border:1px solid var(--ember);border-radius:8px;padding:9px 12px;cursor:pointer;font-size:.86rem}
+#rm{width:auto;background:transparent;color:var(--mist);padding:8px}
+#msg{min-height:1.4em;margin:3px 0 0;color:var(--glow);font-size:.86rem;line-height:1.5}
+#msg.err{color:#ff9a9a}#msg.ok{color:#b6e3b8}
+.login-note{margin-top:16px;text-align:center;color:var(--mist);font-size:.87rem}
+.login-note a{color:var(--glow)}
+@media(max-width:500px){main{padding-left:12px;padding-right:12px}.card{padding:16px;border-radius:18px}.two{grid-template-columns:1fr}}
+</style>
+
+<style id="thr-ultra-smooth-style">
+html{scroll-behavior:smooth}
+body{--mx:50vw;--my:20vh}
+body::before{
+  content:"";
+  position:fixed;
+  left:0;top:0;
+  width:280px;height:280px;
+  border-radius:50%;
+  pointer-events:none;
+  z-index:-1;
+  opacity:.20;
+  background:radial-gradient(circle,rgba(242,196,138,.22) 0%,rgba(201,116,58,.08) 38%,transparent 72%);
+  transform:translate3d(calc(var(--mx) - 140px),calc(var(--my) - 140px),0);
+  will-change:transform;
+}
+button,a,input,select,.card,.account-card,#profile,.member,.music-box{
+  -webkit-tap-highlight-color:transparent;
+}
+button,a{
+  transition:transform .18s cubic-bezier(.2,.8,.2,1),box-shadow .18s ease,filter .18s ease,background-color .18s ease,border-color .18s ease!important;
+}
+button:not(:disabled):active,a:active{transform:scale(.975)}
+input,select{
+  transition:border-color .16s ease,box-shadow .16s ease,background-color .16s ease,transform .16s ease!important;
+}
+input:focus,select:focus{transform:translateZ(0) scale(1.006)}
+.card,.account-card,#profile,.music-box{
+  transform:translateZ(0);
+  backface-visibility:hidden;
+  will-change:transform;
+}
+.thr-reveal{
+  opacity:0;
+  transform:translate3d(0,18px,0) scale(.985);
+}
+.thr-reveal.thr-in{
+  opacity:1;
+  transform:translate3d(0,0,0) scale(1);
+  transition:opacity .52s cubic-bezier(.16,1,.3,1),transform .52s cubic-bezier(.16,1,.3,1);
+}
+.thr-ripple{
+  position:fixed;
+  width:8px;height:8px;
+  margin:-4px 0 0 -4px;
+  border-radius:50%;
+  pointer-events:none;
+  z-index:99999;
+  border:1px solid rgba(242,196,138,.75);
+  box-shadow:0 0 18px rgba(242,196,138,.35);
+  animation:thrRipple .5s ease-out forwards;
+}
+@keyframes thrRipple{
+  to{opacity:0;transform:scale(5)}
+}
+.thr-shine{
+  position:relative;
+  overflow:hidden;
+}
+.thr-shine::after{
+  content:"";
+  position:absolute;
+  inset:-50% auto -50% -40%;
+  width:22%;
+  pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.10),transparent);
+  transform:skewX(-18deg) translateX(-220%);
+  animation:thrShine 7s ease-in-out infinite;
+}
+@keyframes thrShine{
+  0%,78%{transform:skewX(-18deg) translateX(-220%)}
+  92%,100%{transform:skewX(-18deg) translateX(760%)}
+}
+@media (hover:hover) and (pointer:fine){
+  button:not(:disabled):hover,a:hover{transform:translateY(-1px)}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  body::before,.thr-shine::after{display:none!important}
+  *,*::before,*::after{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+    scroll-behavior:auto!important;
+  }
+}
+</style>
+
+<style id="thr-form-fx">
+input,select{background-image:linear-gradient(90deg,rgba(242,196,138,.03),transparent 35%)}
+label{transition:color .16s ease,text-shadow .16s ease}
+div:focus-within>label{color:#ffd6a4;text-shadow:0 0 16px rgba(242,196,138,.18)}
+.card,.account-card{box-shadow:0 20px 60px rgba(0,0,0,.42),0 0 0 1px rgba(255,255,255,.015) inset!important}
+</style>
+
+</head>
+<body>
+<canvas id="stars" aria-hidden="true"></canvas>
+<main>
+<h1>JOIN THR</h1>
+<p class="lead">สร้างบัญชีและข้อมูลสมาชิก THR ในครั้งเดียว</p>
+<section class="card">
+<form id="f" novalidate>
+  <div class="two">
+    <div><label for="email">อีเมลสำหรับเข้าสู่ระบบ</label><input id="email" name="email" type="email" autocomplete="email" required placeholder="you@example.com"></div>
+    <div><label for="password">รหัสผ่าน <small>(อย่างน้อย 6 ตัว)</small></label><input id="password" name="password" type="password" autocomplete="new-password" minlength="6" required placeholder="••••••••"></div>
+  </div>
+  <div><label for="name">ชื่อ</label><input id="name" name="name" type="text" autocomplete="name" required placeholder="ชื่อของคุณ"></div>
+  <div class="two">
+    <div><label for="tiktok">TikTok <small>(ไม่บังคับ)</small></label><input id="tiktok" name="tiktok" type="text" placeholder="@username หรือลิงก์"></div>
+    <div><label for="youtube">YouTube <small>(ไม่บังคับ)</small></label><input id="youtube" name="youtube" type="text" placeholder="@channel หรือลิงก์"></div>
+  </div>
+  <div class="two">
+    <div><label for="facebook">Facebook <small>(ไม่บังคับ)</small></label><input id="facebook" name="facebook" type="text" placeholder="ลิงก์ Facebook"></div>
+    <div><label for="instagram">Instagram <small>(ไม่บังคับ)</small></label><input id="instagram" name="instagram" type="text" placeholder="@username หรือลิงก์"></div>
+  </div>
+  <div><label for="province">จังหวัด</label><select id="province" name="province" required><option value="">เลือกจังหวัด</option></select></div>
+  <div>
+    <label for="photo">รูปโปรไฟล์ <small>(ไม่บังคับ, ไม่เกิน 5 MB)</small></label>
+    <div class="up">
+      <img id="prev" alt="ตัวอย่างรูป" hidden><div id="ph">+</div>
+      <div><input id="photo" type="file" accept="image/jpeg,image/png,image/webp,image/gif"><label class="pick" for="photo" style="margin:0">เลือกรูป</label><button type="button" id="rm" hidden>ลบรูป</button></div>
+    </div>
+  </div>
+  <button id="submit" type="submit">สมัครและสร้างโปรไฟล์</button>
+  <p id="msg" aria-live="polite"></p>
+</form>
+<div class="login-note">มีบัญชีแล้ว? <a href="914672305189.html">เข้าสู่ระบบเพื่อแก้ไขข้อมูล</a></div>
+</section>
+<a class="back" href="583104927650.html">← กลับหน้าหลัก</a>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+var SUPABASE_URL="https://gxurnxlbtmdymrdfrhcv.supabase.co",SUPABASE_ANON_KEY="sb_publishable_QKnPZU1huLddOAYWOP4KPA_29Sv7C7G",BUCKET="member-photos";
+var client=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+var MAX_FILE_SIZE=5*1024*1024,ALLOWED_TYPES=["image/jpeg","image/png","image/webp","image/gif"];
+var PROV=[
+["Amnat Charoen","อำนาจเจริญ"],["Ang Thong","อ่างทอง"],["Bangkok","กรุงเทพมหานคร"],["Bueng Kan","บึงกาฬ"],["Buriram","บุรีรัมย์"],["Chachoengsao","ฉะเชิงเทรา"],["Chai Nat","ชัยนาท"],["Chaiyaphum","ชัยภูมิ"],["Chanthaburi","จันทบุรี"],["Chiang Mai","เชียงใหม่"],["Chiang Rai","เชียงราย"],["Chonburi","ชลบุรี"],["Chumphon","ชุมพร"],["Kalasin","กาฬสินธุ์"],["Kamphaeng Phet","กำแพงเพชร"],["Kanchanaburi","กาญจนบุรี"],["Khon Kaen","ขอนแก่น"],["Krabi","กระบี่"],["Lampang","ลำปาง"],["Lamphun","ลำพูน"],["Loei","เลย"],["Lopburi","ลพบุรี"],["Mae Hong Son","แม่ฮ่องสอน"],["Maha Sarakham","มหาสารคาม"],["Mukdahan","มุกดาหาร"],["Nakhon Nayok","นครนายก"],["Nakhon Pathom","นครปฐม"],["Nakhon Phanom","นครพนม"],["Nakhon Ratchasima","นครราชสีมา"],["Nakhon Sawan","นครสวรรค์"],["Nakhon Si Thammarat","นครศรีธรรมราช"],["Nan","น่าน"],["Narathiwat","นราธิวาส"],["Nong Bua Lamphu","หนองบัวลำภู"],["Nong Khai","หนองคาย"],["Nonthaburi","นนทบุรี"],["Pathum Thani","ปทุมธานี"],["Pattani","ปัตตานี"],["Phang Nga","พังงา"],["Phatthalung","พัทลุง"],["Phayao","พะเยา"],["Phetchabun","เพชรบูรณ์"],["Phetchaburi","เพชรบุรี"],["Phichit","พิจิตร"],["Phitsanulok","พิษณุโลก"],["Phra Nakhon Si Ayutthaya","พระนครศรีอยุธยา"],["Phrae","แพร่"],["Phuket","ภูเก็ต"],["Prachinburi","ปราจีนบุรี"],["Prachuap Khiri Khan","ประจวบคีรีขันธ์"],["Ranong","ระนอง"],["Ratchaburi","ราชบุรี"],["Rayong","ระยอง"],["Roi Et","ร้อยเอ็ด"],["Sa Kaeo","สระแก้ว"],["Sakon Nakhon","สกลนคร"],["Samut Prakan","สมุทรปราการ"],["Samut Sakhon","สมุทรสาคร"],["Samut Songkhram","สมุทรสงคราม"],["Saraburi","สระบุรี"],["Satun","สตูล"],["Sing Buri","สิงห์บุรี"],["Sisaket","ศรีสะเกษ"],["Songkhla","สงขลา"],["Sukhothai","สุโขทัย"],["Suphan Buri","สุพรรณบุรี"],["Surat Thani","สุราษฎร์ธานี"],["Surin","สุรินทร์"],["Tak","ตาก"],["Trang","ตรัง"],["Trat","ตราด"],["Ubon Ratchathani","อุบลราชธานี"],["Udon Thani","อุดรธานี"],["Uthai Thani","อุทัยธานี"],["Uttaradit","อุตรดิตถ์"],["Yala","ยะลา"],["Yasothon","ยโสธร"]
+],sel=document.getElementById("province");
+PROV.forEach(function(p){var o=document.createElement("option");o.value=p[0];o.textContent=p[1];sel.appendChild(o)});
+
+var f=document.getElementById("f"),msg=document.getElementById("msg"),photo=document.getElementById("photo"),prev=document.getElementById("prev"),ph=document.getElementById("ph"),rm=document.getElementById("rm"),submit=document.getElementById("submit"),img="";
+function status(t,type){msg.textContent=t;msg.className=type||""}
+function setImg(u){img=u;prev.hidden=!u;ph.hidden=!!u;rm.hidden=!u;if(u)prev.src=u;else prev.removeAttribute("src")}
+function dataUrlToBlob(dataUrl){var parts=dataUrl.split(","),mime=parts[0].match(/:(.*?);/)[1],binary=atob(parts[1]),bytes=new Uint8Array(binary.length);for(var i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);return new Blob([bytes],{type:mime})}
+
+photo.addEventListener("change",function(){
+ var file=photo.files[0];if(!file)return;
+ if(ALLOWED_TYPES.indexOf(file.type)===-1){status("รองรับเฉพาะ JPEG, PNG, WebP หรือ GIF","err");photo.value="";return}
+ if(file.size>MAX_FILE_SIZE){status("รูปต้องมีขนาดไม่เกิน 5 MB","err");photo.value="";return}
+ var url=URL.createObjectURL(file),im=new Image();
+ im.onload=function(){var M=480,s=Math.min(1,M/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.max(1,Math.round(im.width*s));c.height=Math.max(1,Math.round(im.height*s));c.getContext("2d").drawImage(im,0,0,c.width,c.height);setImg(c.toDataURL("image/jpeg",.82));URL.revokeObjectURL(url)};
+ im.onerror=function(){status("เปิดรูปนี้ไม่ได้","err");photo.value="";URL.revokeObjectURL(url)};
+ im.src=url;
+});
+rm.addEventListener("click",function(){photo.value="";setImg("")});
+
+async function createProfile(user,p){
+ var existing=await client.from("members").select("id").eq("user_id",user.id).maybeSingle();
+ if(existing.error)throw existing.error;
+ if(existing.data)return;
+ var photoUrl=null;
+ if(p.img){
+   var blob=dataUrlToBlob(p.img),path=user.id+"/"+Date.now()+".jpg";
+   var up=await client.storage.from(BUCKET).upload(path,blob,{contentType:"image/jpeg",upsert:false});
+   if(up.error)throw up.error;
+   photoUrl=client.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
+ }
+ var ins=await client.from("members").insert({
+   user_id:user.id,name:p.name,tiktok:p.tiktok||null,youtube:p.youtube||null,
+   facebook:p.facebook||null,instagram:p.instagram||null,province:p.province,
+   photo_url:photoUrl,created_at:new Date().toISOString()
+ });
+ if(ins.error)throw ins.error;
+}
+
+f.addEventListener("submit",async function(e){
+ e.preventDefault();
+ var p={email:f.email.value.trim().toLowerCase(),name:f.name.value.trim(),tiktok:f.tiktok.value.trim(),youtube:f.youtube.value.trim(),facebook:f.facebook.value.trim(),instagram:f.instagram.value.trim(),province:f.province.value,img:img};
+ var password=f.password.value;
+ if(!p.email||!password||!p.name||!p.province){status("กรุณากรอกอีเมล รหัสผ่าน ชื่อ และจังหวัด","err");return}
+ if(password.length<6){status("รหัสผ่านต้องมีอย่างน้อย 6 ตัว","err");return}
+ submit.disabled=true;submit.textContent="กำลังสมัคร...";
+ try{
+   var r=await client.auth.signUp({email:p.email,password:password});
+   if(r.error)throw r.error;
+   if(r.data.session&&r.data.user){
+     await createProfile(r.data.user,p);
+     localStorage.removeItem("thr_pending_profile");
+     status("สมัครสำเร็จ กำลังไปหน้าแก้ไขข้อมูล...","ok");
+     setTimeout(function(){location.replace("748203619558.html")},700);
+   }else{
+     localStorage.setItem("thr_pending_profile",JSON.stringify(p));
+     status("สร้างบัญชีแล้ว กรุณายืนยันอีเมลก่อน จากนั้นเข้าสู่ระบบ โปรไฟล์จะถูกสร้างให้อัตโนมัติ","ok");
+     setTimeout(function(){location.href="914672305189.html"},1500);
+   }
+ }catch(err){status("สมัครไม่สำเร็จ: "+err.message,"err")}
+ finally{submit.disabled=false;submit.textContent="สมัครและสร้างโปรไฟล์"}
+});
+
+var cv=document.getElementById("stars"),x=cv.getContext("2d"),S=[];
+function size(){cv.width=innerWidth;cv.height=innerHeight;S=[];for(var i=0;i<100;i++)S.push([Math.random()*cv.width,Math.random()*cv.height,Math.random()*1.1+.2,Math.random()*6])}
+function draw(t){x.clearRect(0,0,cv.width,cv.height);S.forEach(function(s){x.globalAlpha=.2+.4*Math.abs(Math.sin(t/2500+s[3]));x.fillStyle="#dcd6ee";x.beginPath();x.arc(s[0],s[1],s[2],0,7);x.fill()});if(!matchMedia("(prefers-reduced-motion:reduce)").matches)requestAnimationFrame(draw)}
+size();addEventListener("resize",size);requestAnimationFrame(draw);
+
+</script>
+
+<script id="thr-ultra-smooth-script">
+(function(){
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var fine=matchMedia("(hover:hover) and (pointer:fine)").matches;
+  var root=document.body;
+  var raf=0,lastX=innerWidth*.5,lastY=innerHeight*.2;
+
+  function paintPointer(){
+    raf=0;
+    root.style.setProperty("--mx",lastX+"px");
+    root.style.setProperty("--my",lastY+"px");
+  }
+  if(!reduce){
+    addEventListener("pointermove",function(e){
+      lastX=e.clientX; lastY=e.clientY;
+      if(!raf)raf=requestAnimationFrame(paintPointer);
+    },{passive:true});
+  }
+
+  var revealNodes=[].slice.call(document.querySelectorAll("main,.card,.account-card,.music-box,#profile"));
+  revealNodes.forEach(function(el,i){
+    if(el.id==="profile" && el.hidden)return;
+    el.classList.add("thr-reveal");
+    requestAnimationFrame(function(){
+      setTimeout(function(){el.classList.add("thr-in")},Math.min(i*55,260));
+    });
+  });
+
+  document.querySelectorAll("button,.pick,.music-pick,.join-link").forEach(function(el){
+    el.classList.add("thr-shine");
+  });
+
+  if(fine&&!reduce){
+    document.querySelectorAll(".card,.account-card,#profile").forEach(function(card){
+      var tr=0;
+      card.addEventListener("pointermove",function(e){
+        var r=card.getBoundingClientRect();
+        var px=(e.clientX-r.left)/r.width-.5;
+        var py=(e.clientY-r.top)/r.height-.5;
+        if(tr)return;
+        tr=requestAnimationFrame(function(){
+          tr=0;
+          card.style.transform="perspective(900px) rotateX("+(-py*1.5)+"deg) rotateY("+(px*1.8)+"deg) translateZ(0)";
+        });
+      },{passive:true});
+      card.addEventListener("pointerleave",function(){
+        card.style.transform="perspective(900px) rotateX(0) rotateY(0) translateZ(0)";
+      },{passive:true});
+    });
+  }
+
+  document.addEventListener("pointerdown",function(e){
+    if(reduce)return;
+    if(!e.target.closest("button,a,.pick,.music-pick,.member,.member-marker"))return;
+    var ring=document.createElement("span");
+    ring.className="thr-ripple";
+    ring.style.left=e.clientX+"px";
+    ring.style.top=e.clientY+"px";
+    document.body.appendChild(ring);
+    setTimeout(function(){ring.remove()},520);
+  },{passive:true});
+})();
+</script>
+
+</body>
+</html>
