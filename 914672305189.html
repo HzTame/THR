@@ -1,4 +1,70 @@
-<!DOCTYPE html><html lang="th"><head><meta name="robots" content="noarchive"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>THR Login</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap">
+<!DOCTYPE html><html lang="th"><head>
+<style id="thr-anti-source-v3-style">
+html,body{
+  -webkit-user-select:none;
+  user-select:none;
+  -webkit-touch-callout:none;
+}
+input,textarea,select,[contenteditable="true"]{
+  -webkit-user-select:text;
+  user-select:text;
+}
+</style>
+<script id="thr-anti-source-v3">
+(function(){
+  "use strict";
+
+  function block(e){
+    if(!e) return false;
+    try{ e.preventDefault(); }catch(_){}
+    try{ e.stopPropagation(); }catch(_){}
+    try{ e.stopImmediatePropagation(); }catch(_){}
+    return false;
+  }
+
+  function shouldBlock(e){
+    var k = String(e.key || "").toLowerCase();
+    var code = String(e.code || "").toLowerCase();
+
+    return (
+      e.key === "F12" || code === "f12" ||
+      (e.ctrlKey && k === "u") ||
+      (e.ctrlKey && k === "s") ||
+      (e.ctrlKey && k === "p") ||
+      (e.ctrlKey && e.shiftKey && ["i","j","c","k","e"].includes(k)) ||
+      (e.metaKey && e.altKey && ["i","j","c"].includes(k)) ||
+      (e.metaKey && k === "u")
+    );
+  }
+
+  ["keydown","keypress","keyup"].forEach(function(type){
+    window.addEventListener(type,function(e){
+      if(shouldBlock(e)) return block(e);
+    },true);
+    document.addEventListener(type,function(e){
+      if(shouldBlock(e)) return block(e);
+    },true);
+  });
+
+  document.addEventListener("contextmenu",block,true);
+
+  document.addEventListener("dragstart",function(e){
+    var t=e.target;
+    if(t && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
+    block(e);
+  },true);
+
+  document.addEventListener("selectstart",function(e){
+    var t=e.target;
+    if(t && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
+    block(e);
+  },true);
+
+  /* ปิดเมนู save/print บางกรณี */
+  window.oncontextmenu=function(){return false};
+})();
+</script>
+<meta name="robots" content="noarchive"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>THR Login</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap">
 <style>
 
 :root{--ink:#050509;--ember:#c9743a;--glow:#f2c48a;--mist:#8f8aa3;box-sizing:border-box}
@@ -23,9 +89,6 @@ h1{margin:0 0 8px;text-align:center;font-size:2rem;font-weight:300}.lead{text-al
 .signup{text-align:center;color:var(--mist);font-size:.86rem;margin-top:14px}.signup a{color:var(--glow)}
 @media(max-width:420px){.card{padding:22px 16px;border-radius:20px}h1{font-size:1.7rem}}
 </style>
-
-
-
 <style id="thr-premium-ui-v2">
 :root{
   --thr-gold:#f2c48a;
@@ -368,13 +431,10 @@ body.thr-index-page #profile:not([hidden]) #profile-photo{
   }
 }
 </style>
-
-
 <style id="thr-premium-press-style">
 .thr-press-v2{transform:scale(.975)!important}
 </style>
-
-</head><body><canvas id="stars" aria-hidden="true"></canvas><div class="wrap"><main class="card"><div class="logo">THR</div><h1>LOGIN</h1><p class="lead">เข้าสู่ระบบเพื่อแก้ไขข้อมูลส่วนตัวของคุณ</p><form id="loginForm" novalidate><div class="field"><label for="email">อีเมล</label><input id="email" type="email" autocomplete="email" placeholder="you@example.com" required></div><div class="field"><label for="password">รหัสผ่าน</label><input id="password" type="password" autocomplete="current-password" placeholder="••••••••" required></div><button id="loginBtn" type="submit">เข้าสู่ระบบ</button><p id="msg" aria-live="polite"></p></form><div class="signup">ยังไม่มีบัญชี? <a href="267495831025.html">สมัครสมาชิก THR</a></div><a class="back" href="index.html">← กลับหน้าหลัก</a></main></div>
+</head><body oncontextmenu="return false" ondragstart="return false"><canvas id="stars" aria-hidden="true"></canvas><div class="wrap"><main class="card"><div class="logo">THR</div><h1>LOGIN</h1><p class="lead">เข้าสู่ระบบเพื่อแก้ไขข้อมูลส่วนตัวของคุณ</p><form id="loginForm" novalidate><div class="field"><label for="email">อีเมล</label><input id="email" type="email" autocomplete="email" placeholder="you@example.com" required></div><div class="field"><label for="password">รหัสผ่าน</label><input id="password" type="password" autocomplete="current-password" placeholder="••••••••" required></div><button id="loginBtn" type="submit">เข้าสู่ระบบ</button><p id="msg" aria-live="polite"></p></form><div class="signup">ยังไม่มีบัญชี? <a href="267495831025.html">สมัครสมาชิก THR</a></div><a class="back" href="index.html">← กลับหน้าหลัก</a></main></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 var SUPABASE_URL="https://gxurnxlbtmdymrdfrhcv.supabase.co",SUPABASE_ANON_KEY="sb_publishable_QKnPZU1huLddOAYWOP4KPA_29Sv7C7G",BUCKET="member-photos";
@@ -431,8 +491,6 @@ function draw(t){x.clearRect(0,0,cv.width,cv.height);S.forEach(function(s){x.glo
 size();addEventListener("resize",size);requestAnimationFrame(draw);
 
 </script>
-
-
 <script id="thr-premium-ui-v2-script">
 (function(){
   "use strict";
@@ -500,42 +558,6 @@ size();addEventListener("resize",size);requestAnimationFrame(draw);
       }
     }).observe(profile,{attributes:true,attributeFilter:["hidden"]});
   }
-})();
-</script>
-
-<script id="thr-source-protection">
-(function(){
-  "use strict";
-
-  /* กันเมนูคลิกขวา */
-  document.addEventListener("contextmenu", function(e){
-    e.preventDefault();
-  }, {capture:true});
-
-  /* กันคีย์ลัดที่ใช้เปิด source / devtools / save page */
-  document.addEventListener("keydown", function(e){
-    var k = String(e.key || "").toLowerCase();
-
-    var blocked =
-      e.key === "F12" ||
-      (e.ctrlKey && k === "u") ||
-      (e.ctrlKey && k === "s") ||
-      (e.ctrlKey && e.shiftKey && ["i","j","c","k","e"].includes(k)) ||
-      (e.metaKey && e.altKey && ["i","j","c"].includes(k));
-
-    if(blocked){
-      e.preventDefault();
-      e.stopPropagation();
-      return false;
-    }
-  }, true);
-
-  /* ลดการลาก/คัดลอกโค้ดจากหน้าเว็บ */
-  document.addEventListener("dragstart", function(e){
-    if(e.target && e.target.tagName !== "INPUT" && e.target.tagName !== "TEXTAREA"){
-      e.preventDefault();
-    }
-  }, true);
 })();
 </script>
 </body></html>

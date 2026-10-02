@@ -1,4 +1,70 @@
-<!DOCTYPE html><html lang="th"><head><meta name="robots" content="noarchive"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Edit THR Profile</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap">
+<!DOCTYPE html><html lang="th"><head>
+<style id="thr-anti-source-v3-style">
+html,body{
+  -webkit-user-select:none;
+  user-select:none;
+  -webkit-touch-callout:none;
+}
+input,textarea,select,[contenteditable="true"]{
+  -webkit-user-select:text;
+  user-select:text;
+}
+</style>
+<script id="thr-anti-source-v3">
+(function(){
+  "use strict";
+
+  function block(e){
+    if(!e) return false;
+    try{ e.preventDefault(); }catch(_){}
+    try{ e.stopPropagation(); }catch(_){}
+    try{ e.stopImmediatePropagation(); }catch(_){}
+    return false;
+  }
+
+  function shouldBlock(e){
+    var k = String(e.key || "").toLowerCase();
+    var code = String(e.code || "").toLowerCase();
+
+    return (
+      e.key === "F12" || code === "f12" ||
+      (e.ctrlKey && k === "u") ||
+      (e.ctrlKey && k === "s") ||
+      (e.ctrlKey && k === "p") ||
+      (e.ctrlKey && e.shiftKey && ["i","j","c","k","e"].includes(k)) ||
+      (e.metaKey && e.altKey && ["i","j","c"].includes(k)) ||
+      (e.metaKey && k === "u")
+    );
+  }
+
+  ["keydown","keypress","keyup"].forEach(function(type){
+    window.addEventListener(type,function(e){
+      if(shouldBlock(e)) return block(e);
+    },true);
+    document.addEventListener(type,function(e){
+      if(shouldBlock(e)) return block(e);
+    },true);
+  });
+
+  document.addEventListener("contextmenu",block,true);
+
+  document.addEventListener("dragstart",function(e){
+    var t=e.target;
+    if(t && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
+    block(e);
+  },true);
+
+  document.addEventListener("selectstart",function(e){
+    var t=e.target;
+    if(t && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
+    block(e);
+  },true);
+
+  /* ปิดเมนู save/print บางกรณี */
+  window.oncontextmenu=function(){return false};
+})();
+</script>
+<meta name="robots" content="noarchive"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Edit THR Profile</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap">
 <style>
 :root{--ink:#050509;--ember:#c9743a;--glow:#f2c48a;--mist:#8f8aa3;box-sizing:border-box}
 *,*::before,*::after{box-sizing:inherit}
@@ -230,7 +296,6 @@ button:disabled{opacity:.6;cursor:wait}
   }
 }
 </style>
-
 <style id="thr-premium-ui-v2">
 :root{
   --thr-gold:#f2c48a;
@@ -573,13 +638,10 @@ body.thr-index-page #profile:not([hidden]) #profile-photo{
   }
 }
 </style>
-
-
 <style id="thr-premium-press-style">
 .thr-press-v2{transform:scale(.975)!important}
 </style>
-
-</head><body><canvas id="stars" aria-hidden="true"></canvas><main><div class="top"><h1>EDIT PROFILE</h1><button id="logout" class="logout" type="button">ออกจากระบบ</button></div><p class="lead">แก้ไขข้อมูลส่วนตัวและช่องทางโซเชียลของคุณ</p><section class="card"><form id="f" novalidate><div><label for="name">ชื่อ</label><input id="name" name="name" type="text" autocomplete="name" required></div><div><label for="tiktok">TikTok <small>(ไม่บังคับ)</small></label><input id="tiktok" name="tiktok" type="text" placeholder="@username หรือลิงก์"></div><div><label for="youtube">YouTube <small>(ไม่บังคับ)</small></label><input id="youtube" name="youtube" type="text" placeholder="@channel หรือลิงก์"></div><div><label for="facebook">Facebook <small>(ไม่บังคับ)</small></label><input id="facebook" name="facebook" type="text" placeholder="ลิงก์ Facebook"></div><div><label for="instagram">Instagram <small>(ไม่บังคับ)</small></label><input id="instagram" name="instagram" type="text" placeholder="@username หรือลิงก์"></div><div><label for="province">จังหวัด</label><select id="province" name="province" required><option value="">เลือกจังหวัด</option></select></div><div><label for="photo">รูปโปรไฟล์ <small>(JPEG/PNG/WebP/GIF ไม่เกิน 5 MB)</small></label><div class="up"><img id="prev" alt="รูปโปรไฟล์" hidden><div id="ph">+</div><div><input id="photo" type="file" accept="image/jpeg,image/png,image/webp,image/gif"><label class="pick" for="photo" style="margin:0">เปลี่ยนรูป</label><button type="button" id="rm" hidden>ลบรูป</button></div></div></div><div class="music-box"><h3>เพลงประจำโปรไฟล์ 🎵</h3><p class="music-help">อัปโหลดเพลงของคุณเอง ระบบจะไม่เล่นอัตโนมัติ</p><div class="music-choice"><div><label for="music-title">ชื่อเพลง <small>(ไม่บังคับ)</small></label><input id="music-title" type="text" maxlength="120" placeholder="เช่น My Theme Song"></div><div><label>อัปโหลดไฟล์เพลง <small>(MP3/M4A/OGG/WAV ไม่เกิน 20 MB)</small></label><div class="music-upload-row"><input id="music-file" type="file" accept="audio/mpeg,audio/mp4,audio/ogg,audio/wav,audio/x-wav,.mp3,.m4a,.ogg,.wav"><label class="music-pick" for="music-file">เลือกไฟล์เพลง</label><span id="music-file-name">ยังไม่ได้เลือกไฟล์</span><button id="remove-music" type="button" hidden>ลบเพลง</button></div></div><div id="music-preview" hidden></div></div></div><button id="save" type="submit">บันทึกการแก้ไข</button><p id="msg" aria-live="polite"></p></form></section><section class="account-card" aria-labelledby="account-title"><h2 id="account-title">ACCOUNT SETTINGS</h2><p class="account-lead">เปลี่ยนอีเมลหรือรหัสผ่านสำหรับบัญชีที่ใช้เข้าสู่ระบบ</p><div class="account-grid"><div><label>อีเมลปัจจุบัน</label><div id="current-email" class="account-current">กำลังโหลด...</div></div><div class="account-actions-row"><div class="grow"><label for="new-email">อีเมลใหม่</label><input id="new-email" type="email" autocomplete="email" placeholder="new@example.com"></div><button id="change-email" type="button">เปลี่ยนอีเมล</button></div><p id="email-msg" aria-live="polite"></p><div><label for="new-password">รหัสผ่านใหม่ <small>(อย่างน้อย 6 ตัว)</small></label><div class="password-field"><input id="new-password" type="password" autocomplete="new-password" placeholder="••••••••"><button class="password-toggle" type="button" data-target="new-password" aria-label="แสดงรหัสผ่าน" title="แสดง/ซ่อนรหัสผ่าน"><span class="eye" aria-hidden="true">👁</span><span class="eye-off" aria-hidden="true">🙈</span></button></div></div><div class="account-actions-row"><div class="grow"><label for="confirm-password">ยืนยันรหัสผ่านใหม่</label><div class="password-field"><input id="confirm-password" type="password" autocomplete="new-password" placeholder="••••••••"><button class="password-toggle" type="button" data-target="confirm-password" aria-label="แสดงรหัสผ่าน" title="แสดง/ซ่อนรหัสผ่าน"><span class="eye" aria-hidden="true">👁</span><span class="eye-off" aria-hidden="true">🙈</span></button></div></div><button id="change-password" type="button">เปลี่ยนรหัสผ่าน</button></div><p id="password-msg" aria-live="polite"></p></div></section><a class="back" href="index.html">← กลับหน้าหลัก</a></main>
+</head><body oncontextmenu="return false" ondragstart="return false"><canvas id="stars" aria-hidden="true"></canvas><main><div class="top"><h1>EDIT PROFILE</h1><button id="logout" class="logout" type="button">ออกจากระบบ</button></div><p class="lead">แก้ไขข้อมูลส่วนตัวและช่องทางโซเชียลของคุณ</p><section class="card"><form id="f" novalidate><div><label for="name">ชื่อ</label><input id="name" name="name" type="text" autocomplete="name" required></div><div><label for="tiktok">TikTok <small>(ไม่บังคับ)</small></label><input id="tiktok" name="tiktok" type="text" placeholder="@username หรือลิงก์"></div><div><label for="youtube">YouTube <small>(ไม่บังคับ)</small></label><input id="youtube" name="youtube" type="text" placeholder="@channel หรือลิงก์"></div><div><label for="facebook">Facebook <small>(ไม่บังคับ)</small></label><input id="facebook" name="facebook" type="text" placeholder="ลิงก์ Facebook"></div><div><label for="instagram">Instagram <small>(ไม่บังคับ)</small></label><input id="instagram" name="instagram" type="text" placeholder="@username หรือลิงก์"></div><div><label for="province">จังหวัด</label><select id="province" name="province" required><option value="">เลือกจังหวัด</option></select></div><div><label for="photo">รูปโปรไฟล์ <small>(JPEG/PNG/WebP/GIF ไม่เกิน 5 MB)</small></label><div class="up"><img id="prev" alt="รูปโปรไฟล์" hidden><div id="ph">+</div><div><input id="photo" type="file" accept="image/jpeg,image/png,image/webp,image/gif"><label class="pick" for="photo" style="margin:0">เปลี่ยนรูป</label><button type="button" id="rm" hidden>ลบรูป</button></div></div></div><div class="music-box"><h3>เพลงประจำโปรไฟล์ 🎵</h3><p class="music-help">อัปโหลดเพลงของคุณเอง ระบบจะไม่เล่นอัตโนมัติ</p><div class="music-choice"><div><label for="music-title">ชื่อเพลง <small>(ไม่บังคับ)</small></label><input id="music-title" type="text" maxlength="120" placeholder="เช่น My Theme Song"></div><div><label>อัปโหลดไฟล์เพลง <small>(MP3/M4A/OGG/WAV ไม่เกิน 20 MB)</small></label><div class="music-upload-row"><input id="music-file" type="file" accept="audio/mpeg,audio/mp4,audio/ogg,audio/wav,audio/x-wav,.mp3,.m4a,.ogg,.wav"><label class="music-pick" for="music-file">เลือกไฟล์เพลง</label><span id="music-file-name">ยังไม่ได้เลือกไฟล์</span><button id="remove-music" type="button" hidden>ลบเพลง</button></div></div><div id="music-preview" hidden></div></div></div><button id="save" type="submit">บันทึกการแก้ไข</button><p id="msg" aria-live="polite"></p></form></section><section class="account-card" aria-labelledby="account-title"><h2 id="account-title">ACCOUNT SETTINGS</h2><p class="account-lead">เปลี่ยนอีเมลหรือรหัสผ่านสำหรับบัญชีที่ใช้เข้าสู่ระบบ</p><div class="account-grid"><div><label>อีเมลปัจจุบัน</label><div id="current-email" class="account-current">กำลังโหลด...</div></div><div class="account-actions-row"><div class="grow"><label for="new-email">อีเมลใหม่</label><input id="new-email" type="email" autocomplete="email" placeholder="new@example.com"></div><button id="change-email" type="button">เปลี่ยนอีเมล</button></div><p id="email-msg" aria-live="polite"></p><div><label for="new-password">รหัสผ่านใหม่ <small>(อย่างน้อย 6 ตัว)</small></label><div class="password-field"><input id="new-password" type="password" autocomplete="new-password" placeholder="••••••••"><button class="password-toggle" type="button" data-target="new-password" aria-label="แสดงรหัสผ่าน" title="แสดง/ซ่อนรหัสผ่าน"><span class="eye" aria-hidden="true">👁</span><span class="eye-off" aria-hidden="true">🙈</span></button></div></div><div class="account-actions-row"><div class="grow"><label for="confirm-password">ยืนยันรหัสผ่านใหม่</label><div class="password-field"><input id="confirm-password" type="password" autocomplete="new-password" placeholder="••••••••"><button class="password-toggle" type="button" data-target="confirm-password" aria-label="แสดงรหัสผ่าน" title="แสดง/ซ่อนรหัสผ่าน"><span class="eye" aria-hidden="true">👁</span><span class="eye-off" aria-hidden="true">🙈</span></button></div></div><button id="change-password" type="button">เปลี่ยนรหัสผ่าน</button></div><p id="password-msg" aria-live="polite"></p></div></section><a class="back" href="index.html">← กลับหน้าหลัก</a></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 var SUPABASE_URL="https://gxurnxlbtmdymrdfrhcv.supabase.co";
@@ -898,7 +960,6 @@ document.querySelectorAll(".password-toggle").forEach(function(button){
   });
 });
 </script>
-
 <script id="thr-premium-ui-v2-script">
 (function(){
   "use strict";
@@ -966,42 +1027,6 @@ document.querySelectorAll(".password-toggle").forEach(function(button){
       }
     }).observe(profile,{attributes:true,attributeFilter:["hidden"]});
   }
-})();
-</script>
-
-<script id="thr-source-protection">
-(function(){
-  "use strict";
-
-  /* กันเมนูคลิกขวา */
-  document.addEventListener("contextmenu", function(e){
-    e.preventDefault();
-  }, {capture:true});
-
-  /* กันคีย์ลัดที่ใช้เปิด source / devtools / save page */
-  document.addEventListener("keydown", function(e){
-    var k = String(e.key || "").toLowerCase();
-
-    var blocked =
-      e.key === "F12" ||
-      (e.ctrlKey && k === "u") ||
-      (e.ctrlKey && k === "s") ||
-      (e.ctrlKey && e.shiftKey && ["i","j","c","k","e"].includes(k)) ||
-      (e.metaKey && e.altKey && ["i","j","c"].includes(k));
-
-    if(blocked){
-      e.preventDefault();
-      e.stopPropagation();
-      return false;
-    }
-  }, true);
-
-  /* ลดการลาก/คัดลอกโค้ดจากหน้าเว็บ */
-  document.addEventListener("dragstart", function(e){
-    if(e.target && e.target.tagName !== "INPUT" && e.target.tagName !== "TEXTAREA"){
-      e.preventDefault();
-    }
-  }, true);
 })();
 </script>
 </body></html>
