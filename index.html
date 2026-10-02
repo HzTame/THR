@@ -839,18 +839,59 @@ html,body{cursor:auto}
 </style>
 
 
+
 <style id="unique-visitor-counter-style">
 #unique-visitor-count{
-  margin:2px 0 10px;
-  color:var(--mist);
-  font-size:.78rem;
-  line-height:1.4;
+  position:fixed;
+  left:max(12px,env(safe-area-inset-left,0px));
+  bottom:max(12px,env(safe-area-inset-bottom,0px));
+  z-index:4500;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  min-height:36px;
+  padding:7px 10px;
+  margin:0;
+  border:1px solid rgba(242,196,138,.26);
+  border-radius:999px;
+  background:rgba(5,5,9,.58);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  box-shadow:0 8px 24px rgba(0,0,0,.34);
+  color:var(--glow);
+  font-size:.76rem;
+  line-height:1;
+  user-select:none;
+  pointer-events:none;
+}
+#unique-visitor-count .visitor-eye{
+  width:17px;
+  height:17px;
+  display:block;
+  flex:none;
+  opacity:.95;
 }
 #unique-visitor-count b{
-  color:var(--glow);
+  color:#fff;
   font-weight:500;
+  font-variant-numeric:tabular-nums;
+}
+@media(max-width:520px){
+  #unique-visitor-count{
+    left:max(9px,env(safe-area-inset-left,0px));
+    bottom:max(9px,env(safe-area-inset-bottom,0px));
+    min-height:32px;
+    padding:6px 9px;
+    gap:6px;
+    font-size:.72rem;
+  }
+  #unique-visitor-count .visitor-eye{
+    width:15px;
+    height:15px;
+  }
 }
 </style>
+
 
 </head><body>
 
@@ -871,7 +912,7 @@ html,body{cursor:auto}
     <button id="menu-logout" type="button" hidden>ออกจากระบบ</button>
   </nav>
 </div>
-<video id="bg-video" autoplay muted loop playsinline preload="auto" aria-hidden="true"><source src="https://www.pexels.com/download/video/10343918/" type="video/mp4"></video><div id="bg-overlay" aria-hidden="true"></div><script>(function(){document.addEventListener("contextmenu",function(e){e.preventDefault()});document.addEventListener("keydown",function(e){var k=e.key.toLowerCase();if(e.key==="F12"||(e.ctrlKey&&e.shiftKey&&["i","j","c"].includes(k))||(e.ctrlKey&&["u","s"].includes(k))){e.preventDefault();e.stopPropagation();return false}},true)})();</script><canvas id="stars" aria-hidden="true"></canvas><div id="profile-backdrop" aria-hidden="true"></div><main><section><h1>TAME THR <br></h1><p>Welcome to the THR family, and these are my family members.</p><div id="info" aria-live="polite"><b>77 provinces</b><span>Hover or tap a light on the map</span></div><p id="member-status" aria-live="polite">กำลังโหลดสมาชิก...</p><p id="unique-visitor-count" aria-live="polite">ผู้เข้าชมไม่ซ้ำ: <b>กำลังโหลด...</b></p><div class="account-actions" aria-label="บัญชีสมาชิก">
+<video id="bg-video" autoplay muted loop playsinline preload="auto" aria-hidden="true"><source src="https://www.pexels.com/download/video/10343918/" type="video/mp4"></video><div id="bg-overlay" aria-hidden="true"></div><script>(function(){document.addEventListener("contextmenu",function(e){e.preventDefault()});document.addEventListener("keydown",function(e){var k=e.key.toLowerCase();if(e.key==="F12"||(e.ctrlKey&&e.shiftKey&&["i","j","c"].includes(k))||(e.ctrlKey&&["u","s"].includes(k))){e.preventDefault();e.stopPropagation();return false}},true)})();</script><canvas id="stars" aria-hidden="true"></canvas><div id="profile-backdrop" aria-hidden="true"></div><main><section><h1>TAME THR <br></h1><p>Welcome to the THR family, and these are my family members.</p><div id="info" aria-live="polite"><b>77 provinces</b><span>Hover or tap a light on the map</span></div><p id="member-status" aria-live="polite">กำลังโหลดสมาชิก...</p><p id="unique-visitor-count" aria-label="จำนวนผู้เข้าชมไม่ซ้ำ"><svg class="visitor-eye" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 5c5.2 0 9.3 4.2 10.5 6.1a1.6 1.6 0 0 1 0 1.8C21.3 14.8 17.2 19 12 19S2.7 14.8 1.5 12.9a1.6 1.6 0 0 1 0-1.8C2.7 9.2 6.8 5 12 5Zm0 2C7.9 7 4.5 10.2 3.3 12c1.2 1.8 4.6 5 8.7 5s7.5-3.2 8.7-5C19.5 10.2 16.1 7 12 7Zm0 2.2a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6Z"/></svg><b>กำลังโหลด...</b></p><div class="account-actions" aria-label="บัญชีสมาชิก">
 <a class="join-account" id="join-account" href="267495831025.html">เข้าร่วม THR</a>
 <a class="login-account" id="login-account" href="914672305189.html">เข้าสู่ระบบ</a>
 <a class="edit-account" id="edit-account" href="748203619558.html" hidden>แก้ไขข้อมูลของฉัน</a>
