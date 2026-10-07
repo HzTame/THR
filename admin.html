@@ -4,74 +4,46 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noarchive">
-<title>THR Admin</title>
+<title>THR Admin - People</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap">
 <style>
-:root{--ink:#050509;--panel:#11101b;--panel2:#191222;--gold:#f2c48a;--copper:#c9743a;--cream:#ffe0b5;--mist:#a6a1b8;--danger:#ff8e8e;--ok:#b6e3b8;box-sizing:border-box}*,*::before,*::after{box-sizing:inherit}html,body{min-height:100%;margin:0}body{background:radial-gradient(120% 60% at 50% 108%,#3a1e16 0%,#1a1224 38%,var(--ink) 75%);color:#eee9f5;font-family:"Inter","Helvetica Neue",Arial,sans-serif;overflow-x:hidden}#stars{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}.shell{position:relative;z-index:1;width:min(1180px,100%);margin:0 auto;padding:max(28px,env(safe-area-inset-top)) 18px max(42px,env(safe-area-inset-bottom))}.top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:22px}.brand h1{margin:0;font-size:clamp(2rem,6vw,3.2rem);font-weight:300;line-height:1.05;background:linear-gradient(100deg,#fff 0%,var(--cream) 48%,#d79a6a 100%);-webkit-background-clip:text;background-clip:text;color:transparent}.brand p{margin:10px 0 0;color:var(--mist);line-height:1.55}.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}button,a.btn{font:inherit;font-weight:500;color:#171018;background:linear-gradient(135deg,var(--gold),var(--copper));border:0;border-radius:10px;padding:11px 14px;cursor:pointer;text-decoration:none;white-space:nowrap}button.ghost,a.ghost{color:var(--gold);background:rgba(10,8,16,.58);border:1px solid rgba(242,196,138,.34)}button.danger{color:#2b0808;background:linear-gradient(135deg,#ffb4b4,#e45656)}button:disabled{opacity:.6;cursor:wait}.grid{display:grid;grid-template-columns:280px minmax(0,1fr);gap:18px}.card{border:1px solid rgba(242,196,138,.22);border-radius:18px;background:linear-gradient(180deg,rgba(31,22,40,.88),rgba(8,7,14,.94));box-shadow:0 20px 60px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.06);backdrop-filter:blur(14px)}.side{padding:18px;align-self:start;position:sticky;top:18px}.side h2,.panel h2{margin:0 0 12px;color:var(--gold);font-size:1.02rem;font-weight:500}.metric{display:grid;gap:10px;margin:12px 0 18px}.metric div{padding:12px;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid rgba(242,196,138,.12)}.metric b{display:block;font-size:1.6rem;color:#fff;font-weight:500}.metric span{display:block;margin-top:2px;color:var(--mist);font-size:.78rem}.field{display:grid;gap:6px;margin-bottom:12px}label{color:var(--gold);font-size:.8rem}input,select,textarea{width:100%;font:inherit;color:#eee9f5;background:rgba(9,8,16,.76);border:1px solid rgba(201,116,58,.45);border-radius:10px;padding:11px 12px;outline:none}input:focus,select:focus,textarea:focus{border-color:var(--cream);box-shadow:0 0 0 3px rgba(242,196,138,.11)}.panel{padding:0;overflow:hidden}.toolbar{display:grid;grid-template-columns:minmax(0,1fr) 180px auto;gap:10px;padding:16px;border-bottom:1px solid rgba(242,196,138,.14)}.table-wrap{overflow:auto}.members{width:100%;border-collapse:collapse;min-width:860px}.members th,.members td{padding:12px;border-bottom:1px solid rgba(242,196,138,.1);text-align:left;vertical-align:middle}.members th{position:sticky;top:0;background:#100d18;color:var(--gold);font-size:.76rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;z-index:1}.avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;border:1px solid rgba(242,196,138,.5);background:#17131f}.no-avatar{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;border:1px solid rgba(242,196,138,.3);color:var(--gold);background:#17131f;font-size:.72rem}.person{display:grid;grid-template-columns:42px minmax(0,1fr);gap:10px;align-items:center}.person strong{display:block;font-weight:500;color:#fff;overflow-wrap:anywhere}.person small{display:block;color:var(--mist);font-size:.76rem;overflow-wrap:anywhere}.pill{display:inline-flex;align-items:center;min-height:28px;padding:4px 9px;border-radius:999px;background:rgba(242,196,138,.1);border:1px solid rgba(242,196,138,.2);color:var(--cream);font-size:.78rem}.row-actions{display:flex;gap:8px;align-items:center}.row-actions button{padding:8px 10px;border-radius:9px;font-size:.82rem}.muted{color:var(--mist)}#msg{min-height:1.4em;margin:10px 0 0;color:var(--gold);font-size:.84rem;line-height:1.45}#msg.err{color:var(--danger)}#msg.ok{color:var(--ok)}.lock{max-width:560px;margin:12vh auto 0;padding:24px;text-align:center}.lock h1{margin:0 0 10px;font-size:2rem;font-weight:300;color:var(--gold)}.lock p{color:var(--mist);line-height:1.6}.hide{display:none!important}.modal-backdrop{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.62);display:grid;place-items:center;padding:18px}.modal{width:min(640px,100%);max-height:min(780px,92vh);overflow:auto;padding:20px}.modal h2{margin:0 0 12px;color:var(--gold);font-size:1.25rem}.detail{display:grid;grid-template-columns:120px minmax(0,1fr);gap:8px 12px}.detail dt{color:var(--gold);font-size:.82rem}.detail dd{margin:0;color:#eee9f5;overflow-wrap:anywhere}.sql-note{margin-top:16px;padding:12px;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid rgba(242,196,138,.12);color:var(--mist);font-size:.8rem;line-height:1.55}.sql-note code{color:var(--cream)}@media(max-width:850px){.top{display:grid}.actions{justify-content:flex-start}.grid{grid-template-columns:1fr}.side{position:relative;top:auto}.toolbar{grid-template-columns:1fr}.members{min-width:760px}}@media(max-width:440px){.shell{padding-left:12px;padding-right:12px}.card{border-radius:15px}.side{padding:14px}.toolbar{padding:12px}button,a.btn{width:100%;text-align:center}.row-actions button{width:auto}.detail{grid-template-columns:1fr}}
+:root{--ink:#050509;--gold:#f2c48a;--copper:#c9743a;--cream:#ffe0b5;--mist:#aaa4bc;--line:rgba(242,196,138,.18);box-sizing:border-box}*,*::before,*::after{box-sizing:inherit}html,body{min-height:100%;margin:0}body{background:radial-gradient(120% 60% at 50% 108%,#3a1e16 0%,#1a1224 38%,var(--ink) 75%);color:#eee9f5;font-family:"Inter","Helvetica Neue",Arial,sans-serif;overflow-x:hidden}#stars{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}.shell{position:relative;z-index:1;width:min(1180px,100%);margin:0 auto;padding:max(28px,env(safe-area-inset-top)) 18px max(42px,env(safe-area-inset-bottom))}.top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:20px}.brand h1{margin:0;font-size:clamp(2rem,6vw,3.1rem);font-weight:300;line-height:1.05;background:linear-gradient(100deg,#fff 0%,var(--cream) 48%,#d79a6a 100%);-webkit-background-clip:text;background-clip:text;color:transparent}.brand p{margin:10px 0 0;color:var(--mist);line-height:1.55}.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}button,a.btn{font:inherit;font-weight:500;color:#171018;background:linear-gradient(135deg,var(--gold),var(--copper));border:0;border-radius:10px;padding:11px 14px;cursor:pointer;text-decoration:none;white-space:nowrap}button.ghost,a.ghost{color:var(--gold);background:rgba(10,8,16,.58);border:1px solid rgba(242,196,138,.34)}button:disabled{opacity:.6;cursor:wait}.grid{display:grid;grid-template-columns:280px minmax(0,1fr);gap:18px}.card{border:1px solid rgba(242,196,138,.22);border-radius:18px;background:linear-gradient(180deg,rgba(31,22,40,.88),rgba(8,7,14,.94));box-shadow:0 20px 60px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.06);backdrop-filter:blur(14px)}.side{padding:18px;align-self:start;position:sticky;top:18px}.side h2,.panel h2{margin:0 0 12px;color:var(--gold);font-size:1.02rem;font-weight:500}.metric{display:grid;gap:10px;margin:12px 0 18px}.metric div{padding:12px;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid rgba(242,196,138,.12)}.metric b{display:block;font-size:1.6rem;color:#fff;font-weight:500}.metric span{display:block;margin-top:2px;color:var(--mist);font-size:.78rem}.muted{color:var(--mist)}#msg{min-height:1.4em;margin:12px 0 0;color:var(--gold);font-size:.84rem;line-height:1.45}#msg.err{color:#ff9a9a}#msg.ok{color:#b6e3b8}.toolbar{display:grid;grid-template-columns:minmax(0,1fr) 180px auto;gap:10px;padding:16px;border-bottom:1px solid var(--line)}input,select{width:100%;font:inherit;color:#eee9f5;background:rgba(9,8,16,.76);border:1px solid rgba(201,116,58,.45);border-radius:10px;padding:11px 12px;outline:none}input:focus,select:focus{border-color:var(--cream);box-shadow:0 0 0 3px rgba(242,196,138,.11)}.table-wrap{overflow:auto}.members{width:100%;border-collapse:collapse;min-width:780px}.members th,.members td{padding:12px;border-bottom:1px solid rgba(242,196,138,.1);text-align:left;vertical-align:middle}.members th{position:sticky;top:0;background:#100d18;color:var(--gold);font-size:.76rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;z-index:1}.person{display:grid;grid-template-columns:42px minmax(0,1fr);gap:10px;align-items:center}.avatar,.no-avatar{width:42px;height:42px;border-radius:50%;border:1px solid rgba(242,196,138,.46);background:#17131f}.avatar{object-fit:cover}.no-avatar{display:grid;place-items:center;color:var(--gold);font-size:.72rem}.person strong{display:block;font-weight:500;color:#fff;overflow-wrap:anywhere}.person small{display:block;color:var(--mist);font-size:.76rem;overflow-wrap:anywhere}.pill{display:inline-flex;align-items:center;min-height:28px;padding:4px 9px;border-radius:999px;background:rgba(242,196,138,.1);border:1px solid rgba(242,196,138,.2);color:var(--cream);font-size:.78rem}.row-actions{display:flex;gap:8px;align-items:center}.row-actions button{padding:8px 10px;border-radius:9px;font-size:.82rem}.modal-backdrop{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.62);display:grid;place-items:center;padding:18px}.modal{width:min(660px,100%);max-height:min(780px,92vh);overflow:auto;padding:20px}.modal h2{margin:0 0 12px;color:var(--gold);font-size:1.25rem}.profile-head{display:grid;grid-template-columns:84px minmax(0,1fr);gap:14px;align-items:center;margin-bottom:16px}.profile-head img,.profile-head .no-avatar{width:84px;height:84px}.detail{display:grid;grid-template-columns:130px minmax(0,1fr);gap:8px 12px}.detail dt{color:var(--gold);font-size:.82rem}.detail dd{margin:0;color:#eee9f5;overflow-wrap:anywhere}.links{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.links a{color:#171018;background:linear-gradient(135deg,var(--gold),var(--copper));border-radius:999px;padding:8px 12px;text-decoration:none;font-size:.84rem}.hide{display:none!important}@media(max-width:850px){.top{display:grid}.actions{justify-content:flex-start}.grid{grid-template-columns:1fr}.side{position:relative;top:auto}.toolbar{grid-template-columns:1fr}.members{min-width:720px}}@media(max-width:440px){.shell{padding-left:12px;padding-right:12px}.card{border-radius:15px}.side{padding:14px}.toolbar{padding:12px}button,a.btn{width:100%;text-align:center}.row-actions button{width:auto}.detail{grid-template-columns:1fr}.profile-head{grid-template-columns:1fr;text-align:center}.profile-head img,.profile-head .no-avatar{margin:auto}}
 </style>
 </head>
 <body>
 <canvas id="stars" aria-hidden="true"></canvas>
-<div id="lock" class="lock card hide">
-  <h1>THR ADMIN</h1>
-  <p id="lock-text">กำลังตรวจสอบสิทธิ์...</p>
-  <div class="actions" style="justify-content:center;margin-top:18px">
-    <a class="btn" href="914672305189.html">เข้าสู่ระบบ</a>
-    <a class="btn ghost" href="index.html">กลับหน้าหลัก</a>
-  </div>
-</div>
-<main id="app" class="shell hide">
+<main class="shell">
   <div class="top">
     <div class="brand">
       <h1>THR ADMIN</h1>
-      <p>ดูข้อมูลสมาชิก จัดตำแหน่ง และลบข้อมูลสมาชิกในระบบ</p>
+      <p>หน้าแอดมินสำหรับดูข้อมูลบุคคลและช่องทางติดต่อจากตาราง members</p>
     </div>
     <div class="actions">
       <a class="btn ghost" href="index.html">หน้าหลัก</a>
       <a class="btn ghost" href="748203619558.html">โปรไฟล์</a>
       <button id="refresh" type="button">รีเฟรช</button>
-      <button id="logout" class="ghost" type="button">ออกจากระบบ</button>
     </div>
   </div>
   <div class="grid">
     <aside class="side card">
       <h2>ภาพรวม</h2>
       <div class="metric">
-        <div><b id="total">0</b><span>สมาชิกทั้งหมด</span></div>
-        <div><b id="province-count">0</b><span>จังหวัดที่มีสมาชิก</span></div>
-        <div><b id="admin-level">-</b><span>ยศแอดมินของคุณ</span></div>
+        <div><b id="total">0</b><span>ข้อมูลบุคคลทั้งหมด</span></div>
+        <div><b id="province-count">0</b><span>จังหวัดที่มีข้อมูล</span></div>
+        <div><b id="shown">0</b><span>รายการที่แสดงอยู่</span></div>
       </div>
-      <div class="field">
-        <label for="bulk-role">ตำแหน่งที่ใช้ได้</label>
-        <select id="bulk-role">
-          <option value="member">Member / สมาชิก</option>
-          <option value="staff">Staff / ทีมงาน</option>
-          <option value="moderator">Moderator / ผู้ดูแล</option>
-          <option value="admin">Admin / แอดมิน</option>
-          <option value="head_admin">Head Admin / หัวหน้าแอดมิน</option>
-          <option value="owner">Owner / เจ้าของ</option>
-        </select>
-      </div>
-      <p class="muted" style="font-size:.82rem;line-height:1.55;margin:0">หน้านี้ใช้สำหรับดูข้อมูลบุคคลในตาราง <b>members</b> ส่วนปุ่มลบและเปลี่ยนตำแหน่งจะใช้ได้เฉพาะบัญชีที่มีสิทธิ์แอดมินจริงเท่านั้น</p>
+      <p class="muted" style="font-size:.82rem;line-height:1.55;margin:0">หน้านี้เป็นโหมดดูข้อมูล ไม่ลบหรือแก้ไขข้อมูลในฐานข้อมูล</p>
       <p id="msg" aria-live="polite"></p>
     </aside>
     <section class="panel card">
       <div class="toolbar">
-        <input id="search" type="search" placeholder="ค้นหาชื่อ จังหวัด หรือ user id">
-        <select id="role-filter">
-          <option value="">ทุกตำแหน่ง</option>
-          <option value="member">Member</option>
-          <option value="staff">Staff</option>
-          <option value="moderator">Moderator</option>
-          <option value="admin">Admin</option>
-          <option value="head_admin">Head Admin</option>
-          <option value="owner">Owner</option>
-        </select>
+        <input id="search" type="search" placeholder="ค้นหาชื่อ จังหวัด TikTok YouTube Facebook Instagram">
+        <select id="province-filter"><option value="">ทุกจังหวัด</option></select>
         <button id="clear" class="ghost" type="button">ล้างค้นหา</button>
       </div>
       <div class="table-wrap">
         <table class="members">
-          <thead><tr><th>สมาชิก</th><th>จังหวัด</th><th>ตำแหน่ง</th><th>สร้างเมื่อ</th><th>โซเชียล</th><th>จัดการ</th></tr></thead>
+          <thead><tr><th>บุคคล</th><th>จังหวัด</th><th>โซเชียล</th><th>เพลง</th><th>สร้างเมื่อ</th><th>ดูข้อมูล</th></tr></thead>
           <tbody id="rows"><tr><td colspan="6" class="muted">กำลังโหลด...</td></tr></tbody>
         </table>
       </div>
@@ -80,9 +52,9 @@
 </main>
 <div id="modal-backdrop" class="modal-backdrop hide" role="dialog" aria-modal="true">
   <section class="modal card">
-    <h2 id="modal-title">ข้อมูลสมาชิก</h2>
+    <div id="profile-head" class="profile-head"></div>
     <dl id="detail" class="detail"></dl>
-    <div class="sql-note">ถ้าการเปลี่ยนตำแหน่งไม่สำเร็จ ให้เพิ่มคอลัมน์ <code>role text default 'member'</code> หรือ <code>position text</code> ในตาราง <code>members</code> แล้วลองใหม่</div>
+    <div id="links" class="links"></div>
     <div class="actions" style="margin-top:16px">
       <button id="close-modal" class="ghost" type="button">ปิด</button>
     </div>
@@ -93,122 +65,73 @@
 var SUPABASE_URL="https://gxurnxlbtmdymrdfrhcv.supabase.co";
 var SUPABASE_ANON_KEY="sb_publishable_QKnPZU1huLddOAYWOP4KPA_29Sv7C7G";
 var client=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-var app=document.getElementById("app"),lock=document.getElementById("lock"),lockText=document.getElementById("lock-text"),rows=document.getElementById("rows"),msg=document.getElementById("msg");
-var members=[],currentUser=null,currentAdmin=null,roleColumn=null;
-var roleNames={member:"Member",staff:"Staff",moderator:"Moderator",admin:"Admin",head_admin:"Head Admin",owner:"Owner"};
-var adminRankNames={viewer:"Viewer",admin:"Admin",head_admin:"Head Admin",owner:"Owner",super_admin:"Super Admin"};
+var members=[],rows=document.getElementById("rows"),msg=document.getElementById("msg");
 function status(text,type){msg.textContent=text||"";msg.className=type||""}
-function showLock(text){app.classList.add("hide");lock.classList.remove("hide");lockText.textContent=text}
-function showApp(){lock.classList.add("hide");app.classList.remove("hide")}
-function fmtDate(value){if(!value)return"-";try{return new Date(value).toLocaleString("th-TH",{dateStyle:"medium",timeStyle:"short"})}catch(e){return value}}
 function esc(value){return String(value==null?"":value).replace(/[&<>'"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]})}
-function getRole(row){return row.role||row.position||row.rank||"member"}
-function canDelete(){return ["owner","super_admin","head_admin","admin"].indexOf(currentAdmin&&currentAdmin.rank)>-1}
-function canPromote(){return ["owner","super_admin","head_admin"].indexOf(currentAdmin&&currentAdmin.rank)>-1}
-async function initAccess(){
-  currentAdmin={rank:"viewer",source:"public"};
-  try{
-    var session=await client.auth.getSession();
-    if(session.data&&session.data.session){
-      currentUser=session.data.session.user;
-      var checks=[];
-      checks.push(client.from("admin_roles").select("user_id,rank,active").eq("user_id",currentUser.id).eq("active",true).maybeSingle().then(function(r){return{source:"admin_roles",result:r}}).catch(function(error){return{source:"admin_roles",error:error}}));
-      checks.push(client.from("members").select("id,user_id,name,role,position,rank,is_admin").eq("user_id",currentUser.id).maybeSingle().then(function(r){return{source:"members",result:r}}).catch(function(error){return{source:"members",error:error}}));
-      var results=await Promise.all(checks);
-      var adminRole=results[0].result&&results[0].result.data;
-      if(adminRole){currentAdmin={rank:adminRole.rank||"admin",source:"admin_roles"};return true}
-      var profile=results[1].result&&results[1].result.data;
-      if(profile&&(profile.is_admin||["admin","head_admin","owner","super_admin"].indexOf(profile.role)>-1||["admin","head_admin","owner","super_admin"].indexOf(profile.position)>-1||["admin","head_admin","owner","super_admin"].indexOf(profile.rank)>-1)){
-        currentAdmin={rank:profile.rank||profile.role||profile.position||"admin",source:"members"};
-      }
-    }
-  }catch(e){console.warn("admin access check:",e)}
-  return true;
-}
-async function loadMembers(){
-  status("กำลังโหลดข้อมูล...");
-  var fields="id,user_id,name,tiktok,youtube,facebook,instagram,province,photo_url,created_at,music_url,music_type,music_title,role,position,rank,is_admin";
-  var r=await client.from("members").select(fields).order("created_at",{ascending:false});
-  if(r.error&&/column|schema|does not exist/i.test(r.error.message||"")){
-    fields="id,user_id,name,tiktok,youtube,facebook,instagram,province,photo_url,created_at,music_url,music_type,music_title";
-    r=await client.from("members").select(fields).order("created_at",{ascending:false});
-  }
-  if(r.error){rows.innerHTML='<tr><td colspan="6" class="muted">โหลดข้อมูลไม่สำเร็จ: '+esc(r.error.message)+'</td></tr>';status("โหลดข้อมูลไม่สำเร็จ","err");return}
-  members=r.data||[];
-  detectRoleColumn();
-  render();
-  status("โหลดข้อมูลเรียบร้อย","ok");
-}
-function detectRoleColumn(){
-  roleColumn=null;
-  for(var i=0;i<members.length;i++){
-    if(Object.prototype.hasOwnProperty.call(members[i],"role")){roleColumn="role";break}
-    if(Object.prototype.hasOwnProperty.call(members[i],"position")){roleColumn="position";break}
-    if(Object.prototype.hasOwnProperty.call(members[i],"rank")){roleColumn="rank";break}
-  }
-}
+function fmtDate(value){if(!value)return"-";try{return new Date(value).toLocaleString("th-TH",{dateStyle:"medium",timeStyle:"short"})}catch(e){return value}}
+function linkUrl(kind,value){value=String(value||"").trim();if(!value)return"";if(/^https?:\/\//i.test(value))return value;if(kind==="tiktok")return"https://www.tiktok.com/@"+value.replace(/^@/,"");if(kind==="youtube")return value.charAt(0)==="@"?"https://www.youtube.com/"+value:"https://www.youtube.com/@"+value.replace(/^@/,"");if(kind==="facebook")return"https://www.facebook.com/"+value.replace(/^@/,"");if(kind==="instagram")return"https://www.instagram.com/"+value.replace(/^@/,"");return value}
+function socialText(m){return [m.tiktok&&"TikTok",m.youtube&&"YouTube",m.facebook&&"Facebook",m.instagram&&"Instagram"].filter(Boolean).join(", ")||"-"}
 function filteredMembers(){
   var q=document.getElementById("search").value.trim().toLowerCase();
-  var rf=document.getElementById("role-filter").value;
+  var pf=document.getElementById("province-filter").value;
   return members.filter(function(m){
-    var role=getRole(m);
-    var hay=[m.name,m.province,m.user_id,m.tiktok,m.youtube,m.facebook,m.instagram,role].join(" ").toLowerCase();
-    return (!q||hay.indexOf(q)>-1)&&(!rf||role===rf);
+    var hay=[m.name,m.province,m.tiktok,m.youtube,m.facebook,m.instagram,m.music_title,m.music_url].join(" ").toLowerCase();
+    return (!q||hay.indexOf(q)>-1)&&(!pf||m.province===pf);
   });
 }
+function fillProvinceFilter(){
+  var sel=document.getElementById("province-filter");
+  var current=sel.value;
+  var provinces=Array.from(new Set(members.map(function(m){return m.province}).filter(Boolean))).sort();
+  sel.innerHTML='<option value="">ทุกจังหวัด</option>'+provinces.map(function(p){return'<option value="'+esc(p)+'">'+esc(p)+'</option>'}).join("");
+  sel.value=current;
+}
 function render(){
+  fillProvinceFilter();
   var data=filteredMembers();
   document.getElementById("total").textContent=String(members.length);
   document.getElementById("province-count").textContent=String(new Set(members.map(function(m){return m.province}).filter(Boolean)).size);
-  document.getElementById("admin-level").textContent=adminRankNames[currentAdmin&&currentAdmin.rank]||currentAdmin&&currentAdmin.rank||"-";
-  if(!data.length){rows.innerHTML='<tr><td colspan="6" class="muted">ไม่พบข้อมูล</td></tr>';return}
+  document.getElementById("shown").textContent=String(data.length);
+  if(!data.length){rows.innerHTML='<tr><td colspan="6" class="muted">ไม่พบข้อมูลบุคคล</td></tr>';return}
   rows.innerHTML=data.map(function(m){
-    var social=[m.tiktok&&"TikTok",m.youtube&&"YouTube",m.facebook&&"Facebook",m.instagram&&"Instagram",m.music_url&&"Music"].filter(Boolean).join(", ")||"-";
     var photo=m.photo_url?'<img class="avatar" src="'+esc(m.photo_url)+'" alt="">':'<span class="no-avatar">THR</span>';
-    return '<tr data-id="'+esc(m.id)+'"><td><div class="person">'+photo+'<div><strong>'+esc(m.name||"ไม่ระบุชื่อ")+'</strong><small>'+esc(m.user_id||"-")+'</small></div></div></td><td>'+esc(m.province||"-")+'</td><td><span class="pill">'+esc(roleNames[getRole(m)]||getRole(m))+'</span></td><td>'+esc(fmtDate(m.created_at))+'</td><td>'+esc(social)+'</td><td><div class="row-actions"><button class="ghost" type="button" data-action="view">ดู</button><button class="ghost" type="button" data-action="role" '+(!canPromote()?"disabled":"")+'>ยศ</button><button class="danger" type="button" data-action="delete" '+(!canDelete()?"disabled":"")+'>ลบ</button></div></td></tr>';
+    var music=m.music_title||m.music_url?"มี":"-";
+    return '<tr><td><div class="person">'+photo+'<div><strong>'+esc(m.name||"ไม่ระบุชื่อ")+'</strong><small>'+esc(m.user_id||"")+'</small></div></div></td><td><span class="pill">'+esc(m.province||"-")+'</span></td><td>'+esc(socialText(m))+'</td><td>'+esc(music)+'</td><td>'+esc(fmtDate(m.created_at))+'</td><td><div class="row-actions"><button class="ghost" type="button" data-id="'+esc(m.id)+'">ดูข้อมูล</button></div></td></tr>';
   }).join("");
 }
 function findMember(id){return members.find(function(m){return String(m.id)===String(id)})}
-function showDetail(member){
-  document.getElementById("modal-title").textContent=member.name||"ข้อมูลสมาชิก";
-  var pairs=[["ID",member.id],["User ID",member.user_id],["ชื่อ",member.name],["จังหวัด",member.province],["ตำแหน่ง",roleNames[getRole(member)]||getRole(member)],["TikTok",member.tiktok],["YouTube",member.youtube],["Facebook",member.facebook],["Instagram",member.instagram],["เพลง",member.music_title||member.music_url],["สร้างเมื่อ",fmtDate(member.created_at)]];
+function showDetail(m){
+  var head=document.getElementById("profile-head");
+  var photo=m.photo_url?'<img src="'+esc(m.photo_url)+'" alt="">':'<span class="no-avatar">THR</span>';
+  head.innerHTML=photo+'<div><h2 style="margin:0;color:var(--gold);font-size:1.35rem">'+esc(m.name||"ไม่ระบุชื่อ")+'</h2><p class="muted" style="margin:6px 0 0">'+esc(m.province||"-")+'</p></div>';
+  var pairs=[["ชื่อ",m.name],["จังหวัด",m.province],["TikTok",m.tiktok],["YouTube",m.youtube],["Facebook",m.facebook],["Instagram",m.instagram],["ชื่อเพลง",m.music_title],["ลิงก์เพลง",m.music_url],["วันที่สร้าง",fmtDate(m.created_at)],["User ID",m.user_id]];
   document.getElementById("detail").innerHTML=pairs.map(function(p){return"<dt>"+esc(p[0])+"</dt><dd>"+esc(p[1]||"-")+"</dd>"}).join("");
+  var links=[["TikTok",linkUrl("tiktok",m.tiktok)],["YouTube",linkUrl("youtube",m.youtube)],["Facebook",linkUrl("facebook",m.facebook)],["Instagram",linkUrl("instagram",m.instagram)]].filter(function(x){return x[1]});
+  document.getElementById("links").innerHTML=links.map(function(x){return'<a href="'+esc(x[1])+'" target="_blank" rel="noopener">'+esc(x[0])+'</a>'}).join("");
   document.getElementById("modal-backdrop").classList.remove("hide");
 }
-async function changeRole(member){
-  if(!canPromote())return status("ยศนี้ไม่มีสิทธิ์เปลี่ยนตำแหน่ง","err");
-  var next=document.getElementById("bulk-role").value;
-  var col=roleColumn||"role";
-  var payload={};payload[col]=next;
-  status("กำลังเปลี่ยนตำแหน่ง...");
-  var r=await client.from("members").update(payload).eq("id",member.id).select("id").single();
-  if(r.error){status("เปลี่ยนตำแหน่งไม่สำเร็จ: "+r.error.message,"err");return}
-  member[col]=next;render();status("เปลี่ยนตำแหน่งเรียบร้อย","ok");
+async function loadMembers(){
+  status("กำลังโหลดข้อมูล...");
+  rows.innerHTML='<tr><td colspan="6" class="muted">กำลังโหลด...</td></tr>';
+  var fields="id,user_id,name,tiktok,youtube,facebook,instagram,province,photo_url,created_at,music_url,music_type,music_title";
+  var r=await client.from("members").select(fields).order("created_at",{ascending:false});
+  if(r.error){
+    rows.innerHTML='<tr><td colspan="6" class="muted">โหลดข้อมูลไม่สำเร็จ: '+esc(r.error.message)+'</td></tr>';
+    status("โหลดข้อมูลไม่สำเร็จ: "+r.error.message,"err");
+    return;
+  }
+  members=r.data||[];
+  render();
+  status("โหลดข้อมูลบุคคลเรียบร้อย","ok");
 }
-async function deleteMember(member){
-  if(!canDelete())return status("ยศนี้ไม่มีสิทธิ์ลบข้อมูล","err");
-  var ok=confirm("ลบข้อมูลสมาชิก \""+(member.name||member.id)+"\" ออกจากตาราง members ใช่ไหม?");
-  if(!ok)return;
-  status("กำลังลบข้อมูล...");
-  var r=await client.from("members").delete().eq("id",member.id);
-  if(r.error){status("ลบไม่สำเร็จ: "+r.error.message,"err");return}
-  members=members.filter(function(m){return String(m.id)!==String(member.id)});render();status("ลบข้อมูลเรียบร้อย","ok");
-}
-rows.addEventListener("click",function(e){
-  var btn=e.target.closest("button[data-action]");if(!btn)return;
-  var tr=btn.closest("tr[data-id]");var member=findMember(tr&&tr.dataset.id);if(!member)return;
-  if(btn.dataset.action==="view")showDetail(member);
-  if(btn.dataset.action==="role")changeRole(member);
-  if(btn.dataset.action==="delete")deleteMember(member);
-});
+rows.addEventListener("click",function(e){var btn=e.target.closest("button[data-id]");if(!btn)return;var m=findMember(btn.dataset.id);if(m)showDetail(m)});
 document.getElementById("search").addEventListener("input",render);
-document.getElementById("role-filter").addEventListener("change",render);
-document.getElementById("clear").addEventListener("click",function(){document.getElementById("search").value="";document.getElementById("role-filter").value="";render()});
+document.getElementById("province-filter").addEventListener("change",render);
+document.getElementById("clear").addEventListener("click",function(){document.getElementById("search").value="";document.getElementById("province-filter").value="";render()});
 document.getElementById("refresh").addEventListener("click",loadMembers);
-document.getElementById("logout").addEventListener("click",async function(){await client.auth.signOut();location.href="index.html"});
 document.getElementById("close-modal").addEventListener("click",function(){document.getElementById("modal-backdrop").classList.add("hide")});
 document.getElementById("modal-backdrop").addEventListener("click",function(e){if(e.target.id==="modal-backdrop")e.currentTarget.classList.add("hide")});
-(async function(){await initAccess();showApp();await loadMembers()})();
+loadMembers();
 var cv=document.getElementById("stars"),x=cv.getContext("2d"),S=[];function size(){cv.width=innerWidth;cv.height=innerHeight;S=[];for(var i=0;i<120;i++)S.push([Math.random()*cv.width,Math.random()*cv.height,Math.random()*1.1+.2,Math.random()*6])}function draw(t){x.clearRect(0,0,cv.width,cv.height);S.forEach(function(s){x.globalAlpha=.2+.4*Math.abs(Math.sin(t/2500+s[3]));x.fillStyle="#dcd6ee";x.beginPath();x.arc(s[0],s[1],s[2],0,7);x.fill()});if(!matchMedia("(prefers-reduced-motion:reduce)").matches)requestAnimationFrame(draw)}size();addEventListener("resize",size);requestAnimationFrame(draw);
 </script>
 </body>
