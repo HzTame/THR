@@ -1,0 +1,120 @@
+<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="robots" content="noarchive"><title>THR Admin - People</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"><style>
+:root{--ink:#050509;--gold:#f2c48a;--copper:#c9743a;--cream:#ffe0b5;--mist:#aaa4bc;--line:rgba(242,196,138,.18);box-sizing:border-box}*,*::before,*::after{box-sizing:inherit}html,body{min-height:100%;margin:0}body{background:radial-gradient(120% 60% at 50% 108%,#3a1e16 0%,#1a1224 38%,var(--ink) 75%);color:#eee9f5;font-family:"Inter","Helvetica Neue",Arial,sans-serif;overflow-x:hidden}#stars{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}.shell{position:relative;z-index:1;width:min(1180px,100%);margin:0 auto;padding:max(28px,env(safe-area-inset-top)) 18px max(42px,env(safe-area-inset-bottom))}.top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:20px}.brand h1{margin:0;font-size:clamp(2rem,6vw,3.1rem);font-weight:300;line-height:1.05;background:linear-gradient(100deg,#fff 0%,var(--cream) 48%,#d79a6a 100%);-webkit-background-clip:text;background-clip:text;color:transparent}.brand p{margin:10px 0 0;color:var(--mist);line-height:1.55}.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}button,a.btn{font:inherit;font-weight:500;color:#171018;background:linear-gradient(135deg,var(--gold),var(--copper));border:0;border-radius:10px;padding:11px 14px;cursor:pointer;text-decoration:none;white-space:nowrap}button.ghost,a.ghost{color:var(--gold);background:rgba(10,8,16,.58);border:1px solid rgba(242,196,138,.34)}button:disabled{opacity:.6;cursor:wait}.grid{display:grid;grid-template-columns:280px minmax(0,1fr);gap:18px}.card{border:1px solid rgba(242,196,138,.22);border-radius:18px;background:linear-gradient(180deg,rgba(31,22,40,.88),rgba(8,7,14,.94));box-shadow:0 20px 60px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.06);backdrop-filter:blur(14px)}.side{padding:18px;align-self:start;position:sticky;top:18px}.side h2,.panel h2{margin:0 0 12px;color:var(--gold);font-size:1.02rem;font-weight:500}.metric{display:grid;gap:10px;margin:12px 0 18px}.metric div{padding:12px;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid rgba(242,196,138,.12)}.metric b{display:block;font-size:1.6rem;color:#fff;font-weight:500}.metric span{display:block;margin-top:2px;color:var(--mist);font-size:.78rem}.muted{color:var(--mist)}#msg{min-height:1.4em;margin:12px 0 0;color:var(--gold);font-size:.84rem;line-height:1.45}#msg.err{color:#ff9a9a}#msg.ok{color:#b6e3b8}.toolbar{display:grid;grid-template-columns:minmax(0,1fr) 180px auto;gap:10px;padding:16px;border-bottom:1px solid var(--line)}input,select{width:100%;font:inherit;color:#eee9f5;background:rgba(9,8,16,.76);border:1px solid rgba(201,116,58,.45);border-radius:10px;padding:11px 12px;outline:none}input:focus,select:focus{border-color:var(--cream);box-shadow:0 0 0 3px rgba(242,196,138,.11)}.table-wrap{overflow:auto}.members{width:100%;border-collapse:collapse;min-width:940px}.members th,.members td{padding:12px;border-bottom:1px solid rgba(242,196,138,.1);text-align:left;vertical-align:middle}.members th{position:sticky;top:0;background:#100d18;color:var(--gold);font-size:.76rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;z-index:1}.person{display:grid;grid-template-columns:42px minmax(0,1fr);gap:10px;align-items:center}.avatar,.no-avatar{width:42px;height:42px;border-radius:50%;border:1px solid rgba(242,196,138,.46);background:#17131f}.avatar{object-fit:cover}.no-avatar{display:grid;place-items:center;color:var(--gold);font-size:.72rem}.person strong{display:block;font-weight:500;color:#fff;overflow-wrap:anywhere}.person small{display:block;color:var(--mist);font-size:.76rem;overflow-wrap:anywhere}.pill{display:inline-flex;align-items:center;min-height:28px;padding:4px 9px;border-radius:999px;background:rgba(242,196,138,.1);border:1px solid rgba(242,196,138,.2);color:var(--cream);font-size:.78rem}.pill.admin{background:rgba(242,196,138,.22);border-color:rgba(242,196,138,.55);color:#fff}.pill.deputy_admin{background:rgba(145,178,255,.14);border-color:rgba(145,178,255,.38);color:#dbe5ff}.role-edit{display:grid;grid-template-columns:132px auto;gap:8px;align-items:center}.role-edit select{padding:8px 9px;border-radius:9px;font-size:.82rem}.role-edit button{padding:8px 10px;border-radius:9px;font-size:.82rem}.row-actions{display:flex;gap:8px;align-items:center}.row-actions button{padding:8px 10px;border-radius:9px;font-size:.82rem}.modal-backdrop{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.62);display:grid;place-items:center;padding:18px}.modal{width:min(660px,100%);max-height:min(780px,92vh);overflow:auto;padding:20px}.modal h2{margin:0 0 12px;color:var(--gold);font-size:1.25rem}.profile-head{display:grid;grid-template-columns:84px minmax(0,1fr);gap:14px;align-items:center;margin-bottom:16px}.profile-head img,.profile-head .no-avatar{width:84px;height:84px}.detail{display:grid;grid-template-columns:130px minmax(0,1fr);gap:8px 12px}.detail dt{color:var(--gold);font-size:.82rem}.detail dd{margin:0;color:#eee9f5;overflow-wrap:anywhere}.links{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.links a{color:#171018;background:linear-gradient(135deg,var(--gold),var(--copper));border-radius:999px;padding:8px 12px;text-decoration:none;font-size:.84rem}.hide{display:none!important}@media(max-width:850px){.top{display:grid}.actions{justify-content:flex-start}.grid{grid-template-columns:1fr}.side{position:relative;top:auto}.toolbar{grid-template-columns:1fr}.members{min-width:900px}}@media(max-width:440px){.shell{padding-left:12px;padding-right:12px}.card{border-radius:15px}.side{padding:14px}.toolbar{padding:12px}button,a.btn{width:100%;text-align:center}.row-actions button{width:auto}.detail{grid-template-columns:1fr}.profile-head{grid-template-columns:1fr;text-align:center}.profile-head img,.profile-head .no-avatar{margin:auto}}
+</style></head><body><canvas id="stars" aria-hidden="true"></canvas><main class="shell"><div class="top"><div class="brand"><h1>THR ADMIN</h1><p>หน้าแอดมินสำหรับดูข้อมูลบุคคลและช่องทางติดต่อจากตาราง members</p></div><div class="actions"><a class="btn ghost" href="index.html">หน้าหลัก</a><a class="btn ghost" href="748203619558.html">โปรไฟล์</a><a class="btn ghost" href="629184730562.html">ลำดับยศ</a><button id="refresh" type="button">รีเฟรช</button></div></div><div class="grid"><aside class="side card"><h2>ภาพรวม</h2><div class="metric"><div><b id="total">0</b><span>ข้อมูลบุคคลทั้งหมด</span></div><div><b id="province-count">0</b><span>จังหวัดที่มีข้อมูล</span></div><div><b id="shown">0</b><span>รายการที่แสดงอยู่</span></div><div><b id="my-role">-</b><span>ยศของบัญชีที่ล็อกอิน</span></div></div><p class="muted" style="font-size:.82rem;line-height:1.55;margin:0">แอดมินเท่านั้นที่เปลี่ยนยศได้ รองแอดมินและสมาชิกดูข้อมูลได้อย่างเดียว</p><p id="msg" aria-live="polite"></p></aside><section class="panel card"><div class="toolbar"><input id="search" type="search" placeholder="ค้นหาชื่อ จังหวัด TikTok YouTube Facebook Instagram"><select id="province-filter"><option value="">ทุกจังหวัด</option></select><button id="clear" class="ghost" type="button">ล้างค้นหา</button></div><div class="table-wrap"><table class="members"><thead><tr><th>บุคคล</th><th>จังหวัด</th><th>ยศ</th><th>โซเชียล</th><th>สร้างเมื่อ</th><th>จัดการยศ</th><th>ดูข้อมูล</th></tr></thead><tbody id="rows"><tr><td colspan="7" class="muted">กำลังโหลด...</td></tr></tbody></table></div></section></div></main><div id="modal-backdrop" class="modal-backdrop hide" role="dialog" aria-modal="true"><section class="modal card"><div id="profile-head" class="profile-head"></div><dl id="detail" class="detail"></dl><div id="links" class="links"></div><div class="actions" style="margin-top:16px"><button id="close-modal" class="ghost" type="button">ปิด</button></div></section></div><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
+var SUPABASE_URL="https://gxurnxlbtmdymrdfrhcv.supabase.co";
+var SUPABASE_ANON_KEY="sb_publishable_QKnPZU1huLddOAYWOP4KPA_29Sv7C7G";
+var client=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+var members=[],rows=document.getElementById("rows"),msg=document.getElementById("msg"),currentUser=null,currentRole="member",roleReady=true;
+var roleLabels={admin:"แอดมิน",deputy_admin:"รองแอดมิน",member:"สมาชิก"};
+function status(text,type){msg.textContent=text||"";msg.className=type||""}
+function esc(value){return String(value==null?"":value).replace(/[&<>'"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]})}
+function fmtDate(value){if(!value)return"-";try{return new Date(value).toLocaleString("th-TH",{dateStyle:"medium",timeStyle:"short"})}catch(e){return value}}
+function linkUrl(kind,value){value=String(value||"").trim();if(!value)return"";if(/^https?:\/\//i.test(value))return value;if(kind==="tiktok")return"https://www.tiktok.com/@"+value.replace(/^@/,"");if(kind==="youtube")return value.charAt(0)==="@"?"https://www.youtube.com/"+value:"https://www.youtube.com/@"+value.replace(/^@/,"");if(kind==="facebook")return"https://www.facebook.com/"+value.replace(/^@/,"");if(kind==="instagram")return"https://www.instagram.com/"+value.replace(/^@/,"");return value}
+function socialText(m){return [m.tiktok&&"TikTok",m.youtube&&"YouTube",m.facebook&&"Facebook",m.instagram&&"Instagram"].filter(Boolean).join(", ")||"-"}
+function getRole(m){return m.role||"member"}
+function isAdmin(){return currentRole==="admin"}
+function updateCurrentRole(){
+  currentRole="member";
+  if(currentUser){
+    var me=members.find(function(m){return m.user_id===currentUser.id});
+    if(me)currentRole=getRole(me);
+  }
+  document.getElementById("my-role").textContent=roleLabels[currentRole]||currentRole;
+}
+async function loadSession(){
+  try{
+    var r=await client.auth.getSession();
+    currentUser=r.data&&r.data.session?r.data.session.user:null;
+  }catch(e){currentUser=null}
+}
+function filteredMembers(){
+  var q=document.getElementById("search").value.trim().toLowerCase();
+  var pf=document.getElementById("province-filter").value;
+  return members.filter(function(m){
+    var hay=[m.name,m.province,m.tiktok,m.youtube,m.facebook,m.instagram,m.music_title,m.music_url].join(" ").toLowerCase();
+    return (!q||hay.indexOf(q)>-1)&&(!pf||m.province===pf);
+  });
+}
+function fillProvinceFilter(){
+  var sel=document.getElementById("province-filter");
+  var current=sel.value;
+  var provinces=Array.from(new Set(members.map(function(m){return m.province}).filter(Boolean))).sort();
+  sel.innerHTML='<option value="">ทุกจังหวัด</option>'+provinces.map(function(p){return'<option value="'+esc(p)+'">'+esc(p)+'</option>'}).join("");
+  sel.value=current;
+}
+function render(){
+  fillProvinceFilter();
+  var data=filteredMembers();
+  document.getElementById("total").textContent=String(members.length);
+  document.getElementById("province-count").textContent=String(new Set(members.map(function(m){return m.province}).filter(Boolean)).size);
+  document.getElementById("shown").textContent=String(data.length);
+  updateCurrentRole();
+  if(!data.length){rows.innerHTML='<tr><td colspan="7" class="muted">ไม่พบข้อมูลบุคคล</td></tr>';return}
+  rows.innerHTML=data.map(function(m){
+    var photo=m.photo_url?'<img class="avatar" src="'+esc(m.photo_url)+'" alt="">':'<span class="no-avatar">THR</span>';
+    var role=getRole(m),disabled=!isAdmin()||!roleReady?" disabled":"";
+    var roleEdit='<div class="role-edit"><select data-role-id="'+esc(m.id)+'"'+disabled+'><option value="member"'+(role==="member"?" selected":"")+'>สมาชิก</option><option value="deputy_admin"'+(role==="deputy_admin"?" selected":"")+'>รองแอดมิน</option><option value="admin"'+(role==="admin"?" selected":"")+'>แอดมิน</option></select><button class="ghost" type="button" data-save-role="'+esc(m.id)+'"'+disabled+'>บันทึก</button></div>';
+    return '<tr><td><div class="person">'+photo+'<div><strong>'+esc(m.name||"ไม่ระบุชื่อ")+'</strong><small>'+esc(m.user_id||"")+'</small></div></div></td><td><span class="pill">'+esc(m.province||"-")+'</span></td><td><span class="pill '+esc(role)+'">'+esc(roleLabels[role]||role)+'</span></td><td>'+esc(socialText(m))+'</td><td>'+esc(fmtDate(m.created_at))+'</td><td>'+roleEdit+'</td><td><div class="row-actions"><button class="ghost" type="button" data-id="'+esc(m.id)+'">ดูข้อมูล</button></div></td></tr>';
+  }).join("");
+}
+function findMember(id){return members.find(function(m){return String(m.id)===String(id)})}
+function showDetail(m){
+  var head=document.getElementById("profile-head");
+  var photo=m.photo_url?'<img src="'+esc(m.photo_url)+'" alt="">':'<span class="no-avatar">THR</span>';
+  head.innerHTML=photo+'<div><h2 style="margin:0;color:var(--gold);font-size:1.35rem">'+esc(m.name||"ไม่ระบุชื่อ")+'</h2><p class="muted" style="margin:6px 0 0">'+esc(m.province||"-")+'</p></div>';
+  var pairs=[["ชื่อ",m.name],["จังหวัด",m.province],["ยศ",roleLabels[getRole(m)]||getRole(m)],["TikTok",m.tiktok],["YouTube",m.youtube],["Facebook",m.facebook],["Instagram",m.instagram],["ชื่อเพลง",m.music_title],["ลิงก์เพลง",m.music_url],["วันที่สร้าง",fmtDate(m.created_at)],["User ID",m.user_id]];
+  document.getElementById("detail").innerHTML=pairs.map(function(p){return"<dt>"+esc(p[0])+"</dt><dd>"+esc(p[1]||"-")+"</dd>"}).join("");
+  var links=[["TikTok",linkUrl("tiktok",m.tiktok)],["YouTube",linkUrl("youtube",m.youtube)],["Facebook",linkUrl("facebook",m.facebook)],["Instagram",linkUrl("instagram",m.instagram)]].filter(function(x){return x[1]});
+  document.getElementById("links").innerHTML=links.map(function(x){return'<a href="'+esc(x[1])+'" target="_blank" rel="noopener">'+esc(x[0])+'</a>'}).join("");
+  document.getElementById("modal-backdrop").classList.remove("hide");
+}
+async function loadMembers(){
+  await loadSession();
+  status("กำลังโหลดข้อมูล...");
+  rows.innerHTML='<tr><td colspan="7" class="muted">กำลังโหลด...</td></tr>';
+  var fields="id,user_id,name,tiktok,youtube,facebook,instagram,province,photo_url,created_at,music_url,music_type,music_title,role";
+  var r=await client.from("members").select(fields).order("created_at",{ascending:false});
+  roleReady=true;
+  if(r.error&&/role|column|schema/i.test(r.error.message||"")){
+    roleReady=false;
+    fields="id,user_id,name,tiktok,youtube,facebook,instagram,province,photo_url,created_at,music_url,music_type,music_title";
+    r=await client.from("members").select(fields).order("created_at",{ascending:false});
+  }
+  if(r.error){
+    rows.innerHTML='<tr><td colspan="7" class="muted">โหลดข้อมูลไม่สำเร็จ: '+esc(r.error.message)+'</td></tr>';
+    status("โหลดข้อมูลไม่สำเร็จ: "+r.error.message,"err");
+    return;
+  }
+  members=r.data||[];
+  render();
+  if(!roleReady)status("โหลดข้อมูลได้ แต่ยังไม่มีคอลัมน์ role ให้รันไฟล์ SQL ระบบยศก่อน","err");
+  else if(isAdmin())status("โหลดข้อมูลเรียบร้อย คุณเป็นแอดมิน สามารถเปลี่ยนยศได้","ok");
+  else status("โหลดข้อมูลเรียบร้อย ต้องล็อกอินด้วยบัญชีแอดมินจึงจะเปลี่ยนยศได้","ok");
+}
+async function saveRole(id){
+  if(!isAdmin()){status("ต้องเป็นแอดมินเท่านั้นถึงจะเปลี่ยนยศได้","err");return}
+  var select=Array.prototype.slice.call(document.querySelectorAll("select[data-role-id]")).find(function(el){return String(el.dataset.roleId)===String(id)});
+  var m=findMember(id);
+  if(!select||!m)return;
+  var next=select.value;
+  status("กำลังบันทึกยศ...");
+  var r=await client.from("members").update({role:next}).eq("id",id);
+  if(r.error){status("บันทึกยศไม่สำเร็จ: "+r.error.message+" ถ้ายังไม่ได้รัน thr-role-system.sql ให้รันใน Supabase ก่อน","err");return}
+  m.role=next;
+  render();
+  status("บันทึกยศเป็น "+(roleLabels[next]||next)+" เรียบร้อย","ok");
+}
+rows.addEventListener("click",function(e){
+  var roleBtn=e.target.closest("button[data-save-role]");
+  if(roleBtn){saveRole(roleBtn.dataset.saveRole);return}
+  var btn=e.target.closest("button[data-id]");if(!btn)return;var m=findMember(btn.dataset.id);if(m)showDetail(m)
+});
+document.getElementById("search").addEventListener("input",render);
+document.getElementById("province-filter").addEventListener("change",render);
+document.getElementById("clear").addEventListener("click",function(){document.getElementById("search").value="";document.getElementById("province-filter").value="";render()});
+document.getElementById("refresh").addEventListener("click",loadMembers);
+document.getElementById("close-modal").addEventListener("click",function(){document.getElementById("modal-backdrop").classList.add("hide")});
+document.getElementById("modal-backdrop").addEventListener("click",function(e){if(e.target.id==="modal-backdrop")e.currentTarget.classList.add("hide")});
+loadMembers();
+var cv=document.getElementById("stars"),x=cv.getContext("2d"),S=[];function size(){cv.width=innerWidth;cv.height=innerHeight;S=[];for(var i=0;i<120;i++)S.push([Math.random()*cv.width,Math.random()*cv.height,Math.random()*1.1+.2,Math.random()*6])}function draw(t){x.clearRect(0,0,cv.width,cv.height);S.forEach(function(s){x.globalAlpha=.2+.4*Math.abs(Math.sin(t/2500+s[3]));x.fillStyle="#dcd6ee";x.beginPath();x.arc(s[0],s[1],s[2],0,7);x.fill()});if(!matchMedia("(prefers-reduced-motion:reduce)").matches)requestAnimationFrame(draw)}size();addEventListener("resize",size);requestAnimationFrame(draw);
+</script></body></html>
