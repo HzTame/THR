@@ -21,6 +21,7 @@
     <div class="actions">
       <a class="btn ghost" href="index.html">หน้าหลัก</a>
       <a class="btn ghost" href="748203619558.html">โปรไฟล์</a>
+      <a class="btn ghost" href="rank.html">ลำดับยศ</a>
       <button id="refresh" type="button">รีเฟรช</button>
     </div>
   </div>
@@ -160,8 +161,8 @@ async function saveRole(id){
   if(!select||!m)return;
   var next=select.value;
   status("กำลังบันทึกยศ...");
-  var r=await client.from("members").update({role:next}).eq("id",id).select("id,role").single();
-  if(r.error){status("บันทึกยศไม่สำเร็จ: "+r.error.message,"err");return}
+  var r=await client.from("members").update({role:next}).eq("id",id);
+  if(r.error){status("บันทึกยศไม่สำเร็จ: "+r.error.message+" ถ้ายังไม่ได้รัน thr-role-system.sql ให้รันใน Supabase ก่อน","err");return}
   m.role=next;
   render();
   status("บันทึกยศเป็น "+(roleLabels[next]||next)+" เรียบร้อย","ok");
