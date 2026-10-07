@@ -52,7 +52,7 @@
           <option value="owner">Owner / เจ้าของ</option>
         </select>
       </div>
-      <p class="muted" style="font-size:.82rem;line-height:1.55;margin:0">การลบในหน้านี้ลบข้อมูลจากตาราง <b>members</b> เท่านั้น ถ้าต้องการลบบัญชีเข้าสู่ระบบ Supabase Auth ต้องทำผ่าน Edge Function หรือฝั่งเซิร์ฟเวอร์ที่ใช้ service role key.</p>
+      <p class="muted" style="font-size:.82rem;line-height:1.55;margin:0">หน้านี้ใช้สำหรับดูข้อมูลบุคคลในตาราง <b>members</b> ส่วนปุ่มลบและเปลี่ยนตำแหน่งจะใช้ได้เฉพาะบัญชีที่มีสิทธิ์แอดมินจริงเท่านั้น</p>
       <p id="msg" aria-live="polite"></p>
     </aside>
     <section class="panel card">
@@ -96,7 +96,7 @@ var client=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 var app=document.getElementById("app"),lock=document.getElementById("lock"),lockText=document.getElementById("lock-text"),rows=document.getElementById("rows"),msg=document.getElementById("msg");
 var members=[],currentUser=null,currentAdmin=null,roleColumn=null;
 var roleNames={member:"Member",staff:"Staff",moderator:"Moderator",admin:"Admin",head_admin:"Head Admin",owner:"Owner"};
-var adminRankNames={admin:"Admin",head_admin:"Head Admin",owner:"Owner",super_admin:"Super Admin"};
+var adminRankNames={viewer:"Viewer",admin:"Admin",head_admin:"Head Admin",owner:"Owner",super_admin:"Super Admin"};
 function status(text,type){msg.textContent=text||"";msg.className=type||""}
 function showLock(text){app.classList.add("hide");lock.classList.remove("hide");lockText.textContent=text}
 function showApp(){lock.classList.add("hide");app.classList.remove("hide")}
@@ -105,22 +105,25 @@ function esc(value){return String(value==null?"":value).replace(/[&<>'"]/g,funct
 function getRole(row){return row.role||row.position||row.rank||"member"}
 function canDelete(){return ["owner","super_admin","head_admin","admin"].indexOf(currentAdmin&&currentAdmin.rank)>-1}
 function canPromote(){return ["owner","super_admin","head_admin"].indexOf(currentAdmin&&currentAdmin.rank)>-1}
-async function requireAdmin(){
-  var session=await client.auth.getSession();
-  if(!session.data||!session.data.session){showLock("กรุณาเข้าสู่ระบบก่อนเข้าใช้งานหน้าแอดมิน");return false}
-  currentUser=session.data.session.user;
-  var checks=[];
-  checks.push(client.from("admin_roles").select("user_id,rank,active").eq("user_id",currentUser.id).eq("active",true).maybeSingle().then(function(r){return{source:"admin_roles",result:r}}).catch(function(error){return{source:"admin_roles",error:error}}));
-  checks.push(client.from("members").select("id,user_id,name,role,position,rank,is_admin").eq("user_id",currentUser.id).maybeSingle().then(function(r){return{source:"members",result:r}}).catch(function(error){return{source:"members",error:error}}));
-  var results=await Promise.all(checks);
-  var adminRole=results[0].result&&results[0].result.data;
-  if(adminRole){currentAdmin={rank:adminRole.rank||"admin",source:"admin_roles"};return true}
-  var profile=results[1].result&&results[1].result.data;
-  if(profile&&(profile.is_admin||["admin","head_admin","owner","super_admin"].indexOf(profile.role)>-1||["admin","head_admin","owner","super_admin"].indexOf(profile.position)>-1||["admin","head_admin","owner","super_admin"].indexOf(profile.rank)>-1)){
-    currentAdmin={rank:profile.rank||profile.role||profile.position||"admin",source:"members"};return true
-  }
-  showLock("บัญชีนี้ยังไม่มียศแอดมิน ให้เพิ่มสิทธิ์ในตาราง admin_roles หรือกำหนด role/position/rank เป็น admin ใน members");
-  return false;
+async function initAccess(){
+  currentAdmin={rank:"viewer",source:"public"};
+  try{
+    var session=await client.auth.getSession();
+    if(session.data&&session.data.session){
+      currentUser=session.data.session.user;
+      var checks=[];
+      checks.push(client.from("admin_roles").select("user_id,rank,active").eq("user_id",currentUser.id).eq("active",true).maybeSingle().then(function(r){return{source:"admin_roles",result:r}}).catch(function(error){return{source:"admin_roles",error:error}}));
+      checks.push(client.from("members").select("id,user_id,name,role,position,rank,is_admin").eq("user_id",currentUser.id).maybeSingle().then(function(r){return{source:"members",result:r}}).catch(function(error){return{source:"members",error:error}}));
+      var results=await Promise.all(checks);
+      var adminRole=results[0].result&&results[0].result.data;
+      if(adminRole){currentAdmin={rank:adminRole.rank||"admin",source:"admin_roles"};return true}
+      var profile=results[1].result&&results[1].result.data;
+      if(profile&&(profile.is_admin||["admin","head_admin","owner","super_admin"].indexOf(profile.role)>-1||["admin","head_admin","owner","super_admin"].indexOf(profile.position)>-1||["admin","head_admin","owner","super_admin"].indexOf(profile.rank)>-1)){
+        currentAdmin={rank:profile.rank||profile.role||profile.position||"admin",source:"members"};
+      }
+    }
+  }catch(e){console.warn("admin access check:",e)}
+  return true;
 }
 async function loadMembers(){
   status("กำลังโหลดข้อมูล...");
@@ -205,7 +208,7 @@ document.getElementById("refresh").addEventListener("click",loadMembers);
 document.getElementById("logout").addEventListener("click",async function(){await client.auth.signOut();location.href="index.html"});
 document.getElementById("close-modal").addEventListener("click",function(){document.getElementById("modal-backdrop").classList.add("hide")});
 document.getElementById("modal-backdrop").addEventListener("click",function(e){if(e.target.id==="modal-backdrop")e.currentTarget.classList.add("hide")});
-(async function(){if(await requireAdmin()){showApp();await loadMembers()}})();
+(async function(){await initAccess();showApp();await loadMembers()})();
 var cv=document.getElementById("stars"),x=cv.getContext("2d"),S=[];function size(){cv.width=innerWidth;cv.height=innerHeight;S=[];for(var i=0;i<120;i++)S.push([Math.random()*cv.width,Math.random()*cv.height,Math.random()*1.1+.2,Math.random()*6])}function draw(t){x.clearRect(0,0,cv.width,cv.height);S.forEach(function(s){x.globalAlpha=.2+.4*Math.abs(Math.sin(t/2500+s[3]));x.fillStyle="#dcd6ee";x.beginPath();x.arc(s[0],s[1],s[2],0,7);x.fill()});if(!matchMedia("(prefers-reduced-motion:reduce)").matches)requestAnimationFrame(draw)}size();addEventListener("resize",size);requestAnimationFrame(draw);
 </script>
 </body>
