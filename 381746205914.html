@@ -13,6 +13,22 @@ function linkUrl(kind,value){value=String(value||"").trim();if(!value)return"";i
 function socialText(m){return [m.tiktok&&"TikTok",m.youtube&&"YouTube",m.facebook&&"Facebook",m.instagram&&"Instagram"].filter(Boolean).join(", ")||"-"}
 function getRole(m){return m.role||"member"}
 function isAdmin(){return currentRole==="admin"}
+async function requireAdmin(){
+  await loadSession();
+  if(!currentUser){location.replace("914672305189.html");return false}
+  try{
+    var r=await client.from("members").select("role").eq("user_id",currentUser.id).maybeSingle();
+    if(r.error)throw r.error;
+    currentRole=(r.data&&r.data.role)||"member";
+    document.getElementById("my-role").textContent=roleLabels[currentRole]||currentRole;
+    if(currentRole!=="admin"){location.replace("index.html");return false}
+    return true;
+  }catch(e){
+    status("ตรวจสอบสิทธิ์แอดมินไม่สำเร็จ: "+e.message,"err");
+    setTimeout(function(){location.replace("index.html")},1200);
+    return false;
+  }
+}
 function updateCurrentRole(){
   currentRole="member";
   if(currentUser){
@@ -69,7 +85,7 @@ function showDetail(m){
   document.getElementById("modal-backdrop").classList.remove("hide");
 }
 async function loadMembers(){
-  await loadSession();
+  if(!await requireAdmin())return;
   status("กำลังโหลดข้อมูล...");
   rows.innerHTML='<tr><td colspan="7" class="muted">กำลังโหลด...</td></tr>';
   var fields="id,user_id,name,tiktok,youtube,facebook,instagram,province,photo_url,created_at,music_url,music_type,music_title,role";
