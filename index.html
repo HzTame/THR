@@ -189,7 +189,7 @@ P.forEach(function(p,index){
  var offsets=[];
  if(count===1){offsets.push([0,0]);}
  else {
-  var step=31, golden=Math.PI*(3-Math.sqrt(5));
+  var step=100, golden=Math.PI*(3-Math.sqrt(5));
   for(var k=0;k<count;k++){
    var radius=step*Math.sqrt(k+0.35),angle=k*golden;
    offsets.push([Math.cos(angle)*radius,Math.sin(angle)*radius]);
@@ -208,10 +208,10 @@ P.forEach(function(p,index){
   marker.style.cursor="pointer";
   var title=document.createElementNS(NS,"title");title.textContent=(member.name||"สมาชิก THR")+" — "+th(p.n);marker.appendChild(title);
   var defs=document.createElementNS(NS,"defs"),clip=document.createElementNS(NS,"clipPath"),clipCircle=document.createElementNS(NS,"circle");
-  clip.setAttribute("id",clipId);clip.setAttribute("clipPathUnits","userSpaceOnUse");clipCircle.setAttribute("cx",x);clipCircle.setAttribute("cy",y);clipCircle.setAttribute("r",12);
+  clip.setAttribute("id",clipId);clip.setAttribute("clipPathUnits","userSpaceOnUse");clipCircle.setAttribute("cx",x);clipCircle.setAttribute("cy",y);clipCircle.setAttribute("r",45);
   clip.appendChild(clipCircle);defs.appendChild(clip);marker.appendChild(defs);
-  var back=document.createElementNS(NS,"circle");back.setAttribute("cx",x);back.setAttribute("cy",y);back.setAttribute("r",15);back.setAttribute("fill","#090810");back.setAttribute("stroke",memberIndex===0?"#ffe0b5":"#f2c48a");back.setAttribute("stroke-width","2.5");marker.appendChild(back);
-  var avatar=document.createElementNS(NS,"image");avatar.setAttribute("x",x-12);avatar.setAttribute("y",y-12);avatar.setAttribute("width","24");avatar.setAttribute("height","24");avatar.setAttribute("preserveAspectRatio","xMidYMid slice");avatar.setAttribute("clip-path","url(#"+clipId+")");avatar.setAttribute("href",src);avatar.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href",src);marker.appendChild(avatar);
+  var back=document.createElementNS(NS,"circle");back.setAttribute("cx",x);back.setAttribute("cy",y);back.setAttribute("r",50);back.setAttribute("fill","#090810");back.setAttribute("stroke",memberIndex===0?"#ffe0b5":"#f2c48a");back.setAttribute("stroke-width","3.5");marker.appendChild(back);
+  var avatar=document.createElementNS(NS,"image");avatar.setAttribute("x",x-45);avatar.setAttribute("y",y-45);avatar.setAttribute("width","90");avatar.setAttribute("height","90");avatar.setAttribute("preserveAspectRatio","xMidYMid slice");avatar.setAttribute("clip-path","url(#"+clipId+")");avatar.setAttribute("href",src);avatar.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href",src);marker.appendChild(avatar);
   marker.addEventListener("click",function(e){e.preventDefault();e.stopPropagation();show(p,true,member)});
   marker.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();e.stopPropagation();show(p,true,member)}});
   group.insertBefore(marker,group.querySelector("text"));
