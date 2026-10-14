@@ -17,6 +17,6 @@ function render(){
     return'<section class="level"><div class="nodes">'+nodes+'</div></section>';
   }).join("");
 }
-async function loadMembers(){setStatus("กำลังโหลดข้อมูล...");var r=await client.from("members").select("user_id,name,province,photo_url,role").order("name",{ascending:true});if(r.error){setStatus("โหลดข้อมูลไม่สำเร็จ: "+r.error.message,true);return}allMembers=r.data||[];render();setStatus("โหลดผังลำดับยศเรียบร้อย")}
+async function loadMembers(){setStatus("กำลังโหลดข้อมูล...");var r=await client.from("members").select("user_id,name,province,photo_url,role").eq("status","approved").order("name",{ascending:true});if(r.error){setStatus("โหลดข้อมูลไม่สำเร็จ: "+r.error.message,true);return}allMembers=r.data||[];render();setStatus("โหลดผังลำดับยศเรียบร้อย")}
 document.getElementById("search").addEventListener("input",render);document.getElementById("refresh").addEventListener("click",loadMembers);loadMembers();
 </script></body></html>
