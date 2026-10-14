@@ -70,7 +70,7 @@ function render(){
     var photo=m.photo_url?'<img class="avatar" src="'+esc(m.photo_url)+'" alt="">':'<span class="no-avatar">THR</span>';
     var role=getRole(m),disabled=!isAdmin()||!roleReady?" disabled":"";
     var roleEdit='<div class="role-edit"><select data-role-id="'+esc(m.id)+'"'+disabled+'><option value="member"'+(role==="member"?" selected":"")+'>สมาชิก</option><option value="deputy_admin"'+(role==="deputy_admin"?" selected":"")+'>รองแอดมิน</option><option value="admin"'+(role==="admin"?" selected":"")+'>แอดมิน</option></select><button class="ghost" type="button" data-save-role="'+esc(m.id)+'"'+disabled+'>บันทึก</button></div>';
-    return '<tr><td><div class="person">'+photo+'<div><strong>'+esc(m.name||"ไม่ระบุชื่อ")+'</strong><small>'+esc(m.user_id||"")+'</small></div></div></td><td><span class="pill">'+esc(m.province||"-")+'</span></td><td><span class="pill '+esc(role)+'">'+esc(roleLabels[role]||role)+'</span></td><td>'+esc(socialText(m))+'</td><td>'+esc(fmtDate(m.created_at))+'</td><td>'+roleEdit+'</td><td><div class="row-actions"><button class="ghost" type="button" data-id="'+esc(m.id)+'">ดูข้อมูล</button></div></td></tr>';
+    return '<tr><td><div class="person">'+photo+'<div><strong>'+esc(m.name||"ไม่ระบุชื่อ")+'</strong><small>'+esc(m.user_id||"")+'</small></div></div></td><td><span class="pill">'+esc(m.province||"-")+'</span></td><td><span class="pill '+esc(role)+'">'+esc(roleLabels[role]||role)+'</span></td><td>'+esc(socialText(m))+'</td><td>'+esc(fmtDate(m.created_at))+'</td><td>'+roleEdit+'</td><td><div class="row-actions"><button class="ghost" type="button" data-id="'+esc(m.id)+'">ดูข้อมูล</button><button type="button" data-del="'+esc(m.id)+'" style="background:transparent;color:#ffb0b0;border:1px solid rgba(255,154,154,.5)"'+((!isAdmin()||(currentUser&&m.user_id===currentUser.id))?" disabled":"")+'>ลบโปรไฟล์</button></div></td></tr>';
   }).join("");
 }
 function findMember(id){return members.find(function(m){return String(m.id)===String(id)})}
@@ -131,7 +131,32 @@ async function saveRole(id){
   render();
   status("บันทึกยศเป็น "+(roleLabels[next]||next)+" เรียบร้อย","ok");
 }
+function storagePath(url,bucket){
+  var marker="/object/public/"+bucket+"/",i=String(url||"").indexOf(marker);
+  return i<0?"":decodeURIComponent(String(url).slice(i+marker.length).split("?")[0]);
+}
+async function deleteProfile(id){
+  if(!isAdmin()){status("ต้องเป็นแอดมินเท่านั้นถึงจะลบโปรไฟล์ได้","err");return}
+  var m=findMember(id);if(!m)return;
+  if(currentUser&&m.user_id===currentUser.id){status("ไม่สามารถลบโปรไฟล์ของตัวเองได้","err");return}
+  if(!confirm("ยืนยันลบโปรไฟล์ของ "+(m.name||"สมาชิก")+" ถาวรหรือไม่? การลบนี้ย้อนกลับไม่ได้"))return;
+  status("กำลังลบโปรไฟล์...");
+  var r=await client.from("members").delete().eq("id",id).select("id");
+  if(r.error){status("ลบไม่สำเร็จ: "+r.error.message,"err");return}
+  if(!r.data||!r.data.length){status("ลบไม่สำเร็จ: ไม่มีสิทธิ์ลบ (ตรวจสอบ RLS policy แบบ delete ของตาราง members)","err");return}
+  try{
+    var pp=storagePath(m.photo_url,"member-photos");if(pp)await client.storage.from("member-photos").remove([pp]);
+    var mb=storagePath(m.music_url,"member-music"),mbk="member-music";
+    if(!mb){mb=storagePath(m.music_url,"member-photos");mbk="member-photos"}
+    if(mb)await client.storage.from(mbk).remove([mb]);
+  }catch(e){}
+  members=members.filter(function(x){return String(x.id)!==String(id)});
+  render();loadPending();
+  status("ลบโปรไฟล์ของ "+(m.name||"สมาชิก")+" เรียบร้อย","ok");
+}
 rows.addEventListener("click",function(e){
+  var delBtn=e.target.closest("button[data-del]");
+  if(delBtn){deleteProfile(delBtn.dataset.del);return}
   var roleBtn=e.target.closest("button[data-save-role]");
   if(roleBtn){saveRole(roleBtn.dataset.saveRole);return}
   var btn=e.target.closest("button[data-id]");if(!btn)return;var m=findMember(btn.dataset.id);if(m)showDetail(m)
