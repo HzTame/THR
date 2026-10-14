@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noarchive">
+<title>THR | สถานะการสมัคร</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap">
+<style>
+:root{--ink:#050509;--ember:#c9743a;--glow:#f2c48a;--mist:#8f8aa3;box-sizing:border-box}
+*,*::before,*::after{box-sizing:inherit}
+html,body{min-height:100%;margin:0}
+body{background:radial-gradient(120% 60% at 50% 108%,#3a1e16 0%,#1a1224 38%,var(--ink) 75%);color:#e9e4ef;font-family:"Inter","Helvetica Neue",Arial,sans-serif;overflow-x:hidden}
+.wrap{min-height:100dvh;display:grid;place-items:center;padding:max(24px,env(safe-area-inset-top)) 18px max(24px,env(safe-area-inset-bottom))}
+.card{width:min(100%,440px);padding:34px 26px;text-align:center;border:1px solid rgba(242,196,138,.28);border-radius:24px;background:linear-gradient(180deg,rgba(25,18,32,.92),rgba(8,7,14,.95));box-shadow:0 20px 60px rgba(0,0,0,.55),0 0 36px rgba(201,116,58,.12)}
+.icon{width:76px;height:76px;margin:0 auto 18px;border-radius:50%;display:grid;place-items:center;font-size:2rem;border:1px solid rgba(242,196,138,.45);color:var(--glow)}
+.pending .icon{animation:pulse 2s ease-in-out infinite}
+.approved .icon{color:#b6e3b8;border-color:rgba(182,227,184,.6)}
+.rejected .icon{color:#ff9a9a;border-color:rgba(255,154,154,.6)}
+@keyframes pulse{50%{transform:scale(1.08);box-shadow:0 0 28px rgba(242,196,138,.35)}}
+h1{margin:0 0 10px;font-size:1.7rem;font-weight:400;color:var(--glow)}
+.approved h1{color:#b6e3b8}.rejected h1{color:#ff9a9a}
+p{margin:0 0 8px;color:var(--mist);line-height:1.65}
+.note{color:var(--glow);font-weight:500}
+.btns{display:grid;gap:10px;margin-top:22px}
+a.btn,button{font:inherit;font-weight:500;color:#171018;background:linear-gradient(135deg,var(--glow),var(--ember));border:0;border-radius:10px;padding:12px 16px;cursor:pointer;text-decoration:none;display:block}
+.ghost{color:var(--glow);background:transparent;border:1px solid rgba(242,196,138,.4)}
+[hidden]{display:none!important}
+@media(prefers-reduced-motion:reduce){.pending .icon{animation:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<main class="card pending" id="card" aria-live="polite">
+  <div class="icon" id="icon">⏳</div>
+  <h1 id="title">กำลังตรวจสอบสถานะ...</h1>
+  <p id="text"></p>
+  <p class="note" id="note"></p>
+  <div class="btns">
+    <a class="btn" id="go-edit" href="748203619558.html" hidden>เข้าสู่ระบบและแก้ไขโปรไฟล์</a>
+    <a class="btn ghost" id="go-join" href="267495831025.html" hidden>ติดต่อแอดมิน / สมัครใหม่</a>
+    <button class="ghost" id="logout" type="button">ออกจากระบบ</button>
+    <a class="btn ghost" href="index.html">← กลับหน้าหลัก</a>
+  </div>
+</main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+var client=window.supabase.createClient("https://gxurnxlbtmdymrdfrhcv.supabase.co","sb_publishable_QKnPZU1huLddOAYWOP4KPA_29Sv7C7G");
+var card=document.getElementById("card"),timer=null;
+function view(state,icon,title,text,note){
+  card.className="card "+state;
+  document.getElementById("icon").textContent=icon;
+  document.getElementById("title").textContent=title;
+  document.getElementById("text").textContent=text;
+  document.getElementById("note").textContent=note||"";
+  document.getElementById("go-edit").hidden=state!=="approved";
+  document.getElementById("go-join").hidden=state!=="rejected";
+}
+async function check(){
+  var s=await client.auth.getSession();
+  if(!s.data||!s.data.session){location.replace("914672305189.html");return}
+  var r=await client.from("members").select("status").eq("user_id",s.data.session.user.id).maybeSingle();
+  if(r.error){view("pending","⚠️","โหลดสถานะไม่สำเร็จ",r.error.message,"");return}
+  if(!r.data){view("rejected","⚠️","ไม่พบข้อมูลการสมัคร","กรุณาสมัครใหม่หรือติดต่อแอดมิน","");clearInterval(timer);return}
+  var st=r.data.status;
+  if(st==="approved"){
+    view("approved","✓","อนุมัติผ่านแล้ว","ยินดีต้อนรับสู่ THR Family คุณสามารถเข้าใช้งานได้แล้ว","");
+    clearInterval(timer);
+  }else if(st==="rejected"){
+    view("rejected","✕","ไม่ผ่านการอนุมัติ","คำขอสมัครของคุณไม่ได้รับการอนุมัติ หากมีข้อสงสัยกรุณาติดต่อแอดมิน","");
+    clearInterval(timer);
+  }else{
+    view("pending","⏳","กำลังรออนุมัติ","คำขอสมัครของคุณกำลังอยู่ระหว่างการพิจารณาโดยแอดมิน","โปรดรอไม่เกิน 1 ชั่วโมง");
+  }
+}
+document.getElementById("logout").addEventListener("click",async function(){await client.auth.signOut();location.replace("index.html")});
+check();
+timer=setInterval(check,5000);
+</script>
+</body>
+</html>
