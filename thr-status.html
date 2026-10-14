@@ -62,7 +62,7 @@ async function check(){
   if(!s.data||!s.data.session){location.replace("914672305189.html");return}
   var r=await client.from("members").select("status").eq("user_id",s.data.session.user.id).maybeSingle();
   if(r.error){view("pending","⚠️","โหลดสถานะไม่สำเร็จ",r.error.message,"");return}
-  if(!r.data){view("rejected","⚠️","ไม่พบข้อมูลการสมัคร","กรุณาสมัครใหม่หรือติดต่อแอดมิน","");clearInterval(timer);return}
+  if(!r.data){view("rejected","✕","ไม่ผ่านการอนุมัติ","คำขอสมัครของคุณไม่ได้รับการอนุมัติ และข้อมูลที่ส่งมาถูกลบออกจากระบบแล้ว คุณสามารถสมัครใหม่ได้","");clearInterval(timer);return}
   var st=r.data.status;
   if(st==="approved"){
     view("approved","✓","อนุมัติผ่านแล้ว","ยินดีต้อนรับสู่ THR Family คุณสามารถเข้าใช้งานได้แล้ว","");
