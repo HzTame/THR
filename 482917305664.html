@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>THR | Post</title>
+<title>THR | SKU</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap">
 <style>
 :root{--ink:#050509;--gold:#f2c48a;--copper:#c9743a;--cream:#ffe0b5;--mist:#aaa4bc;--line:rgba(242,196,138,.32)}
@@ -107,7 +107,7 @@ button.sm{padding:6px 10px;font-size:.8rem}
 <main class="shell">
   <header class="top">
     <div>
-      <h1>Post</h1>
+      <h1>SKU</h1>
       <p class="lead" id="lead">กำลังโหลด...</p>
     </div>
     <nav class="actions">
@@ -203,8 +203,8 @@ async function init(){
   }
   profile=r.data;
   isAdmin=profile.role==="admin"||profile.role==="deputy_admin";
-  document.getElementById("lead").textContent=isAdmin?"Admin เห็นรายการของสมาชิกทุกคน · แก้ไข/ลบได้เฉพาะของตัวเอง":"อัปโหลดได้ · เห็นและแก้ไขได้เฉพาะรายการของคุณ";
-  app.innerHTML=(isAdmin?'<div class="tabs"><button class="ghost on" data-tab="sku" type="button">Post</button><button class="ghost" data-tab="adm" type="button">ประกาศแอดมิน</button></div>':'')+'<div id="tab-sku"></div><div id="tab-adm" style="display:none"></div>';
+  document.getElementById("lead").textContent=isAdmin?"Admin เห็น แก้ไข และลบรายการของสมาชิกทุกคนได้":"อัปโหลดได้ · เห็นและแก้ไขได้เฉพาะรายการของคุณ";
+  app.innerHTML=(isAdmin?'<div class="tabs"><button class="ghost on" data-tab="sku" type="button">SKU</button><button class="ghost" data-tab="adm" type="button">ประกาศแอดมิน</button></div>':'')+'<div id="tab-sku"></div><div id="tab-adm" style="display:none"></div>';
   status("");renderSku();await loadSku();
   if(isAdmin){renderChannel();await loadSettings();await loadPosts()}
 }
@@ -335,7 +335,7 @@ function renderSkuFeed(){
   document.getElementById("k-n").textContent=list.length;
   if(!list.length){feed.innerHTML='<div class="empty">'+(skus.length?"ไม่พบรายการที่ค้นหา":"ยังไม่มีรายการ")+'</div>';return}
   feed.innerHTML=list.map(function(p){
-    var id=esc(p.id),mine=p.author_id===me.id;
+    var id=esc(p.id),mine=p.author_id===me.id,can=mine||isAdmin;
     if(String(editing)===String(p.id)){
       return '<article class="card composer" style="margin:0"><h3>✎ แก้ไขรายการ</h3>'+
         '<input type="text" id="e-title" maxlength="120" value="'+esc(p.title||"")+'">'+
@@ -347,7 +347,7 @@ function renderSkuFeed(){
     var u=urls[p.file_path],f="";
     if(p.file_path&&u)f=isImg(p.file_type)?'<a href="'+esc(u)+'" target="_blank" rel="noopener noreferrer"><img src="'+esc(u)+'" alt=""></a>'
       :'<p><a class="btn ghost" href="'+esc(u)+'" target="_blank" rel="noopener noreferrer">📎 '+esc(p.file_name||"ไฟล์แนบ")+'</a></p>';
-    var foot=mine?'<div class="foot"><button class="ghost sm" data-kedit="'+id+'" type="button">แก้ไข</button><button class="danger" data-kdel="'+id+'" type="button">ลบ</button></div>':"";
+    var foot=can?'<div class="foot"><button class="ghost sm" data-kedit="'+id+'" type="button">แก้ไข</button><button class="danger" data-kdel="'+id+'" type="button">ลบ</button></div>':"";
     return '<article class="card post"><h3>'+esc(p.title||"ไม่มีหัวข้อ")+'</h3>'+
       '<div class="meta">โดย '+esc(p.author_name||"สมาชิก")+(mine?'<span class="badge">ของคุณ</span>':'')+' · '+esc(fdate(p.created_at))+(p.min_days!=null?' · ⏱ เปิดได้หลังเข้าทีม '+(Number(p.min_days)===0?'ทันที':dayLabel(Number(p.min_days))):'')+(p.updated_at?' · แก้ไขแล้ว':'')+'</div>'+
       (p.body?'<div class="body">'+linkify(p.body)+'</div>':'')+f+foot+'</article>';
@@ -383,16 +383,18 @@ async function saveSku(id){
   status("กำลังบันทึก...");
   if(f){nu=await upFile(f);if(nu.err){status("อัปโหลดไม่สำเร็จ: "+nu.err,"err");return}
     upd.file_path=nu.path;upd.file_name=nu.name;upd.file_type=nu.type;old=p.file_path}
-  var r=await client.from("sku_posts").update(upd).eq("id",id).eq("author_id",me.id).select("id");
-  if(r.error||!(r.data&&r.data.length)){if(nu)await client.storage.from(BUCKET).remove([nu.path]);status("บันทึกไม่สำเร็จ"+(r.error?": "+r.error.message:" (แก้ไขได้เฉพาะของตัวเอง)"),"err");return}
+  var uq=client.from("sku_posts").update(upd).eq("id",id);if(!isAdmin)uq=uq.eq("author_id",me.id);
+  var r=await uq.select("id");
+  if(r.error||!(r.data&&r.data.length)){if(nu)await client.storage.from(BUCKET).remove([nu.path]);status("บันทึกไม่สำเร็จ"+(r.error?": "+r.error.message:" (ไม่มีสิทธิ์แก้ไข)"),"err");return}
   if(old)await client.storage.from(BUCKET).remove([old]);
   editing=null;await loadSku();status("บันทึกแล้ว","ok");
 }
 async function delSku(id){
   if(!confirm("ยืนยันการลบรายการนี้?"))return;
   var p=skus.filter(function(x){return String(x.id)===String(id)})[0];
-  var r=await client.from("sku_posts").delete().eq("id",id).eq("author_id",me.id).select("id");
-  if(r.error||!(r.data&&r.data.length)){status("ลบไม่สำเร็จ"+(r.error?": "+r.error.message:" (ลบได้เฉพาะของตัวเอง)"),"err");return}
+  var dq=client.from("sku_posts").delete().eq("id",id);if(!isAdmin)dq=dq.eq("author_id",me.id);
+  var r=await dq.select("id");
+  if(r.error||!(r.data&&r.data.length)){status("ลบไม่สำเร็จ"+(r.error?": "+r.error.message:" (ไม่มีสิทธิ์ลบ)"),"err");return}
   if(p&&p.file_path)await client.storage.from(BUCKET).remove([p.file_path]);
   await loadSku();status("ลบเรียบร้อย","ok");
 }
