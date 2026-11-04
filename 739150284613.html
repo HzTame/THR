@@ -108,7 +108,7 @@ async function init(){
     setTimeout(function(){location.replace("index.html")},1200);return;
   }
   prof=r.data;
-  if(r.data.role==="admin"||r.data.role==="deputy_admin"){document.getElementById("sku-link").style.display=""}
+  document.getElementById("sku-link").style.display="";
   await load();
 }
 
