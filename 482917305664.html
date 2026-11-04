@@ -77,6 +77,12 @@ select:focus{border-color:var(--cream);box-shadow:0 0 0 3px rgba(242,196,138,.13
 .ok{color:#b6e3b8}.no{color:#ffb0b0}
 .snote{margin:10px 0 0;color:#ff9a9a;font-size:.82rem;min-height:1em}
 .body a{color:var(--gold);text-decoration:underline;word-break:break-all}.body a:hover{color:var(--cream)}
+.post .foot{align-items:center;gap:8px}
+.pdays{display:inline-flex;align-items:center;gap:6px;color:var(--mist);font-size:.78rem}
+.pdays select{min-width:0;font-size:.8rem;padding:5px 8px;border-radius:8px;color:var(--gold);background:rgba(10,8,16,.58);border:1px solid rgba(242,196,138,.34)}
+.pdays select:disabled{opacity:.55}
+.composer .pdays{font-size:.85rem}
+.composer .pdays select{font-size:.88rem;padding:8px 10px}
 </style>
 </head>
 <body>
@@ -123,9 +129,17 @@ function fday(e){if(!e)return"-";var d=new Date(e);return p2(d.getDate())+"/"+p2
 var OPTS=[[1,"1 วัน"],[3,"3 วัน"],[7,"7 วัน"],[14,"14 วัน"],[30,"1 เดือน"],[60,"2 เดือน"],[90,"3 เดือน"],[120,"4 เดือน"],[150,"5 เดือน"],[180,"6 เดือน"],[210,"7 เดือน"],[240,"8 เดือน"],[270,"9 เดือน"],[300,"10 เดือน"],[330,"11 เดือน"],[365,"1 ปี"]];
 var minDays=30,savedDays=30,roster=[];
 function dayLabel(d){var o=OPTS.filter(function(x){return x[0]===d})[0];return o?o[1]:d+" วัน"}
+function postDaysOpts(cur,defLabel){
+  var h='<option value=""'+(cur==null?' selected':'')+'>'+esc(defLabel)+'</option><option value="0"'+(cur===0?' selected':'')+'>เปิดทันที</option>';
+  return h+OPTS.map(function(o){return '<option value="'+o[0]+'"'+(cur===o[0]?' selected':'')+'>'+o[1]+'</option>'}).join("");
+}
 function tenure(m){var s=new Date(m.approved_at||m.created_at);return Math.max(0,Math.floor((Date.now()-s)/864e5))}
 function isStaff(m){return m.role==="admin"||m.role==="deputy_admin"}
 
+function fillComposerDays(){
+  var el=document.getElementById("p-days");if(!el)return;
+  el.innerHTML=postDaysOpts(null,"ค่าเริ่มต้น ("+dayLabel(minDays)+")");
+}
 function fillSelect(){
   var sel=document.getElementById("s-days");
   sel.innerHTML=OPTS.map(function(o){return '<option value="'+o[0]+'"'+(o[0]===minDays?" selected":"")+'>'+o[1]+'</option>'}).join("");
@@ -148,7 +162,7 @@ async function loadSettings(){
   else if(r.data&&r.data.min_days){minDays=savedDays=r.data.min_days}
   var m=await client.from("members").select("user_id,name,role,approved_at,created_at").eq("status","approved");
   roster=m.data||[];
-  fillSelect();renderRoster();
+  fillSelect();renderRoster();fillComposerDays();
 }
 async function saveSettings(){
   var btn=document.getElementById("s-save"),v=parseInt(document.getElementById("s-days").value,10);
@@ -156,7 +170,7 @@ async function saveSettings(){
   var r=await client.from("channel_settings").upsert({id:1,min_days:v,updated_by:me.id,updated_at:new Date().toISOString()},{onConflict:"id"});
   btn.disabled=false;
   if(r.error){status("บันทึกไม่สำเร็จ: "+r.error.message,"err");return}
-  minDays=savedDays=v;renderRoster();status("บันทึกแล้ว: ต้องอยู่ในทีมครบ "+dayLabel(v),"ok");
+  minDays=savedDays=v;renderRoster();fillComposerDays();if(posts.length)renderPosts();status("บันทึกแล้ว: ต้องอยู่ในทีมครบ "+dayLabel(v),"ok");
 }
 
 async function init(){
@@ -184,6 +198,7 @@ function renderChannel(){
      '<input type="text" id="p-title" maxlength="120" placeholder="หัวข้อ">'+
      '<textarea id="p-body" maxlength="4000" placeholder="เขียนข้อความถึงสมาชิก..."></textarea>'+
      '<div class="row"><label class="file">แนบรูป (ไม่บังคับ): <input type="file" id="p-file" accept="image/*"></label>'+
+     '<span class="pdays">เปิดดูได้หลังเข้าทีม <select id="p-days"></select></span>'+
      '<button id="p-send" type="button">ส่งข้อความ</button></div>'+
    '</section>':'';
   app.innerHTML='<section class="card sett" style="margin-top:18px">'+
@@ -194,15 +209,17 @@ function renderChannel(){
      '<div class="roster" id="s-list"></div>'+
      '<p class="snote" id="s-note"></p>'+
    '</section>'+composer+'<div id="stats" class="stats"></div><section id="feed" class="feed"></section>';
-  if(isAdmin)document.getElementById("p-send").addEventListener("click",publish);
+  if(isAdmin){document.getElementById("p-send").addEventListener("click",publish);fillComposerDays()}
   document.getElementById("s-save").addEventListener("click",saveSettings);
   document.getElementById("s-days").addEventListener("change",function(){minDays=parseInt(this.value,10);renderRoster()});
 }
 
-var posts=[];
+var posts=[],hasPostDays=true;
 async function loadPosts(){
   status("กำลังโหลดข้อความ...");
-  var r=await client.from("channel_posts").select("id,author_id,author_name,title,body,image_url,created_at").order("created_at",{ascending:false});
+  var r=await client.from("channel_posts").select("id,author_id,author_name,title,body,image_url,created_at,min_days").order("created_at",{ascending:false});
+  hasPostDays=!r.error;
+  if(r.error)r=await client.from("channel_posts").select("id,author_id,author_name,title,body,image_url,created_at").order("created_at",{ascending:false});
   if(r.error){
     status("โหลดข้อความไม่สำเร็จ: "+r.error.message,"err");
     document.getElementById("feed").innerHTML='<div class="empty">กรุณารันไฟล์ SQL (channel_setup.sql) ก่อน หรือคุณยังไม่มีสิทธิ์เปิดช่องนี้</div>';
@@ -217,7 +234,8 @@ function renderPosts(){
   if(!posts.length){feed.innerHTML='<div class="empty">ยังไม่มีข้อความจากแอดมิน</div>';return}
   feed.innerHTML=posts.map(function(p){
     var img=/^https:\/\//.test(p.image_url||"")?'<img src="'+esc(p.image_url)+'" alt="">':"";
-    var del=isAdmin?'<div class="foot"><button class="danger" data-del="'+esc(p.id)+'">ลบ</button></div>':"";
+    var pd=hasPostDays?'<label class="pdays" title="ตั้งว่าสมาชิกต้องอยู่ในทีมกี่วันถึงจะเปิดโพสต์นี้ได้">⏱ เปิดได้หลัง <select data-days="'+esc(p.id)+'">'+postDaysOpts(p.min_days==null?null:Number(p.min_days),"ค่าเริ่มต้น ("+dayLabel(minDays)+")")+'</select></label>':"";
+    var del=isAdmin?'<div class="foot">'+pd+'<button class="danger" data-del="'+esc(p.id)+'">ลบ</button></div>':"";
     return '<article class="card post"><h3>'+esc(p.title||"ไม่มีหัวข้อ")+'</h3>'+
       '<div class="meta">โดย '+esc(p.author_name||"Admin")+'<span class="badge">ADMIN</span> · '+esc(fdate(p.created_at))+'</div>'+
       '<div class="body">'+linkify(p.body||"")+'</div>'+img+del+'</article>';
@@ -240,13 +258,26 @@ async function publish(){
     if(up.error){status("อัปโหลดรูปไม่สำเร็จ: "+up.error.message,"err");btn.disabled=false;return}
     url=client.storage.from("channel-files").getPublicUrl(path).data.publicUrl;
   }
-  var ins=await client.from("channel_posts").insert({author_id:me.id,author_name:profile.name||"Admin",title:t||null,body:b||null,image_url:url});
+  var row={author_id:me.id,author_name:profile.name||"Admin",title:t||null,body:b||null,image_url:url},
+      pdv=document.getElementById("p-days").value;
+  if(pdv!=="")row.min_days=parseInt(pdv,10);
+  var ins=await client.from("channel_posts").insert(row);
   btn.disabled=false;
   if(ins.error){status("ส่งไม่สำเร็จ: "+ins.error.message,"err");return}
   document.getElementById("p-title").value="";document.getElementById("p-body").value="";document.getElementById("p-file").value="";
   await loadPosts();status("ส่งข้อความเรียบร้อย","ok");
 }
 
+app.addEventListener("change",async function(e){
+  var sel=e.target.closest("[data-days]");if(!sel)return;
+  var id=sel.dataset.days,v=sel.value===""?null:parseInt(sel.value,10);
+  sel.disabled=true;status("กำลังบันทึกเวลาเปิดโพสต์...");
+  var r=await client.from("channel_posts").update({min_days:v}).eq("id",id).select("id");
+  sel.disabled=false;
+  if(r.error||!(r.data&&r.data.length)){status("บันทึกไม่สำเร็จ"+(r.error?": "+r.error.message:" (ยังไม่มีสิทธิ์แก้ไข รัน channel_post_lock.sql ก่อน)"),"err");return}
+  posts.forEach(function(p){if(String(p.id)===String(id))p.min_days=v});
+  status(v==null?"ใช้ค่าเริ่มต้นแล้ว":"บันทึกแล้ว: เปิดได้หลังเข้าทีม "+(v===0?"ทันที":dayLabel(v)),"ok");
+});
 app.addEventListener("click",async function(e){
   var d=e.target.closest("[data-del]");if(!d)return;
   if(!confirm("ยืนยันการลบข้อความนี้?"))return;

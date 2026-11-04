@@ -54,6 +54,11 @@ h1{line-height:1.1}
 .actions{flex-wrap:nowrap;justify-content:flex-end;flex:none}
 a.btn,button{white-space:nowrap}
 @media(max-width:760px){.top{flex-wrap:wrap}.actions{flex-wrap:wrap;justify-content:flex-start;flex:1 1 100%}}
+.post{position:relative}
+.post.locked .lk{filter:blur(7px);-webkit-user-select:none;user-select:none;pointer-events:none}
+.post.locked .imgph{height:150px;margin-top:12px;border-radius:12px;border:1px solid var(--line);background:linear-gradient(135deg,rgba(242,196,138,.18),rgba(201,116,58,.12))}
+.lockov{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:12px;pointer-events:none}
+.lockov span{padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:rgba(8,7,14,.82);color:var(--cream);font-size:.86rem}
 </style>
 </head>
 <body>
@@ -120,13 +125,17 @@ async function lockView(){
 
 async function load(){
   status("กำลังโหลดโพสต์...");
-  var r=await client.from("channel_posts").select("id,author_name,title,body,image_url,created_at").order("created_at",{ascending:false});
+  var r=await client.rpc("get_channel_posts");
   if(r.error){
-    status("");
-    await lockView();
-    return;
+    /* ยังไม่ได้รัน channel_post_lock.sql: ใช้วิธีเดิม */
+    r=await client.from("channel_posts").select("id,author_name,title,body,image_url,created_at").order("created_at",{ascending:false});
+    if(r.error){
+      status("");
+      await lockView();
+      return;
+    }
   }
-  posts=r.data||[];
+  posts=Array.isArray(r.data)?r.data:[];
   app.innerHTML='<div class="tools"><input type="search" id="q" placeholder="ค้นหาหัวข้อหรือข้อความ"><span class="count">ทั้งหมด <b id="n">0</b> โพสต์</span></div><section id="feed" class="feed"></section>';
   document.getElementById("q").addEventListener("input",render);
   render();status("โหลดเรียบร้อย","ok");
@@ -139,11 +148,13 @@ function render(){
   document.getElementById("n").textContent=list.length;
   if(!list.length){feed.innerHTML='<div class="empty">'+(posts.length?"ไม่พบโพสต์ที่ค้นหา":"ยังไม่มีโพสต์จากแอดมิน")+'</div>';return}
   feed.innerHTML=list.map(function(p,i){
-    var img=/^https:\/\//.test(p.image_url||"")?'<img src="'+esc(p.image_url)+'" alt="">':"";
-    return '<article class="card post" style="animation-delay:'+Math.min(i,10)*50+'ms">'+
-      '<h3>'+esc(p.title||"ไม่มีหัวข้อ")+'</h3>'+
+    var lk=p.locked===true,
+        img=lk?(p.has_image?'<div class="imgph lk"></div>':""):(/^https:\/\//.test(p.image_url||"")?'<img src="'+esc(p.image_url)+'" alt="">':""),
+        ov=lk?'<div class="lockov"><span>🔒 เปิดดูได้อีก '+esc(p.days_left||1)+' วัน</span></div>':"";
+    return '<article class="card post'+(lk?' locked':'')+'" style="animation-delay:'+Math.min(i,10)*50+'ms">'+
+      '<h3 class="lk">'+esc(p.title||"ไม่มีหัวข้อ")+'</h3>'+
       '<div class="meta">โดย '+esc(p.author_name||"Admin")+'<span class="badge">ADMIN</span> · '+esc(fdate(p.created_at))+'</div>'+
-      (p.body?'<div class="body">'+linkify(p.body)+'</div>':'')+img+'</article>';
+      (p.body?'<div class="body lk">'+(lk?esc(p.body):linkify(p.body))+'</div>':'')+img+ov+'</article>';
   }).join("");
 }
 
