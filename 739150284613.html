@@ -9,7 +9,7 @@
 :root{--ink:#050509;--gold:#f2c48a;--copper:#c9743a;--cream:#ffe0b5;--mist:#aaa4bc;--line:rgba(242,196,138,.32)}
 *{box-sizing:border-box}
 body{margin:0;min-height:100vh;background:radial-gradient(120% 60% at 50% 108%,#3a1e16 0,#1a1224 38%,var(--ink) 75%) fixed;color:#eee9f5;font-family:Inter,Arial,sans-serif}
-.shell{width:min(820px,100%);margin:auto;padding:28px 18px 56px}
+.shell{width:min(820px,100%);margin:0 auto;padding:max(8px,env(safe-area-inset-top)) 18px 56px}
 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
 h1{margin:0;font-weight:300;font-size:clamp(2rem,5vw,3rem);background:linear-gradient(100deg,#fff,var(--cream),#d79a6a);-webkit-background-clip:text;background-clip:text;color:transparent}
 .lead{color:var(--mist);line-height:1.6;margin:.4em 0 0}
@@ -43,6 +43,17 @@ input:focus{border-color:var(--cream);box-shadow:0 0 0 3px rgba(242,196,138,.13)
 .zoom.on{display:grid}
 .zoom img{max-width:100%;max-height:100%;border-radius:12px}
 .body a{color:var(--gold);text-decoration:underline;word-break:break-all}.body a:hover{color:var(--cream)}
+
+.top{gap:10px 16px}
+h1{line-height:1.1}
+.lead{margin:.2em 0 0;font-size:.9rem}
+.status{margin:8px 0 4px}
+/* top bar: title left, nav buttons in one row on the right */
+.top{align-items:center;flex-wrap:nowrap}
+.top>div:first-child{min-width:0}
+.actions{flex-wrap:nowrap;justify-content:flex-end;flex:none}
+a.btn,button{white-space:nowrap}
+@media(max-width:760px){.top{flex-wrap:wrap}.actions{flex-wrap:wrap;justify-content:flex-start;flex:1 1 100%}}
 </style>
 </head>
 <body>
@@ -53,10 +64,10 @@ input:focus{border-color:var(--cream);box-shadow:0 0 0 3px rgba(242,196,138,.13)
       <p class="lead">ข้อความและรูปภาพทั้งหมดที่แอดมินโพสต์ไว้ เรียงจากใหม่ไปเก่า</p>
     </div>
     <nav class="actions">
-      <a class="btn ghost" href="index.html">หน้าหลัก</a>
+      <a class="btn ghost" id="sku-link" href="482917305664.html" style="display:none">SKU</a>
       <a class="btn ghost" href="389554462347.html">โปรไฟล์</a>
       <a class="btn ghost" href="111908932517.html">องค์กร</a>
-      <a class="btn ghost" id="sku-link" href="482917305664.html" style="display:none">SKU</a>
+      <a class="btn ghost" href="index.html">หน้าหลัก</a>
       <button id="refresh" type="button">รีเฟรช</button>
     </nav>
   </header>
