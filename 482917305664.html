@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>THR | SKU</title>
+<title>THR | Post</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap">
 <style>
 :root{--ink:#050509;--gold:#f2c48a;--copper:#c9743a;--cream:#ffe0b5;--mist:#aaa4bc;--line:rgba(242,196,138,.32)}
@@ -107,7 +107,7 @@ button.sm{padding:6px 10px;font-size:.8rem}
 <main class="shell">
   <header class="top">
     <div>
-      <h1>SKU</h1>
+      <h1>Post</h1>
       <p class="lead" id="lead">กำลังโหลด...</p>
     </div>
     <nav class="actions">
@@ -204,7 +204,7 @@ async function init(){
   profile=r.data;
   isAdmin=profile.role==="admin"||profile.role==="deputy_admin";
   document.getElementById("lead").textContent=isAdmin?"Admin เห็นรายการของสมาชิกทุกคน · แก้ไข/ลบได้เฉพาะของตัวเอง":"อัปโหลดได้ · เห็นและแก้ไขได้เฉพาะรายการของคุณ";
-  app.innerHTML=(isAdmin?'<div class="tabs"><button class="ghost on" data-tab="sku" type="button">SKU</button><button class="ghost" data-tab="adm" type="button">ประกาศแอดมิน</button></div>':'')+'<div id="tab-sku"></div><div id="tab-adm" style="display:none"></div>';
+  app.innerHTML=(isAdmin?'<div class="tabs"><button class="ghost on" data-tab="sku" type="button">Post</button><button class="ghost" data-tab="adm" type="button">ประกาศแอดมิน</button></div>':'')+'<div id="tab-sku"></div><div id="tab-adm" style="display:none"></div>';
   status("");renderSku();await loadSku();
   if(isAdmin){renderChannel();await loadSettings();await loadPosts()}
 }
@@ -312,7 +312,9 @@ function renderSku(){
   '<section class="card composer" style="margin-top:18px"><h3>✎ อัปโหลดใหม่</h3>'+
   '<input type="text" id="k-title" maxlength="120" placeholder="หัวข้อ / รหัส SKU">'+
   '<textarea id="k-body" maxlength="4000" placeholder="รายละเอียด..."></textarea>'+
-  '<div class="row"><label class="file">แนบไฟล์ (ไม่เกิน 10MB): <input type="file" id="k-file"></label><button id="k-send" type="button">อัปโหลด</button></div></section>'+
+  '<div class="row"><label class="file">แนบไฟล์ (ไม่เกิน 10MB): <input type="file" id="k-file"></label>'+
+  '<label class="pdays">⏱ เปิดได้หลังเข้าทีม <select id="k-days">'+postDaysOpts(null,"ไม่ตั้งเวลา")+'</select></label>'+
+  '<button id="k-send" type="button">อัปโหลด</button></div></section>'+
   '<div class="tools"><input type="search" id="k-q" placeholder="'+(isAdmin?"ค้นหาหัวข้อ ข้อความ หรือชื่อผู้โพสต์":"ค้นหา")+'"><span class="count">'+(isAdmin?"ทั้งหมด":"ของฉัน")+' <b id="k-n">0</b> รายการ</span></div>'+
   '<section id="k-feed" class="feed"></section>';
   document.getElementById("k-send").addEventListener("click",sendSku);
@@ -339,6 +341,7 @@ function renderSkuFeed(){
         '<input type="text" id="e-title" maxlength="120" value="'+esc(p.title||"")+'">'+
         '<textarea id="e-body" maxlength="4000">'+esc(p.body||"")+'</textarea>'+
         '<div class="row"><label class="file">เปลี่ยนไฟล์ (ไม่บังคับ): <input type="file" id="e-file"></label>'+
+        '<label class="pdays">⏱ เปิดได้หลังเข้าทีม <select id="e-days">'+postDaysOpts(p.min_days==null?null:Number(p.min_days),"ไม่ตั้งเวลา")+'</select></label>'+
         '<span class="acts"><button class="ghost" data-kcancel="1" type="button">ยกเลิก</button><button data-ksave="'+id+'" type="button">บันทึก</button></span></div></article>';
     }
     var u=urls[p.file_path],f="";
@@ -346,7 +349,7 @@ function renderSkuFeed(){
       :'<p><a class="btn ghost" href="'+esc(u)+'" target="_blank" rel="noopener noreferrer">📎 '+esc(p.file_name||"ไฟล์แนบ")+'</a></p>';
     var foot=mine?'<div class="foot"><button class="ghost sm" data-kedit="'+id+'" type="button">แก้ไข</button><button class="danger" data-kdel="'+id+'" type="button">ลบ</button></div>':"";
     return '<article class="card post"><h3>'+esc(p.title||"ไม่มีหัวข้อ")+'</h3>'+
-      '<div class="meta">โดย '+esc(p.author_name||"สมาชิก")+(mine?'<span class="badge">ของคุณ</span>':'')+' · '+esc(fdate(p.created_at))+(p.updated_at?' · แก้ไขแล้ว':'')+'</div>'+
+      '<div class="meta">โดย '+esc(p.author_name||"สมาชิก")+(mine?'<span class="badge">ของคุณ</span>':'')+' · '+esc(fdate(p.created_at))+(p.min_days!=null?' · ⏱ เปิดได้หลังเข้าทีม '+(Number(p.min_days)===0?'ทันที':dayLabel(Number(p.min_days))):'')+(p.updated_at?' · แก้ไขแล้ว':'')+'</div>'+
       (p.body?'<div class="body">'+linkify(p.body)+'</div>':'')+f+foot+'</article>';
   }).join("");
 }
@@ -363,17 +366,20 @@ async function sendSku(){
   if(!t&&!b&&!f){status("กรุณากรอกข้อความหรือแนบไฟล์","err");return}
   btn.disabled=true;status("กำลังอัปโหลด...");
   var row={author_id:me.id,author_name:profile.name||"สมาชิก",title:t||null,body:b||null};
+  var kd=document.getElementById("k-days").value;if(kd!=="")row.min_days=parseInt(kd,10);
   if(f){var u=await upFile(f);if(u.err){status("อัปโหลดไม่สำเร็จ: "+u.err,"err");btn.disabled=false;return}row.file_path=u.path;row.file_name=u.name;row.file_type=u.type}
   var ins=await client.from("sku_posts").insert(row);
   btn.disabled=false;
   if(ins.error){if(row.file_path)await client.storage.from(BUCKET).remove([row.file_path]);status("บันทึกไม่สำเร็จ: "+ins.error.message,"err");return}
-  document.getElementById("k-title").value="";document.getElementById("k-body").value="";document.getElementById("k-file").value="";
+  document.getElementById("k-title").value="";document.getElementById("k-body").value="";document.getElementById("k-file").value="";document.getElementById("k-days").value="";
   await loadSku();status("อัปโหลดเรียบร้อย","ok");
 }
 async function saveSku(id){
   var p=skus.filter(function(x){return String(x.id)===String(id)})[0];if(!p)return;
   var upd={title:document.getElementById("e-title").value.trim()||null,body:document.getElementById("e-body").value.trim()||null,updated_at:new Date().toISOString()},
+      ed=document.getElementById("e-days").value,
       f=document.getElementById("e-file").files[0],old=null,nu=null;
+  upd.min_days=ed===""?null:parseInt(ed,10);
   status("กำลังบันทึก...");
   if(f){nu=await upFile(f);if(nu.err){status("อัปโหลดไม่สำเร็จ: "+nu.err,"err");return}
     upd.file_path=nu.path;upd.file_name=nu.name;upd.file_type=nu.type;old=p.file_path}
