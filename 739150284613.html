@@ -66,7 +66,7 @@ a.btn,button{white-space:nowrap}
   <header class="top">
     <div>
       <h1>Post</h1>
-      <p class="lead">ข้อความและรูปภาพทั้งหมดที่แอดมินโพสต์ไว้ เรียงจากใหม่ไปเก่า</p>
+      <p class="lead">ข้อความและรูปภาพที่แอดมินและสมาชิกโพสต์ไว้ เรียงจากใหม่ไปเก่า</p>
     </div>
     <nav class="actions">
       <a class="btn ghost" id="sku-link" href="482917305664.html" style="display:none">SKU</a>
@@ -125,20 +125,30 @@ async function lockView(){
 
 async function load(){
   status("กำลังโหลดโพสต์...");
-  var r=await client.rpc("get_channel_posts");
+  var chanErr=false,r=await client.rpc("get_channel_posts");
   if(r.error){
     /* ยังไม่ได้รัน channel_post_lock.sql: ใช้วิธีเดิม */
     r=await client.from("channel_posts").select("id,author_name,title,body,image_url,created_at").order("created_at",{ascending:false});
-    if(r.error){
-      status("");
-      await lockView();
-      return;
-    }
+    if(r.error){chanErr=true;r={data:[]}}
   }
   posts=Array.isArray(r.data)?r.data:[];
+  var mem=await loadMembers();
+  if(chanErr&&!mem.length){status("");await lockView();return}
+  posts=posts.concat(mem).sort(function(a,b){return new Date(b.created_at)-new Date(a.created_at)});
   app.innerHTML='<div class="tools"><input type="search" id="q" placeholder="ค้นหาหัวข้อหรือข้อความ"><span class="count">ทั้งหมด <b id="n">0</b> โพสต์</span></div><section id="feed" class="feed"></section>';
   document.getElementById("q").addEventListener("input",render);
   render();status("โหลดเรียบร้อย","ok");
+}
+
+async function loadMembers(){
+  var r=await client.rpc("get_member_posts");
+  if(r.error||!Array.isArray(r.data))return [];
+  var paths=r.data.filter(function(p){return !p.locked&&p.file_path}).map(function(p){return p.file_path}),map={};
+  if(paths.length){try{var s=await client.storage.from("sku-files").createSignedUrls(paths,3600);(s.data||[]).forEach(function(x){if(x.signedUrl)map[x.path]=x.signedUrl})}catch(e){}}
+  return r.data.map(function(p){
+    var u=p.file_path?map[p.file_path]:"",im=u&&/^image\//.test(p.file_type||"");
+    return {id:p.id,kind:"member",author_name:p.author_name,title:p.title,body:p.body,created_at:p.created_at,locked:p.locked,days_left:p.days_left,has_image:p.has_file,image_url:im?u:"",file_url:im?"":u,file_name:p.file_name};
+  });
 }
 
 function render(){
@@ -148,13 +158,14 @@ function render(){
   document.getElementById("n").textContent=list.length;
   if(!list.length){feed.innerHTML='<div class="empty">'+(posts.length?"ไม่พบโพสต์ที่ค้นหา":"ยังไม่มีโพสต์จากแอดมิน")+'</div>';return}
   feed.innerHTML=list.map(function(p,i){
-    var lk=p.locked===true,
+    var lk=p.locked===true,mb=p.kind==="member",
+        fl=(!lk&&/^https:\/\//.test(p.file_url||""))?'<p style="margin:12px 0 0"><a class="btn ghost" href="'+esc(p.file_url)+'" target="_blank" rel="noopener noreferrer">📎 '+esc(p.file_name||"ไฟล์แนบ")+'</a></p>':"",
         img=lk?(p.has_image?'<div class="imgph lk"></div>':""):(/^https:\/\//.test(p.image_url||"")?'<img src="'+esc(p.image_url)+'" alt="">':""),
         ov=lk?'<div class="lockov"><span>🔒 เปิดดูได้อีก '+esc(p.days_left||1)+' วัน</span></div>':"";
     return '<article class="card post'+(lk?' locked':'')+'" style="animation-delay:'+Math.min(i,10)*50+'ms">'+
-      '<h3 class="lk">'+esc(p.title||"ไม่มีหัวข้อ")+'</h3>'+
-      '<div class="meta">โดย '+esc(p.author_name||"Admin")+'<span class="badge">ADMIN</span> · '+esc(fdate(p.created_at))+'</div>'+
-      (p.body?'<div class="body lk">'+(lk?esc(p.body):linkify(p.body))+'</div>':'')+img+ov+'</article>';
+      '<h3 class="lk">'+esc(p.title||(lk&&mb?"โพสต์ของสมาชิก":"ไม่มีหัวข้อ"))+'</h3>'+
+      '<div class="meta">โดย '+esc(p.author_name||(mb?"สมาชิก":"Admin"))+'<span class="badge">'+(mb?"สมาชิก":"ADMIN")+'</span> · '+esc(fdate(p.created_at))+'</div>'+
+      ((p.body||(lk&&mb))?'<div class="body lk">'+(lk?esc(p.body||"ข้อความนี้ถูกล็อกไว้ ยังเปิดดูไม่ได้"):linkify(p.body))+'</div>':'')+img+fl+ov+'</article>';
   }).join("");
 }
 
