@@ -59,6 +59,22 @@ input:focus,textarea:focus{border-color:var(--cream);box-shadow:0 0 0 3px rgba(2
 .post .foot{display:flex;justify-content:flex-end;margin-top:10px}
 .empty{padding:22px;border:1px dashed var(--line);border-radius:14px;color:var(--mist);text-align:center}
 .badge{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:99px;font-size:.7rem;color:#171018;background:linear-gradient(135deg,var(--gold),var(--copper))}
+
+/* settings */
+.sett h3{margin:0 0 4px;font-weight:500;color:var(--gold);font-size:1rem}
+.sett p.hint{margin:0 0 12px;color:var(--mist);font-size:.84rem;line-height:1.6}
+.sett .srow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+select{font:inherit;font-size:.92rem;color:#eee9f5;background:rgba(9,8,16,.76);border:1px solid rgba(201,116,58,.45);border-radius:10px;padding:10px 12px;outline:0;min-width:170px}
+select:focus{border-color:var(--cream);box-shadow:0 0 0 3px rgba(242,196,138,.13)}
+.sum{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 10px}
+.sum span{border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:var(--mist)}
+.sum b{color:var(--cream)}
+.roster{max-height:320px;overflow:auto;border:1px solid var(--line);border-radius:12px}
+.rrow{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:9px 12px;border-bottom:1px solid rgba(242,196,138,.1);font-size:.88rem}
+.rrow:last-child{border-bottom:0}
+.rrow small{color:var(--mist)}
+.ok{color:#b6e3b8}.no{color:#ffb0b0}
+.snote{margin:10px 0 0;color:#ff9a9a;font-size:.82rem;min-height:1em}
 </style>
 </head>
 <body>
@@ -92,6 +108,45 @@ function fdate(e){return e?new Date(e).toLocaleString("th-TH"):"-"}
 function p2(n){return String(n).padStart(2,"0")}
 function fday(e){if(!e)return"-";var d=new Date(e);return p2(d.getDate())+"/"+p2(d.getMonth()+1)+"/"+(d.getFullYear()+543)}
 
+var OPTS=[[1,"1 วัน"],[3,"3 วัน"],[7,"7 วัน"],[14,"14 วัน"],[30,"1 เดือน"],[60,"2 เดือน"],[90,"3 เดือน"],[120,"4 เดือน"],[150,"5 เดือน"],[180,"6 เดือน"],[210,"7 เดือน"],[240,"8 เดือน"],[270,"9 เดือน"],[300,"10 เดือน"],[330,"11 เดือน"],[365,"1 ปี"]];
+var minDays=30,savedDays=30,roster=[];
+function dayLabel(d){var o=OPTS.filter(function(x){return x[0]===d})[0];return o?o[1]:d+" วัน"}
+function tenure(m){var s=new Date(m.approved_at||m.created_at);return Math.max(0,Math.floor((Date.now()-s)/864e5))}
+function isStaff(m){return m.role==="admin"||m.role==="deputy_admin"}
+
+function fillSelect(){
+  var sel=document.getElementById("s-days");
+  sel.innerHTML=OPTS.map(function(o){return '<option value="'+o[0]+'"'+(o[0]===minDays?" selected":"")+'>'+o[1]+'</option>'}).join("");
+}
+function renderRoster(){
+  var ok=0,rows=roster.slice().sort(function(a,b){return tenure(b)-tenure(a)}).map(function(m){
+    var d=tenure(m),pass=isStaff(m)||d>=minDays;if(pass)ok++;
+    return '<div class="rrow"><span>'+esc(m.name||"ไม่ระบุชื่อ")+(isStaff(m)?' <small>(แอดมิน)</small>':'')+'</span>'+
+      '<span><small>อยู่มา '+d+' วัน</small> · '+(pass?'<span class="ok">เปิดได้</span>':'<span class="no">ยังไม่ถึง</span>')+'</span></div>';
+  }).join("");
+  document.getElementById("s-sum").innerHTML='<span>เงื่อนไขปัจจุบัน: <b>'+esc(dayLabel(minDays))+'</b></span>'+
+    '<span>เข้าเงื่อนไขแล้ว: <b>'+ok+'</b> / '+roster.length+' คน</span>'+
+    (minDays!==savedDays?'<span style="color:var(--gold)">ยังไม่ได้บันทึก</span>':'');
+  document.getElementById("s-list").innerHTML=rows||'<div class="rrow"><small>ยังไม่มีสมาชิก</small></div>';
+}
+async function loadSettings(){
+  var note=document.getElementById("s-note");note.textContent="";
+  var r=await client.from("channel_settings").select("min_days").eq("id",1).maybeSingle();
+  if(r.error){note.textContent="ยังไม่ได้ตั้งค่าระบบ: รันไฟล์ channel_settings.sql ใน Supabase ก่อน ("+r.error.message+")"}
+  else if(r.data&&r.data.min_days){minDays=savedDays=r.data.min_days}
+  var m=await client.from("members").select("user_id,name,role,approved_at,created_at").eq("status","approved");
+  roster=m.data||[];
+  fillSelect();renderRoster();
+}
+async function saveSettings(){
+  var btn=document.getElementById("s-save"),v=parseInt(document.getElementById("s-days").value,10);
+  btn.disabled=true;status("กำลังบันทึก...");
+  var r=await client.from("channel_settings").upsert({id:1,min_days:v,updated_by:me.id,updated_at:new Date().toISOString()},{onConflict:"id"});
+  btn.disabled=false;
+  if(r.error){status("บันทึกไม่สำเร็จ: "+r.error.message,"err");return}
+  minDays=savedDays=v;renderRoster();status("บันทึกแล้ว: ต้องอยู่ในทีมครบ "+dayLabel(v),"ok");
+}
+
 async function init(){
   var u=await client.auth.getUser();
   if(u.error||!u.data.user){location.replace("index.html");return}
@@ -107,7 +162,7 @@ async function init(){
     status("หน้านี้สำหรับ Admin และรอง Admin เท่านั้น","err");
     setTimeout(function(){location.replace("index.html")},1000);return;
   }
-  status("");renderChannel();await loadPosts();
+  status("");renderChannel();await loadSettings();await loadPosts();
 }
 
 function renderChannel(){
@@ -119,8 +174,17 @@ function renderChannel(){
      '<div class="row"><label class="file">แนบรูป (ไม่บังคับ): <input type="file" id="p-file" accept="image/*"></label>'+
      '<button id="p-send" type="button">ส่งข้อความ</button></div>'+
    '</section>':'';
-  app.innerHTML=composer+'<div id="stats" class="stats"></div><section id="feed" class="feed"></section>';
+  app.innerHTML='<section class="card sett" style="margin-top:18px">'+
+     '<h3>⏱ ตั้งเวลาเปิดสิทธิ์ดูโพสต์</h3>'+
+     '<p class="hint">นับจากวันที่ได้รับอนุมัติเข้าทีม สมาชิกที่อยู่ครบตามเวลาที่เลือกจะเปิดดูโพสต์ของแอดมินได้ (Admin และรอง Admin เปิดได้เสมอ)</p>'+
+     '<div class="srow"><select id="s-days"></select><button id="s-save" type="button">บันทึกการตั้งค่า</button></div>'+
+     '<div class="sum" id="s-sum"></div>'+
+     '<div class="roster" id="s-list"></div>'+
+     '<p class="snote" id="s-note"></p>'+
+   '</section>'+composer+'<div id="stats" class="stats"></div><section id="feed" class="feed"></section>';
   if(isAdmin)document.getElementById("p-send").addEventListener("click",publish);
+  document.getElementById("s-save").addEventListener("click",saveSettings);
+  document.getElementById("s-days").addEventListener("change",function(){minDays=parseInt(this.value,10);renderRoster()});
 }
 
 var posts=[];

@@ -65,7 +65,7 @@ input:focus{border-color:var(--cream);box-shadow:0 0 0 3px rgba(242,196,138,.13)
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 var client=window.supabase.createClient("https://gxurnxlbtmdymrdfrhcv.supabase.co","sb_publishable_QKnPZU1huLddOAYWOP4KPA_29Sv7C7G"),
-    msg=document.getElementById("msg"),app=document.getElementById("app"),posts=[];
+    msg=document.getElementById("msg"),app=document.getElementById("app"),posts=[],prof=null;
 
 function esc(e){return String(e==null?"":e).replace(/[&<>'"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]})}
 function status(t,c){msg.textContent=t;msg.className="status "+(c||"")}
@@ -74,13 +74,25 @@ function fdate(e){return e?new Date(e).toLocaleString("th-TH"):"-"}
 async function init(){
   var u=await client.auth.getUser();
   if(u.error||!u.data.user){location.replace("index.html");return}
-  var r=await client.from("members").select("status,role").eq("user_id",u.data.user.id).maybeSingle();
+  var r=await client.from("members").select("status,role,approved_at,created_at").eq("user_id",u.data.user.id).maybeSingle();
   if(r.error||!r.data||r.data.status!=="approved"){
     status("หน้านี้สำหรับสมาชิกที่ได้รับอนุมัติแล้วเท่านั้น","err");
     setTimeout(function(){location.replace("index.html")},1200);return;
   }
+  prof=r.data;
   if(r.data.role==="admin"||r.data.role==="deputy_admin"){document.getElementById("sku-link").style.display=""}
   await load();
+}
+
+function dayLabel(d){if(d<30)return d+" วัน";if(d===365)return "1 ปี";if(d%30===0)return (d/30)+" เดือน";return d+" วัน"}
+async function lockView(){
+  var days=30,s=await client.from("channel_settings").select("min_days").eq("id",1).maybeSingle();
+  if(!s.error&&s.data&&s.data.min_days)days=s.data.min_days;
+  var start=new Date(prof&&(prof.approved_at||prof.created_at)||Date.now()),
+      left=Math.max(0,Math.ceil(days-(Date.now()-start)/864e5));
+  app.innerHTML='<section class="card lock"><div class="ic">🔒</div><h2>ยังเปิดดูโพสต์ไม่ได้</h2>'+
+    '<p>ต้องเป็นสมาชิกในทีมครบ <b style="color:var(--cream)">'+esc(dayLabel(days))+'</b> ก่อนจึงจะเปิดดูได้'+
+    (left>0?'<br>เหลืออีก <b style="color:var(--cream)">'+left+'</b> วัน':'')+'</p></section>';
 }
 
 async function load(){
@@ -88,8 +100,7 @@ async function load(){
   var r=await client.from("channel_posts").select("id,author_name,title,body,image_url,created_at").order("created_at",{ascending:false});
   if(r.error){
     status("");
-    app.innerHTML='<section class="card lock"><div class="ic">🔒</div><h2>ยังเปิดดูโพสต์ไม่ได้</h2>'+
-      '<p>โพสต์ของแอดมินเปิดให้เฉพาะสมาชิกที่อยู่ในทีมครบ 1 เดือน</p></section>';
+    await lockView();
     return;
   }
   posts=r.data||[];
