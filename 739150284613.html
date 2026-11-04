@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>THR | โพสต์จากแอดมิน</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap">
+<style>
+:root{--ink:#050509;--gold:#f2c48a;--copper:#c9743a;--cream:#ffe0b5;--mist:#aaa4bc;--line:rgba(242,196,138,.32)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(120% 60% at 50% 108%,#3a1e16 0,#1a1224 38%,var(--ink) 75%) fixed;color:#eee9f5;font-family:Inter,Arial,sans-serif}
+.shell{width:min(820px,100%);margin:auto;padding:28px 18px 56px}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+h1{margin:0;font-weight:300;font-size:clamp(2rem,5vw,3rem);background:linear-gradient(100deg,#fff,var(--cream),#d79a6a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{color:var(--mist);line-height:1.6;margin:.4em 0 0}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+a.btn,button{font:inherit;font-weight:500;color:#171018;background:linear-gradient(135deg,var(--gold),var(--copper));border:0;border-radius:10px;padding:10px 14px;cursor:pointer;text-decoration:none;transition:box-shadow .2s}
+button:hover,a.btn:hover{box-shadow:0 10px 30px rgba(201,116,58,.42)}
+.ghost{color:var(--gold)!important;background:rgba(10,8,16,.58)!important;border:1px solid rgba(242,196,138,.34)!important}
+.status{min-height:1.5em;color:var(--gold);font-size:.9rem;margin:14px 0 6px}
+.status.err{color:#ff9a9a}.status.ok{color:#b6e3b8}
+.card{border:1px solid var(--line);border-radius:16px;background:linear-gradient(180deg,rgba(31,22,40,.9),rgba(8,7,14,.94));padding:18px}
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:12px 0}
+input[type=search]{flex:1;min-width:200px;font:inherit;font-size:.92rem;color:#eee9f5;background:rgba(9,8,16,.76);border:1px solid rgba(201,116,58,.45);border-radius:10px;padding:10px 12px;outline:0}
+input:focus{border-color:var(--cream);box-shadow:0 0 0 3px rgba(242,196,138,.13)}
+.count{border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:var(--mist);white-space:nowrap}
+.count b{color:var(--cream)}
+.feed{display:grid;gap:14px;margin-top:10px}
+.post{animation:in .5s cubic-bezier(.16,1,.3,1) backwards}
+@keyframes in{from{opacity:0;transform:translateY(14px)}}
+.post h3{margin:0 0 4px;font-weight:500;color:#fff;font-size:1.1rem;overflow-wrap:anywhere}
+.meta{font-size:.78rem;color:var(--mist);margin-bottom:10px}
+.badge{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:99px;font-size:.7rem;color:#171018;background:linear-gradient(135deg,var(--gold),var(--copper))}
+.body{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.7;font-size:.93rem}
+.post img{display:block;max-width:100%;max-height:420px;margin-top:12px;border-radius:12px;border:1px solid var(--line);cursor:zoom-in}
+.empty{padding:22px;border:1px dashed var(--line);border-radius:14px;color:var(--mist);text-align:center}
+.lock{text-align:center;padding:40px 22px}
+.lock .ic{font-size:2.4rem}
+.lock h2{margin:10px 0 6px;font-weight:400;color:var(--cream)}
+.lock p{color:var(--mist);line-height:1.7;margin:6px 0 16px}
+.zoom{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.85);display:none;place-items:center;padding:18px;cursor:zoom-out}
+.zoom.on{display:grid}
+.zoom img{max-width:100%;max-height:100%;border-radius:12px}
+</style>
+</head>
+<body>
+<main class="shell">
+  <header class="top">
+    <div>
+      <h1>โพสต์จากแอดมิน</h1>
+      <p class="lead">ข้อความและรูปภาพทั้งหมดที่แอดมินโพสต์ไว้ เรียงจากใหม่ไปเก่า</p>
+    </div>
+    <nav class="actions">
+      <a class="btn ghost" href="index.html">หน้าหลัก</a>
+      <a class="btn ghost" href="482917305664.html">SKU</a>
+      <button id="refresh" type="button">รีเฟรช</button>
+    </nav>
+  </header>
+
+  <p id="msg" class="status" aria-live="polite">กำลังตรวจสอบสิทธิ์...</p>
+  <div id="app"></div>
+</main>
+<div class="zoom" id="zoom"><img alt=""></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+var client=window.supabase.createClient("https://gxurnxlbtmdymrdfrhcv.supabase.co","sb_publishable_QKnPZU1huLddOAYWOP4KPA_29Sv7C7G"),
+    msg=document.getElementById("msg"),app=document.getElementById("app"),posts=[];
+
+function esc(e){return String(e==null?"":e).replace(/[&<>'"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]})}
+function status(t,c){msg.textContent=t;msg.className="status "+(c||"")}
+function fdate(e){return e?new Date(e).toLocaleString("th-TH"):"-"}
+
+async function init(){
+  var u=await client.auth.getUser();
+  if(u.error||!u.data.user){location.replace("index.html");return}
+  var r=await client.from("members").select("status").eq("user_id",u.data.user.id).maybeSingle();
+  if(r.error||!r.data||r.data.status!=="approved"){
+    status("หน้านี้สำหรับสมาชิกที่ได้รับอนุมัติแล้วเท่านั้น","err");
+    setTimeout(function(){location.replace("index.html")},1200);return;
+  }
+  await load();
+}
+
+async function load(){
+  status("กำลังโหลดโพสต์...");
+  var r=await client.from("channel_posts").select("id,author_name,title,body,image_url,created_at").order("created_at",{ascending:false});
+  if(r.error){
+    status("");
+    app.innerHTML='<section class="card lock"><div class="ic">🔒</div><h2>ยังเปิดดูโพสต์ไม่ได้</h2>'+
+      '<p>โพสต์ของแอดมินเปิดให้เฉพาะสมาชิกที่อยู่ในทีมครบ 1 เดือน<br>ดูเวลาที่เหลือได้ที่หน้า SKU</p>'+
+      '<a class="btn" href="482917305664.html">ไปหน้า SKU</a></section>';
+    return;
+  }
+  posts=r.data||[];
+  app.innerHTML='<div class="tools"><input type="search" id="q" placeholder="ค้นหาหัวข้อหรือข้อความ"><span class="count">ทั้งหมด <b id="n">0</b> โพสต์</span></div><section id="feed" class="feed"></section>';
+  document.getElementById("q").addEventListener("input",render);
+  render();status("โหลดเรียบร้อย","ok");
+}
+
+function render(){
+  var q=(document.getElementById("q").value||"").trim().toLowerCase(),
+      list=posts.filter(function(p){return !q||((p.title||"")+" "+(p.body||"")).toLowerCase().indexOf(q)>-1}),
+      feed=document.getElementById("feed");
+  document.getElementById("n").textContent=list.length;
+  if(!list.length){feed.innerHTML='<div class="empty">'+(posts.length?"ไม่พบโพสต์ที่ค้นหา":"ยังไม่มีโพสต์จากแอดมิน")+'</div>';return}
+  feed.innerHTML=list.map(function(p,i){
+    var img=/^https:\/\//.test(p.image_url||"")?'<img src="'+esc(p.image_url)+'" alt="">':"";
+    return '<article class="card post" style="animation-delay:'+Math.min(i,10)*50+'ms">'+
+      '<h3>'+esc(p.title||"ไม่มีหัวข้อ")+'</h3>'+
+      '<div class="meta">โดย '+esc(p.author_name||"Admin")+'<span class="badge">ADMIN</span> · '+esc(fdate(p.created_at))+'</div>'+
+      (p.body?'<div class="body">'+esc(p.body)+'</div>':'')+img+'</article>';
+  }).join("");
+}
+
+var zoom=document.getElementById("zoom");
+app.addEventListener("click",function(e){
+  if(e.target.tagName==="IMG"&&e.target.closest(".post")){zoom.querySelector("img").src=e.target.src;zoom.classList.add("on")}
+});
+zoom.addEventListener("click",function(){zoom.classList.remove("on")});
+document.getElementById("refresh").addEventListener("click",function(){app.innerHTML="";init()});
+init();
+</script>
+</body>
+</html>
