@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>THR | ช่องประกาศจากแอดมิน</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap">
+<style>
+:root{--ink:#050509;--gold:#f2c48a;--copper:#c9743a;--cream:#ffe0b5;--mist:#aaa4bc;--line:rgba(242,196,138,.32)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(120% 60% at 50% 108%,#3a1e16 0,#1a1224 38%,var(--ink) 75%) fixed;color:#eee9f5;font-family:Inter,Arial,sans-serif}
+.shell{width:min(860px,100%);margin:auto;padding:28px 18px 56px}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+h1{margin:0;font-weight:300;font-size:clamp(2rem,5vw,3rem);background:linear-gradient(100deg,#fff,var(--cream),#d79a6a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{color:var(--mist);line-height:1.6;margin:.4em 0 0}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+a.btn,button{font:inherit;font-weight:500;color:#171018;background:linear-gradient(135deg,var(--gold),var(--copper));border:0;border-radius:10px;padding:10px 14px;cursor:pointer;text-decoration:none;transition:box-shadow .2s}
+button:hover:not(:disabled),a.btn:hover{box-shadow:0 10px 30px rgba(201,116,58,.42)}
+button:disabled{opacity:.55;cursor:wait}
+.ghost{color:var(--gold)!important;background:rgba(10,8,16,.58)!important;border:1px solid rgba(242,196,138,.34)!important}
+.danger{background:0 0;color:#ffb0b0;border:1px solid rgba(255,154,154,.5);padding:6px 10px;font-size:.8rem}
+.status{min-height:1.5em;color:var(--gold);font-size:.9rem;margin:14px 0 6px}
+.status.err{color:#ff9a9a}.status.ok{color:#b6e3b8}
+.card{border:1px solid var(--line);border-radius:16px;background:linear-gradient(180deg,rgba(31,22,40,.9),rgba(8,7,14,.94));padding:18px}
+
+/* locked gate */
+.lock{text-align:center;padding:42px 22px}
+.lock .icon{width:84px;height:84px;margin:0 auto 18px;border-radius:50%;display:grid;place-items:center;font-size:2.2rem;color:var(--gold);border:1px solid var(--gold);background:rgba(242,196,138,.07);box-shadow:0 0 30px rgba(242,196,138,.2);position:relative}
+.lock .icon::after{content:"";position:absolute;inset:-2px;border-radius:50%;border:1px solid var(--gold);animation:ping 2.6s ease-out infinite}
+@keyframes ping{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.8);opacity:0}}
+.lock h2{margin:0 0 8px;font-weight:400;color:var(--cream);font-size:1.4rem}
+.lock p{margin:6px 0;color:var(--mist);line-height:1.7}
+.big{font-size:2.6rem;font-weight:300;color:var(--cream);margin:10px 0 0}
+.digits{display:flex;justify-content:center;gap:10px;margin:14px 0 0;flex-wrap:wrap}
+.digits div{min-width:68px;padding:10px 8px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.04)}
+.digits b{display:block;font-size:2rem;font-weight:300;color:var(--cream);font-variant-numeric:tabular-nums}
+.digits small{color:var(--mist);font-size:.72rem}
+.bar{height:8px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;max-width:420px;margin:18px auto 8px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--copper),var(--gold),var(--cream));border-radius:99px;transition:width 1s cubic-bezier(.16,1,.3,1);box-shadow:0 0 12px rgba(242,196,138,.6)}
+
+/* composer */
+.composer{display:grid;gap:10px;margin:18px 0}
+.composer h3{margin:0;font-weight:500;color:var(--gold);font-size:1rem}
+input[type=text],textarea{width:100%;font:inherit;font-size:.92rem;color:#eee9f5;background:rgba(9,8,16,.76);border:1px solid rgba(201,116,58,.45);border-radius:10px;padding:10px 12px;outline:0}
+textarea{min-height:110px;resize:vertical}
+input:focus,textarea:focus{border-color:var(--cream);box-shadow:0 0 0 3px rgba(242,196,138,.13)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:space-between}
+.file{color:var(--mist);font-size:.82rem}
+
+/* posts */
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+.stats span{border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:var(--mist)}
+.stats b{color:var(--cream)}
+.feed{display:grid;gap:14px;margin-top:10px}
+.post h3{margin:0 0 4px;font-weight:500;color:#fff;font-size:1.1rem;overflow-wrap:anywhere}
+.meta{font-size:.78rem;color:var(--mist);margin-bottom:10px}
+.body{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.7;font-size:.93rem}
+.post img{display:block;max-width:100%;max-height:420px;margin-top:12px;border-radius:12px;border:1px solid var(--line)}
+.post .foot{display:flex;justify-content:flex-end;margin-top:10px}
+.empty{padding:22px;border:1px dashed var(--line);border-radius:14px;color:var(--mist);text-align:center}
+.badge{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:99px;font-size:.7rem;color:#171018;background:linear-gradient(135deg,var(--gold),var(--copper))}
+</style>
+</head>
+<body>
+<main class="shell">
+  <header class="top">
+    <div>
+      <h1>ช่องประกาศแอดมิน</h1>
+      <p class="lead">ข้อความและไฟล์ที่แอดมินอัปโหลดให้สมาชิกในทีม · เปิดได้เมื่อเป็นสมาชิกครบ 1 เดือน</p>
+    </div>
+    <nav class="actions">
+      <a class="btn ghost" href="index.html">หน้าหลัก</a>
+      <button id="refresh" type="button">รีเฟรช</button>
+    </nav>
+  </header>
+
+  <p id="msg" class="status" aria-live="polite">กำลังตรวจสอบสิทธิ์...</p>
+  <div id="app"></div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+var SUPABASE_URL="https://gxurnxlbtmdymrdfrhcv.supabase.co",
+    SUPABASE_ANON_KEY="sb_publishable_QKnPZU1huLddOAYWOP4KPA_29Sv7C7G",
+    client=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY),
+    me=null,profile=null,isAdmin=false,
+    msg=document.getElementById("msg"),app=document.getElementById("app");
+
+function esc(e){return String(e==null?"":e).replace(/[&<>'"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]})}
+function status(t,c){msg.textContent=t;msg.className="status "+(c||"")}
+function fdate(e){return e?new Date(e).toLocaleString("th-TH"):"-"}
+function p2(n){return String(n).padStart(2,"0")}
+function fday(e){if(!e)return"-";var d=new Date(e);return p2(d.getDate())+"/"+p2(d.getMonth()+1)+"/"+(d.getFullYear()+543)}
+
+/* วันที่ครบ 1 เดือน นับจากวันที่ได้รับอนุมัติ (ถ้าไม่มี ใช้วันที่สมัคร) */
+function unlockDate(p){
+  var s=new Date(p.approved_at||p.created_at);
+  var u=new Date(s);u.setMonth(u.getMonth()+1);
+  return {start:s,unlock:u};
+}
+
+async function init(){
+  var u=await client.auth.getUser();
+  if(u.error||!u.data.user){location.replace("index.html");return}
+  me=u.data.user;
+  var r=await client.from("members").select("name,role,status,approved_at,created_at").eq("user_id",me.id).maybeSingle();
+  if(r.error||!r.data||r.data.status!=="approved"){
+    status("หน้านี้สำหรับสมาชิกที่ได้รับอนุมัติแล้วเท่านั้น","err");
+    setTimeout(function(){location.replace("index.html")},1200);return;
+  }
+  profile=r.data;
+  isAdmin=profile.role==="admin"||profile.role==="deputy_admin";
+
+  if(isAdmin){status("");renderChannel();await loadPosts();return}
+
+  var d=unlockDate(profile),now=new Date();
+  if(now>=d.unlock){status("");renderChannel();await loadPosts();}
+  else renderLocked(d,now);
+}
+
+function renderLocked(d,now){
+  var total=d.unlock-d.start,done=Math.max(0,now-d.start),
+      pct=Math.min(100,Math.round(done/total*100)),
+      left=Math.ceil((d.unlock-now)/86400000);
+  status("");
+  app.innerHTML=
+   '<section class="card lock">'+
+     '<div class="icon">🔒</div>'+
+     '<h2>ช่องนี้ยังถูกล็อกอยู่</h2>'+
+     '<p>เปิดให้เฉพาะสมาชิกที่อยู่ในทีมครบ 1 เดือน</p>'+
+     '<div class="digits" id="cd"></div>'+
+     '<div class="bar"><i id="fill"></i></div>'+
+     '<p>เริ่มนับตั้งแต่ '+esc(fday(d.start))+' · เปิดสิทธิ์วันที่ <b style="color:var(--cream)">'+esc(fday(d.unlock))+'</b></p>'+
+   '</section>';
+  setTimeout(function(){var f=document.getElementById("fill");if(f)f.style.width=pct+"%"},80);
+  function tickCd(){
+    var ms=Math.max(0,d.unlock-new Date()),
+        dd=Math.floor(ms/86400000),hh=Math.floor(ms%86400000/3600000),
+        mm=Math.floor(ms%3600000/60000),ss=Math.floor(ms%60000/1000),
+        el=document.getElementById("cd");
+    if(!el){clearInterval(cdTimer);return}
+    el.innerHTML=[[dd,"วัน"],[hh,"ชม."],[mm,"นาที"],[ss,"วินาที"]].map(function(x){
+      return '<div><b>'+p2(x[0])+'</b><small>'+x[1]+'</small></div>'}).join("");
+    if(ms<=0){clearInterval(cdTimer);init()}
+  }
+  var cdTimer=setInterval(tickCd,1000);tickCd();
+}
+
+function renderChannel(){
+  var composer=isAdmin?
+   '<section class="card composer">'+
+     '<h3>✎ โพสต์ใหม่ (เฉพาะแอดมิน)</h3>'+
+     '<input type="text" id="p-title" maxlength="120" placeholder="หัวข้อ">'+
+     '<textarea id="p-body" maxlength="4000" placeholder="เขียนข้อความถึงสมาชิก..."></textarea>'+
+     '<div class="row"><label class="file">แนบรูป (ไม่บังคับ): <input type="file" id="p-file" accept="image/*"></label>'+
+     '<button id="p-send" type="button">ส่งข้อความ</button></div>'+
+   '</section>':'';
+  app.innerHTML=composer+'<div id="stats" class="stats"></div><section id="feed" class="feed"></section>';
+  if(isAdmin)document.getElementById("p-send").addEventListener("click",publish);
+}
+
+var posts=[];
+async function loadPosts(){
+  status("กำลังโหลดข้อความ...");
+  var r=await client.from("channel_posts").select("id,author_id,author_name,title,body,image_url,created_at").order("created_at",{ascending:false});
+  if(r.error){
+    status("โหลดข้อความไม่สำเร็จ: "+r.error.message,"err");
+    document.getElementById("feed").innerHTML='<div class="empty">กรุณารันไฟล์ SQL (channel_setup.sql) ก่อน หรือคุณยังไม่มีสิทธิ์เปิดช่องนี้</div>';
+    return;
+  }
+  posts=r.data||[];renderPosts();status("โหลดเรียบร้อย","ok");
+}
+
+function renderPosts(){
+  document.getElementById("stats").innerHTML="<span>ข้อความทั้งหมด: <b>"+posts.length+"</b></span>";
+  var feed=document.getElementById("feed");
+  if(!posts.length){feed.innerHTML='<div class="empty">ยังไม่มีข้อความจากแอดมิน</div>';return}
+  feed.innerHTML=posts.map(function(p){
+    var img=/^https:\/\//.test(p.image_url||"")?'<img src="'+esc(p.image_url)+'" alt="">':"";
+    var del=isAdmin?'<div class="foot"><button class="danger" data-del="'+esc(p.id)+'">ลบ</button></div>':"";
+    return '<article class="card post"><h3>'+esc(p.title||"ไม่มีหัวข้อ")+'</h3>'+
+      '<div class="meta">โดย '+esc(p.author_name||"Admin")+'<span class="badge">ADMIN</span> · '+esc(fdate(p.created_at))+'</div>'+
+      '<div class="body">'+esc(p.body||"")+'</div>'+img+del+'</article>';
+  }).join("");
+}
+
+async function publish(){
+  var t=document.getElementById("p-title").value.trim(),
+      b=document.getElementById("p-body").value.trim(),
+      f=document.getElementById("p-file").files[0],
+      btn=document.getElementById("p-send");
+  if(!t&&!b&&!f){status("กรุณากรอกข้อความหรือแนบรูป","err");return}
+  btn.disabled=true;status("กำลังส่ง...");
+  var url=null;
+  if(f){
+    if(f.size>5*1024*1024){status("รูปต้องไม่เกิน 5MB","err");btn.disabled=false;return}
+    var ext=(f.name.split(".").pop()||"png").replace(/[^a-z0-9]/gi,"").toLowerCase().slice(0,5)||"png",
+        path=me.id+"/"+Date.now()+"."+ext,
+        up=await client.storage.from("channel-files").upload(path,f,{contentType:f.type});
+    if(up.error){status("อัปโหลดรูปไม่สำเร็จ: "+up.error.message,"err");btn.disabled=false;return}
+    url=client.storage.from("channel-files").getPublicUrl(path).data.publicUrl;
+  }
+  var ins=await client.from("channel_posts").insert({author_id:me.id,author_name:profile.name||"Admin",title:t||null,body:b||null,image_url:url});
+  btn.disabled=false;
+  if(ins.error){status("ส่งไม่สำเร็จ: "+ins.error.message,"err");return}
+  document.getElementById("p-title").value="";document.getElementById("p-body").value="";document.getElementById("p-file").value="";
+  await loadPosts();status("ส่งข้อความเรียบร้อย","ok");
+}
+
+app.addEventListener("click",async function(e){
+  var d=e.target.closest("[data-del]");if(!d)return;
+  if(!confirm("ยืนยันการลบข้อความนี้?"))return;
+  var r=await client.from("channel_posts").delete().eq("id",d.dataset.del).select("id");
+  if(r.error||!(r.data&&r.data.length)){status("ลบไม่สำเร็จ"+(r.error?": "+r.error.message:""),"err");return}
+  posts=posts.filter(function(p){return String(p.id)!==String(d.dataset.del)});renderPosts();status("ลบเรียบร้อย","ok");
+});
+
+document.getElementById("refresh").addEventListener("click",function(){app.innerHTML="";init()});
+init();
+</script>
+</body>
+</html>
