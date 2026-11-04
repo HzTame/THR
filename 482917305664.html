@@ -75,6 +75,7 @@ select:focus{border-color:var(--cream);box-shadow:0 0 0 3px rgba(242,196,138,.13
 .rrow small{color:var(--mist)}
 .ok{color:#b6e3b8}.no{color:#ffb0b0}
 .snote{margin:10px 0 0;color:#ff9a9a;font-size:.82rem;min-height:1em}
+.body a{color:var(--gold);text-decoration:underline;word-break:break-all}.body a:hover{color:var(--cream)}
 </style>
 </head>
 <body>
@@ -103,6 +104,14 @@ var SUPABASE_URL="https://gxurnxlbtmdymrdfrhcv.supabase.co",
     msg=document.getElementById("msg"),app=document.getElementById("app");
 
 function esc(e){return String(e==null?"":e).replace(/[&<>'"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]})}
+function linkify(t){
+  return esc(t).replace(/https?:\/\/[^\s]+/g,function(u){
+    var cut=u.search(/&quot;|&#39;|&lt;|&gt;/);var rest="";
+    if(cut>-1){rest=u.slice(cut);u=u.slice(0,cut)}
+    var m=u.match(/[.,;:!?)\]]+$/);if(m){rest=m[0]+rest;u=u.slice(0,-m[0].length)}
+    return u?'<a href="'+u+'" target="_blank" rel="noopener noreferrer">'+u+'</a>'+rest:rest;
+  });
+}
 function status(t,c){msg.textContent=t;msg.className="status "+(c||"")}
 function fdate(e){return e?new Date(e).toLocaleString("th-TH"):"-"}
 function p2(n){return String(n).padStart(2,"0")}
@@ -208,7 +217,7 @@ function renderPosts(){
     var del=isAdmin?'<div class="foot"><button class="danger" data-del="'+esc(p.id)+'">ลบ</button></div>':"";
     return '<article class="card post"><h3>'+esc(p.title||"ไม่มีหัวข้อ")+'</h3>'+
       '<div class="meta">โดย '+esc(p.author_name||"Admin")+'<span class="badge">ADMIN</span> · '+esc(fdate(p.created_at))+'</div>'+
-      '<div class="body">'+esc(p.body||"")+'</div>'+img+del+'</article>';
+      '<div class="body">'+linkify(p.body||"")+'</div>'+img+del+'</article>';
   }).join("");
 }
 

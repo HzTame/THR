@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>THR | โพสต์จากแอดมิน</title>
+<title>THR | Post</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap">
 <style>
 :root{--ink:#050509;--gold:#f2c48a;--copper:#c9743a;--cream:#ffe0b5;--mist:#aaa4bc;--line:rgba(242,196,138,.32)}
@@ -41,13 +41,14 @@ input:focus{border-color:var(--cream);box-shadow:0 0 0 3px rgba(242,196,138,.13)
 .zoom{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.85);display:none;place-items:center;padding:18px;cursor:zoom-out}
 .zoom.on{display:grid}
 .zoom img{max-width:100%;max-height:100%;border-radius:12px}
+.body a{color:var(--gold);text-decoration:underline;word-break:break-all}.body a:hover{color:var(--cream)}
 </style>
 </head>
 <body>
 <main class="shell">
   <header class="top">
     <div>
-      <h1>โพสต์จากแอดมิน</h1>
+      <h1>Post</h1>
       <p class="lead">ข้อความและรูปภาพทั้งหมดที่แอดมินโพสต์ไว้ เรียงจากใหม่ไปเก่า</p>
     </div>
     <nav class="actions">
@@ -68,6 +69,14 @@ var client=window.supabase.createClient("https://gxurnxlbtmdymrdfrhcv.supabase.c
     msg=document.getElementById("msg"),app=document.getElementById("app"),posts=[],prof=null;
 
 function esc(e){return String(e==null?"":e).replace(/[&<>'"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]})}
+function linkify(t){
+  return esc(t).replace(/https?:\/\/[^\s]+/g,function(u){
+    var cut=u.search(/&quot;|&#39;|&lt;|&gt;/);var rest="";
+    if(cut>-1){rest=u.slice(cut);u=u.slice(0,cut)}
+    var m=u.match(/[.,;:!?)\]]+$/);if(m){rest=m[0]+rest;u=u.slice(0,-m[0].length)}
+    return u?'<a href="'+u+'" target="_blank" rel="noopener noreferrer">'+u+'</a>'+rest:rest;
+  });
+}
 function status(t,c){msg.textContent=t;msg.className="status "+(c||"")}
 function fdate(e){return e?new Date(e).toLocaleString("th-TH"):"-"}
 
@@ -120,7 +129,7 @@ function render(){
     return '<article class="card post" style="animation-delay:'+Math.min(i,10)*50+'ms">'+
       '<h3>'+esc(p.title||"ไม่มีหัวข้อ")+'</h3>'+
       '<div class="meta">โดย '+esc(p.author_name||"Admin")+'<span class="badge">ADMIN</span> · '+esc(fdate(p.created_at))+'</div>'+
-      (p.body?'<div class="body">'+esc(p.body)+'</div>':'')+img+'</article>';
+      (p.body?'<div class="body">'+linkify(p.body)+'</div>':'')+img+'</article>';
   }).join("");
 }
 
