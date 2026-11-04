@@ -66,7 +66,7 @@ input:focus,textarea:focus{border-color:var(--cream);box-shadow:0 0 0 3px rgba(2
   <header class="top">
     <div>
       <h1>ช่องประกาศแอดมิน</h1>
-      <p class="lead">ข้อความและไฟล์ที่แอดมินอัปโหลดให้สมาชิกในทีม · เปิดได้เมื่อเป็นสมาชิกครบ 1 เดือน</p>
+      <p class="lead">จัดการโพสต์ของแอดมิน · เฉพาะ Admin และรอง Admin เท่านั้น</p>
     </div>
     <nav class="actions">
       <a class="btn ghost" href="index.html">หน้าหลัก</a>
@@ -92,13 +92,6 @@ function fdate(e){return e?new Date(e).toLocaleString("th-TH"):"-"}
 function p2(n){return String(n).padStart(2,"0")}
 function fday(e){if(!e)return"-";var d=new Date(e);return p2(d.getDate())+"/"+p2(d.getMonth()+1)+"/"+(d.getFullYear()+543)}
 
-/* วันที่ครบ 1 เดือน นับจากวันที่ได้รับอนุมัติ (ถ้าไม่มี ใช้วันที่สมัคร) */
-function unlockDate(p){
-  var s=new Date(p.approved_at||p.created_at);
-  var u=new Date(s);u.setMonth(u.getMonth()+1);
-  return {start:s,unlock:u};
-}
-
 async function init(){
   var u=await client.auth.getUser();
   if(u.error||!u.data.user){location.replace("index.html");return}
@@ -110,40 +103,11 @@ async function init(){
   }
   profile=r.data;
   isAdmin=profile.role==="admin"||profile.role==="deputy_admin";
-
-  if(isAdmin){status("");renderChannel();await loadPosts();return}
-
-  var d=unlockDate(profile),now=new Date();
-  if(now>=d.unlock){status("");renderChannel();await loadPosts();}
-  else renderLocked(d,now);
-}
-
-function renderLocked(d,now){
-  var total=d.unlock-d.start,done=Math.max(0,now-d.start),
-      pct=Math.min(100,Math.round(done/total*100)),
-      left=Math.ceil((d.unlock-now)/86400000);
-  status("");
-  app.innerHTML=
-   '<section class="card lock">'+
-     '<div class="icon">🔒</div>'+
-     '<h2>ช่องนี้ยังถูกล็อกอยู่</h2>'+
-     '<p>เปิดให้เฉพาะสมาชิกที่อยู่ในทีมครบ 1 เดือน</p>'+
-     '<div class="digits" id="cd"></div>'+
-     '<div class="bar"><i id="fill"></i></div>'+
-     '<p>เริ่มนับตั้งแต่ '+esc(fday(d.start))+' · เปิดสิทธิ์วันที่ <b style="color:var(--cream)">'+esc(fday(d.unlock))+'</b></p>'+
-   '</section>';
-  setTimeout(function(){var f=document.getElementById("fill");if(f)f.style.width=pct+"%"},80);
-  function tickCd(){
-    var ms=Math.max(0,d.unlock-new Date()),
-        dd=Math.floor(ms/86400000),hh=Math.floor(ms%86400000/3600000),
-        mm=Math.floor(ms%3600000/60000),ss=Math.floor(ms%60000/1000),
-        el=document.getElementById("cd");
-    if(!el){clearInterval(cdTimer);return}
-    el.innerHTML=[[dd,"วัน"],[hh,"ชม."],[mm,"นาที"],[ss,"วินาที"]].map(function(x){
-      return '<div><b>'+p2(x[0])+'</b><small>'+x[1]+'</small></div>'}).join("");
-    if(ms<=0){clearInterval(cdTimer);init()}
+  if(!isAdmin){
+    status("หน้านี้สำหรับ Admin และรอง Admin เท่านั้น","err");
+    setTimeout(function(){location.replace("index.html")},1000);return;
   }
-  var cdTimer=setInterval(tickCd,1000);tickCd();
+  status("");renderChannel();await loadPosts();
 }
 
 function renderChannel(){

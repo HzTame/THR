@@ -52,7 +52,7 @@ input:focus{border-color:var(--cream);box-shadow:0 0 0 3px rgba(242,196,138,.13)
     </div>
     <nav class="actions">
       <a class="btn ghost" href="index.html">หน้าหลัก</a>
-      <a class="btn ghost" href="482917305664.html">SKU</a>
+      <a class="btn ghost" id="sku-link" href="482917305664.html" style="display:none">SKU</a>
       <button id="refresh" type="button">รีเฟรช</button>
     </nav>
   </header>
@@ -74,11 +74,12 @@ function fdate(e){return e?new Date(e).toLocaleString("th-TH"):"-"}
 async function init(){
   var u=await client.auth.getUser();
   if(u.error||!u.data.user){location.replace("index.html");return}
-  var r=await client.from("members").select("status").eq("user_id",u.data.user.id).maybeSingle();
+  var r=await client.from("members").select("status,role").eq("user_id",u.data.user.id).maybeSingle();
   if(r.error||!r.data||r.data.status!=="approved"){
     status("หน้านี้สำหรับสมาชิกที่ได้รับอนุมัติแล้วเท่านั้น","err");
     setTimeout(function(){location.replace("index.html")},1200);return;
   }
+  if(r.data.role==="admin"||r.data.role==="deputy_admin"){document.getElementById("sku-link").style.display=""}
   await load();
 }
 
@@ -88,8 +89,7 @@ async function load(){
   if(r.error){
     status("");
     app.innerHTML='<section class="card lock"><div class="ic">🔒</div><h2>ยังเปิดดูโพสต์ไม่ได้</h2>'+
-      '<p>โพสต์ของแอดมินเปิดให้เฉพาะสมาชิกที่อยู่ในทีมครบ 1 เดือน<br>ดูเวลาที่เหลือได้ที่หน้า SKU</p>'+
-      '<a class="btn" href="482917305664.html">ไปหน้า SKU</a></section>';
+      '<p>โพสต์ของแอดมินเปิดให้เฉพาะสมาชิกที่อยู่ในทีมครบ 1 เดือน</p></section>';
     return;
   }
   posts=r.data||[];
